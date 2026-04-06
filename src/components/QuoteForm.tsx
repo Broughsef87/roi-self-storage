@@ -77,11 +77,11 @@ export default function QuoteForm() {
             className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors bg-white"
           >
             <option value="">Select a type...</option>
-            <option value="drive-up">Single-Story Drive-Up</option>
+            <option value="standard">Standard Storage</option>
             <option value="climate">Climate Controlled</option>
-            <option value="multi-story">Multi-Story</option>
             <option value="boat-rv">Boat &amp; RV Storage</option>
-            <option value="mixed">Mixed-Use Commercial</option>
+            <option value="flex">Flex Spaces</option>
+            <option value="retrofit">Retrofit / Conversion</option>
             <option value="other">Not Sure / Other</option>
           </select>
         </div>

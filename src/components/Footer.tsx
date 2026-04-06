@@ -23,11 +23,11 @@ export default function Footer() {
               Building Types
             </h4>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="#buildings" className="hover:text-white transition-colors">Single-Story Drive-Up</a></li>
-              <li><a href="#buildings" className="hover:text-white transition-colors">Multi-Story Climate Controlled</a></li>
+              <li><a href="#buildings" className="hover:text-white transition-colors">Standard Storage</a></li>
+              <li><a href="#buildings" className="hover:text-white transition-colors">Climate Controlled</a></li>
               <li><a href="#buildings" className="hover:text-white transition-colors">Boat &amp; RV Storage</a></li>
-              <li><a href="#buildings" className="hover:text-white transition-colors">Portable Storage Units</a></li>
-              <li><a href="#buildings" className="hover:text-white transition-colors">Mixed-Use Commercial</a></li>
+              <li><a href="#buildings" className="hover:text-white transition-colors">Flex Spaces</a></li>
+              <li><a href="#buildings" className="hover:text-white transition-colors">Retrofit / Conversion</a></li>
             </ul>
           </div>
 

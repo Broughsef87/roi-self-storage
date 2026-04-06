@@ -54,59 +54,59 @@ function IconClock() {
 /* ------------------------------------------------------------------ */
 const buildingTypes = [
   {
-    name: "Single-Story Drive-Up",
+    name: "Standard Storage",
     desc: "The workhorse of the industry. Roll-up doors, simple access, low operating costs. Most popular for first-time facility owners.",
-    sizes: "5\u00d710 to 10\u00d730 units",
+    price: "$10\u2013$12 / sq ft",
     tag: "Most Popular",
   },
   {
     name: "Climate Controlled",
-    desc: "Insulated, HVAC-equipped buildings that command 25-50% premium rents. Ideal for markets with temperature-sensitive demand.",
-    sizes: "5\u00d75 to 10\u00d720 units",
+    desc: "Insulated, HVAC-equipped buildings that command premium rents. Ideal for markets with temperature-sensitive demand.",
+    price: "$17\u2013$20 / sq ft",
     tag: "Premium Revenue",
-  },
-  {
-    name: "Multi-Story",
-    desc: "Maximize revenue per square foot of land. Elevator-served upper floors with drive-up ground level. Best for high-value sites.",
-    sizes: "2-4 stories",
-    tag: "Max Density",
   },
   {
     name: "Boat & RV Storage",
     desc: "Tall clear-span structures with extra-wide doors and high eave heights. Covered or enclosed configurations available.",
-    sizes: "12\u00d730 to 15\u00d750 bays",
+    price: "$12\u2013$15 / sq ft",
     tag: "High Margin",
   },
   {
-    name: "Mixed-Use Commercial",
-    desc: "Ground-floor retail or office with storage above or behind. Zoning-friendly design that doubles your income streams.",
-    sizes: "Custom layouts",
+    name: "Flex Spaces",
+    desc: "Higher-finish or specialized fit-out spaces. Ideal for mixed-use, workshop, or commercial storage applications.",
+    price: "$16+ / sq ft",
     tag: "Versatile",
+  },
+  {
+    name: "Retrofit / Conversion",
+    desc: "Convert or expand existing structures into self storage. The most cost-effective path for owners with an existing building or shell.",
+    price: "$7\u2013$10 / sq ft",
+    tag: "Best Value",
   },
 ];
 
 const stats = [
   { value: "90+", label: "Years Combined Experience" },
-  { value: "50", label: "States Served" },
+  { value: "48", label: "States Delivered" },
   { value: "8-14", label: "Week Lead Times" },
   { value: "100%", label: "Custom Engineered" },
 ];
 
 const benefits = [
   { icon: <IconChart />, title: "Built for ROI", desc: "We engineer buildings around your pro forma, not the other way around. Every design decision maps to your revenue model." },
-  { icon: <IconShield />, title: "26-Gauge Galvalume Steel", desc: "Commercial-grade panels with 40-year paint warranties. Built to last decades with minimal maintenance." },
-  { icon: <IconBolt />, title: "Clear-Span to 200\u2019", desc: "No interior columns means maximum usable square footage. More units per building. More revenue per dollar spent." },
-  { icon: <IconTruck />, title: "Nationwide Delivery", desc: "We ship to all 50 states. Freight is a line item on your quote — no hidden costs, no surprises at closing." },
+  { icon: <IconShield />, title: "Min. 26ga 80KSI Exterior Panels", desc: "Commercial-grade Galvalume steel panels with 40-year paint warranties. Built to last decades with minimal maintenance." },
+  { icon: <IconBolt />, title: "Upgrades Available", desc: "Standing seam roofing, moisture barriers, insulated metal panels, double-sided partitions, and more. Customize to your market." },
+  { icon: <IconTruck />, title: "Nationwide Delivery", desc: "We ship to 48 states and engineer for all 50. Freight is a line item on your quote — no hidden costs, no surprises." },
   { icon: <IconWrench />, title: "Turnkey Engineering", desc: "Stamped drawings, foundation plans, and erection guides included. Your contractor builds from our blueprints." },
   { icon: <IconClock />, title: "Fast Turnaround", desc: "8-14 week manufacturing. Site prep runs in parallel. Most facilities are operational within 6 months of order." },
 ];
 
-const sizingData = [
-  { size: "2,400 sq ft", units: "~20 units", use: "Starter facility", range: "$35K - $55K" },
-  { size: "6,000 sq ft", units: "~50 units", use: "Small market", range: "$75K - $120K" },
-  { size: "15,000 sq ft", units: "~120 units", use: "Mid-size facility", range: "$180K - $280K" },
-  { size: "30,000 sq ft", units: "~250 units", use: "Large facility", range: "$340K - $520K" },
-  { size: "50,000+ sq ft", units: "400+ units", use: "Full-scale operation", range: "Call for pricing" },
+const pricingData = [
+  { type: "Standard Storage", building: "$10\u2013$12", erection: "$3.50\u2013$6.00", concrete: "$10\u2013$15", total: "$23.50\u2013$33.00", avg: "$28.25" },
+  { type: "Climate Controlled", building: "$17\u2013$20", erection: "$3.50\u2013$6.00", concrete: "$10\u2013$15", total: "$30.50\u2013$41.00", avg: "$35.75" },
+  { type: "Boat & RV Storage", building: "$12\u2013$15", erection: "$3.50\u2013$6.00", concrete: "$10\u2013$15", total: "$25.50\u2013$36.00", avg: "$30.75" },
+  { type: "Flex Spaces", building: "$16+", erection: "$3.50\u2013$6.00", concrete: "$10\u2013$15", total: "$29.50\u2013$37.00+", avg: "$33.25+" },
+  { type: "Retrofit / Conversion", building: "$7\u2013$10", erection: "$3.50\u2013$6.00", concrete: "Varies", total: "$10.50\u2013$16.00+", avg: "~$13.25+" },
 ];
 
 const steps = [
@@ -207,8 +207,8 @@ export default function Home() {
                   <p className="text-sm text-roi-steel leading-relaxed">{b.desc}</p>
                 </div>
                 <div className="shrink-0 text-right lg:text-left">
-                  <div className="text-xs text-gray-400 uppercase tracking-wider">Typical Sizes</div>
-                  <div className="text-sm font-semibold text-roi-navy mt-0.5">{b.sizes}</div>
+                  <div className="text-xs text-gray-400 uppercase tracking-wider">Building Package</div>
+                  <div className="text-sm font-semibold text-roi-navy mt-0.5">{b.price}</div>
                 </div>
                 <a
                   href="#quote"
@@ -249,37 +249,41 @@ export default function Home() {
         </div>
       </section>
 
-      {/* =================== SIZE & PRICING TABLE =================== */}
+      {/* =================== PRICING GUIDE =================== */}
       <section id="sizes" className="py-20 lg:py-28 bg-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="max-w-2xl mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-roi-navy tracking-tight">
-              Size &amp; pricing guide
+              Pricing guide
             </h2>
             <p className="mt-4 text-roi-steel leading-relaxed">
-              Ballpark ranges for building packages only (foundation, erection, and site
-              work are separate). Every project is custom quoted.
+              All prices per square foot. Estimated total includes building package + steel
+              erection + concrete/site work. Every project is custom quoted.
             </p>
           </div>
 
           {/* Desktop table */}
-          <div className="hidden md:block overflow-hidden rounded-lg border border-gray-200">
+          <div className="hidden lg:block overflow-hidden rounded-lg border border-gray-200">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-roi-navy text-white">
-                  <th className="text-left font-semibold px-6 py-4">Building Size</th>
-                  <th className="text-left font-semibold px-6 py-4">Unit Count</th>
-                  <th className="text-left font-semibold px-6 py-4">Best For</th>
-                  <th className="text-right font-semibold px-6 py-4">Price Range</th>
+                  <th className="text-left font-semibold px-5 py-4">Building Type</th>
+                  <th className="text-center font-semibold px-5 py-4">Building Package</th>
+                  <th className="text-center font-semibold px-5 py-4">Steel Erection</th>
+                  <th className="text-center font-semibold px-5 py-4">Concrete / Site</th>
+                  <th className="text-center font-semibold px-5 py-4">Est. Total Range</th>
+                  <th className="text-right font-semibold px-5 py-4">Avg. Total</th>
                 </tr>
               </thead>
               <tbody>
-                {sizingData.map((row, i) => (
-                  <tr key={row.size} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-                    <td className="px-6 py-4 font-medium text-roi-navy">{row.size}</td>
-                    <td className="px-6 py-4 text-roi-steel">{row.units}</td>
-                    <td className="px-6 py-4 text-roi-steel">{row.use}</td>
-                    <td className="px-6 py-4 text-right font-semibold text-roi-navy">{row.range}</td>
+                {pricingData.map((row, i) => (
+                  <tr key={row.type} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                    <td className="px-5 py-4 font-medium text-roi-navy">{row.type}</td>
+                    <td className="px-5 py-4 text-center text-roi-steel">{row.building}</td>
+                    <td className="px-5 py-4 text-center text-roi-steel">{row.erection}</td>
+                    <td className="px-5 py-4 text-center text-roi-steel">{row.concrete}</td>
+                    <td className="px-5 py-4 text-center font-medium text-roi-navy">{row.total}</td>
+                    <td className="px-5 py-4 text-right font-semibold text-roi-navy">{row.avg}</td>
                   </tr>
                 ))}
               </tbody>
@@ -287,27 +291,43 @@ export default function Home() {
           </div>
 
           {/* Mobile cards */}
-          <div className="md:hidden space-y-4">
-            {sizingData.map((row) => (
-              <div key={row.size} className="border border-gray-200 rounded-lg p-5">
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <div className="font-bold text-roi-navy">{row.size}</div>
-                    <div className="text-xs text-gray-400 mt-0.5">{row.units}</div>
-                  </div>
+          <div className="lg:hidden space-y-4">
+            {pricingData.map((row) => (
+              <div key={row.type} className="border border-gray-200 rounded-lg p-5">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="font-bold text-roi-navy">{row.type}</div>
                   <div className="text-right">
-                    <div className="font-semibold text-roi-navy text-sm">{row.range}</div>
+                    <div className="text-xs text-gray-400">Avg. Total</div>
+                    <div className="font-semibold text-roi-navy">{row.avg}/sf</div>
                   </div>
                 </div>
-                <div className="text-xs text-roi-steel">{row.use}</div>
+                <div className="grid grid-cols-3 gap-3 text-xs">
+                  <div>
+                    <div className="text-gray-400 mb-0.5">Building</div>
+                    <div className="font-medium text-roi-steel">{row.building}</div>
+                  </div>
+                  <div>
+                    <div className="text-gray-400 mb-0.5">Erection</div>
+                    <div className="font-medium text-roi-steel">{row.erection}</div>
+                  </div>
+                  <div>
+                    <div className="text-gray-400 mb-0.5">Concrete</div>
+                    <div className="font-medium text-roi-steel">{row.concrete}</div>
+                  </div>
+                </div>
+                <div className="mt-3 pt-3 border-t border-gray-100 text-xs">
+                  <span className="text-gray-400">Total range: </span>
+                  <span className="font-medium text-roi-navy">{row.total}/sf</span>
+                </div>
               </div>
             ))}
           </div>
 
-          <p className="mt-6 text-xs text-gray-400">
-            * Pricing reflects building package only. Actual costs vary by location, engineering
-            requirements, and current steel market. Request a quote for accurate pricing.
-          </p>
+          <div className="mt-8 bg-roi-light rounded-lg p-5 text-xs text-roi-steel leading-relaxed space-y-1.5">
+            <p><strong className="text-roi-navy">What&apos;s included:</strong> Building package (metal building kit) + steel erection + concrete/site work. All figures are per square foot, based on national averages.</p>
+            <p><strong className="text-roi-navy">What&apos;s not included:</strong> Land, permits, utilities, design fees, financing, landscaping, or other soft costs. ROI does not perform concrete services — concrete figures are based on national averages for reference.</p>
+            <p><strong className="text-roi-navy">Note:</strong> Actual costs vary by location, zoning, wind loads, snow loads, and current steel market. Flex space pricing ($16+) increases with finish level and specialization. Request a quote for your specific project.</p>
+          </div>
         </div>
       </section>
 

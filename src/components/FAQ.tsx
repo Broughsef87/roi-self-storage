@@ -9,19 +9,23 @@ const faqs = [
   },
   {
     q: "Do you handle the full build or just the metal shell?",
-    a: "We supply the pre-engineered metal building package — framing, panels, trim, fasteners, and doors. We can connect you with certified erectors in your area, or your general contractor can handle the install with our engineering drawings.",
+    a: "We supply the pre-engineered metal building package — framing, panels, trim, fasteners, and doors. We can connect you with certified erectors in your area, or your general contractor can handle the install with our engineering drawings. ROI does not perform concrete services — we provide national average estimates for budgeting purposes.",
   },
   {
-    q: "What sizes of storage buildings do you offer?",
-    a: "From small 2,400 sq ft facilities with 20 units up to 100,000+ sq ft multi-story complexes. Clear-span widths up to 200 feet. Every building is custom engineered to your site and business plan.",
+    q: "How much does a self storage building cost?",
+    a: "Building packages range from $7-$20 per square foot depending on type. Standard storage runs $10-$12/sf, climate controlled is $17-$20/sf, boat & RV is $12-$15/sf, and retrofits start at $7-$10/sf. When you add erection ($3.50-$6.00/sf) and concrete/site work ($10-$15/sf), total estimated build costs range from roughly $23-$41/sf depending on building type. These are national averages — your actual costs will depend on location, zoning, wind and snow loads, and current steel market.",
   },
   {
     q: "Can I add climate control later?",
     a: "Yes. Our buildings are designed to accommodate insulation and HVAC retrofits. We recommend planning for it upfront — the incremental cost at build time is significantly less than a retrofit.",
   },
   {
+    q: "Can you retrofit or convert an existing building into self storage?",
+    a: "Absolutely. Retrofit and conversion projects are one of the most cost-effective ways to get into self storage, starting at $7-$10 per square foot for the building package. If you have an existing structure, we can engineer a storage conversion that maximizes your unit count and revenue potential.",
+  },
+  {
     q: "Do your buildings meet local building codes?",
-    a: "Every building is engineered to meet your specific local codes including wind, snow, and seismic loads. We provide stamped engineering drawings for your permit application.",
+    a: "Every building is engineered to meet your specific local codes including wind, snow, and seismic loads. We provide stamped engineering drawings for your permit application. Costs can vary by area depending on these factors.",
   },
   {
     q: "What kind of ROI can I expect from a self storage facility?",
@@ -29,7 +33,7 @@ const faqs = [
   },
   {
     q: "Do you deliver nationwide?",
-    a: "Yes. We deliver to all 50 states. Freight cost varies by distance from our manufacturing facilities, and we'll include it as a line item in your quote so there are no surprises.",
+    a: "We deliver to 48 states and engineer for all 50. Freight cost varies by distance from our manufacturing facilities, and we'll include it as a line item in your quote so there are no surprises.",
   },
 ];
 
