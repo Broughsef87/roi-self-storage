@@ -94,7 +94,7 @@ const stats = [
 
 const benefits = [
   { icon: <IconChart />, title: "Built for ROI", desc: "We engineer buildings around your pro forma, not the other way around. Every design decision maps to your revenue model." },
-  { icon: <IconShield />, title: "Min. 26ga 80KSI Exterior Panels", desc: "Commercial-grade Galvalume steel panels with 40-year paint warranties. Built to last decades with minimal maintenance." },
+  { icon: <IconShield />, title: "Min. 26ga 80KSI Exterior Panels", desc: "Commercial-grade galvanized steel panels with 40-year paint warranties. Built to last decades with minimal maintenance." },
   { icon: <IconBolt />, title: "Upgrades Available", desc: "Standing seam roofing, moisture barriers, insulated metal panels, double-sided partitions, and more. Customize to your market." },
   { icon: <IconTruck />, title: "Nationwide Delivery", desc: "We ship to 48 states and engineer for all 50. Freight is a line item on your quote — no hidden costs, no surprises." },
   { icon: <IconWrench />, title: "Turnkey Engineering", desc: "Stamped drawings, foundation plans, and erection guides included. Your contractor builds from our blueprints." },
