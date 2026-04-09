@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -23,11 +24,13 @@ export default function Footer() {
               Building Types
             </h4>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="#buildings" className="hover:text-white transition-colors">Standard Storage</a></li>
-              <li><a href="#buildings" className="hover:text-white transition-colors">Climate Controlled</a></li>
-              <li><a href="#buildings" className="hover:text-white transition-colors">Boat &amp; RV Storage</a></li>
-              <li><a href="#buildings" className="hover:text-white transition-colors">Flex Spaces</a></li>
-              <li><a href="#buildings" className="hover:text-white transition-colors">Retrofit / Conversion</a></li>
+              <li><Link href="/mini-storage" className="hover:text-white transition-colors">Mini Storage</Link></li>
+              <li><Link href="/climate-controlled" className="hover:text-white transition-colors">Climate Controlled</Link></li>
+              <li><Link href="/boat-storage" className="hover:text-white transition-colors">Boat Storage</Link></li>
+              <li><Link href="/rv-storage" className="hover:text-white transition-colors">RV Storage</Link></li>
+              <li><Link href="/retrofit" className="hover:text-white transition-colors">Retrofit / Conversion</Link></li>
+              <li><Link href="/portable-storage" className="hover:text-white transition-colors">Portable Containers</Link></li>
+              <li><Link href="/storage-doors" className="hover:text-white transition-colors">Storage Doors</Link></li>
             </ul>
           </div>
 
@@ -37,9 +40,10 @@ export default function Footer() {
               Resources
             </h4>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="#sizes" className="hover:text-white transition-colors">Size &amp; Pricing Guide</a></li>
-              <li><a href="#process" className="hover:text-white transition-colors">How It Works</a></li>
-              <li><a href="#faq" className="hover:text-white transition-colors">FAQ</a></li>
+              <li><Link href="/#sizes" className="hover:text-white transition-colors">Pricing Guide</Link></li>
+              <li><Link href="/specials" className="hover:text-white transition-colors">Specials</Link></li>
+              <li><Link href="/#process" className="hover:text-white transition-colors">How It Works</Link></li>
+              <li><Link href="/#faq" className="hover:text-white transition-colors">FAQ</Link></li>
               <li><a href="https://roimetalbuildings.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">ROI Metal Buildings</a></li>
             </ul>
           </div>
