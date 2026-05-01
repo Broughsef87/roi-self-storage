@@ -16,7 +16,7 @@ export default function Footer() {
               aria-label="Visit ROI Metal Buildings — opens in new tab"
             >
               <Image
-                src="/brand/logo-horizontal-white.png"
+                src="/brand/logo-horizontal-on-dark.png"
                 alt="ROI Self Storage"
                 width={220}
                 height={52}

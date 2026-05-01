@@ -25,7 +25,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5" aria-label="ROI Self Storage — Home">
             <Image
-              src="/brand/logo-horizontal-black.png"
+              src="/brand/logo-horizontal-transparent.png"
               alt="ROI Self Storage"
               width={200}
               height={48}
