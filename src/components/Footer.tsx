@@ -43,6 +43,7 @@ export default function Footer() {
               <li><Link href="/#sizes" className="hover:text-white transition-colors">Pricing Guide</Link></li>
               <li><Link href="/specials" className="hover:text-white transition-colors">Specials</Link></li>
               <li><Link href="/case-studies" className="hover:text-white transition-colors">Case Studies</Link></li>
+              <li><Link href="/about" className="hover:text-white transition-colors">About</Link></li>
               <li><Link href="/#process" className="hover:text-white transition-colors">How It Works</Link></li>
               <li><Link href="/#faq" className="hover:text-white transition-colors">FAQ</Link></li>
               <li><a href="https://roimetalbuildings.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">ROI Metal Buildings</a></li>

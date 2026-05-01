@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import QuoteForm from "@/components/QuoteForm";
 import FAQ from "@/components/FAQ";
+import GoogleReviews from "@/components/GoogleReviews";
 
 /* ------------------------------------------------------------------ */
 /*  SVG icons used inline to avoid dependency                          */
@@ -356,40 +357,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* =================== SOCIAL PROOF BAND =================== */}
-      <section className="py-14 bg-roi-light border-y border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
-            <div className="text-center md:text-left">
-              <p className="text-roi-steel text-sm leading-relaxed italic">
-                &ldquo;They didn&apos;t try to oversell us. Just gave us the numbers and
-                let the project speak for itself. Building went up in 4 months.&rdquo;
-              </p>
-              <p className="mt-3 text-xs font-semibold text-roi-navy">
-                &mdash; Facility Owner, Nashville TN
-              </p>
-            </div>
-            <div className="text-center md:text-left">
-              <p className="text-roi-steel text-sm leading-relaxed italic">
-                &ldquo;Third facility we&apos;ve built with ROI. The engineering is
-                dialed in and the pricing is always competitive.&rdquo;
-              </p>
-              <p className="mt-3 text-xs font-semibold text-roi-navy">
-                &mdash; Portfolio Operator, Charlotte NC
-              </p>
-            </div>
-            <div className="text-center md:text-left">
-              <p className="text-roi-steel text-sm leading-relaxed italic">
-                &ldquo;We came in under budget and ahead of schedule. Occupancy hit
-                85% within six months of opening.&rdquo;
-              </p>
-              <p className="mt-3 text-xs font-semibold text-roi-navy">
-                &mdash; First-Time Investor, Knoxville TN
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* =================== GOOGLE REVIEWS =================== */}
+      <GoogleReviews />
 
       {/* =================== FAQ =================== */}
       <section id="faq" className="py-20 lg:py-28 bg-white">
