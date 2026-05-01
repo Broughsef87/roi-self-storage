@@ -23,11 +23,15 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5">
-            <Image src="/roi-logo.png" alt="ROI Metal Buildings" width={48} height={32} className="h-8 w-auto" />
-            <span className="text-roi-navy font-bold text-lg tracking-tight">
-              ROI Self Storage
-            </span>
+          <Link href="/" className="flex items-center gap-2.5" aria-label="ROI Self Storage — Home">
+            <Image
+              src="/brand/logo-horizontal-black.png"
+              alt="ROI Self Storage"
+              width={200}
+              height={48}
+              className="h-9 lg:h-10 w-auto"
+              priority
+            />
           </Link>
 
           {/* Desktop Nav */}

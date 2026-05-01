@@ -21,6 +21,17 @@ export const metadata: Metadata = {
     "Custom metal self storage buildings engineered for maximum ROI. From mini-storage to climate-controlled facilities. Nationwide delivery. Call (865) 316-9009.",
   keywords:
     "self storage buildings, metal storage buildings, mini storage, climate controlled storage, pre-engineered metal buildings",
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-128x128.png", sizes: "128x128", type: "image/png" },
+      { url: "/favicon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/favicon-512x512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: { url: "/favicon-192x192.png", sizes: "192x192" },
+  },
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({

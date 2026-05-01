@@ -8,13 +8,33 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-2.5 mb-4">
-              <Image src="/roi-logo.png" alt="ROI Metal Buildings" width={48} height={32} className="h-8 w-auto brightness-0 invert" />
-              <span className="font-bold text-lg tracking-tight">ROI Self Storage</span>
-            </div>
+            <a
+              href="https://roimetalbuildings.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mb-4 group"
+              aria-label="Visit ROI Metal Buildings — opens in new tab"
+            >
+              <Image
+                src="/brand/logo-horizontal-white.png"
+                alt="ROI Self Storage"
+                width={220}
+                height={52}
+                className="h-10 w-auto group-hover:opacity-80 transition-opacity"
+              />
+            </a>
             <p className="text-gray-400 text-sm leading-relaxed">
               Pre-engineered metal self storage buildings built for long-term returns.
-              A division of ROI Metal Buildings.
+              A division of{" "}
+              <a
+                href="https://roimetalbuildings.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white hover:text-roi-red transition-colors font-medium underline-offset-2 hover:underline"
+              >
+                ROI Metal Buildings
+              </a>
+              .
             </p>
           </div>
 

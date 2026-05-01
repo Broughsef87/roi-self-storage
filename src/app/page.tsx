@@ -138,10 +138,19 @@ export default function Home() {
         />
         <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 bg-white/10 text-white/80 text-xs font-medium px-3 py-1.5 rounded-full mb-6 backdrop-blur-sm">
+            <a
+              href="https://roimetalbuildings.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 text-white/80 hover:text-white text-xs font-medium px-3 py-1.5 rounded-full mb-6 backdrop-blur-sm transition-colors group"
+              aria-label="Visit ROI Metal Buildings — opens in new tab"
+            >
               <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
               A division of ROI Metal Buildings
-            </div>
+              <svg className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight">
               Metal Storage Buildings<br />
               <span className="text-roi-red">Engineered for Profit</span>
