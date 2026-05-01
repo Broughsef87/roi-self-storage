@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Read(//c/Users/broug/.openclaw/workspace/production/ROI Self Storage Website/**)",
+      "Bash(curl -L -o public/roi-logo.png \"https://roimetalbuildings.com/wp-content/uploads/2024/01/image1-e1706542975540.png\")",
+      "Bash(gh repo:*)",
+      "Bash(npx vercel:*)"
+    ]
+  }
+}

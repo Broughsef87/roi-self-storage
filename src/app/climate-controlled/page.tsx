@@ -95,11 +95,11 @@ export default function ClimateControlledPage() {
             </div>
             <div className="bg-white rounded-lg p-6 border border-gray-200">
               <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">+ Erection &amp; Concrete</div>
-              <div className="text-2xl font-bold text-roi-navy">$13.50–$21/sf</div>
+              <div className="text-2xl font-bold text-roi-navy">$15–$22/sf</div>
             </div>
             <div className="bg-roi-navy rounded-lg p-6">
               <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Est. Total Build</div>
-              <div className="text-2xl font-bold text-white">$30.50–$41/sf</div>
+              <div className="text-2xl font-bold text-white">$32–$42/sf</div>
             </div>
           </div>
           <p className="mt-4 text-xs text-gray-400">

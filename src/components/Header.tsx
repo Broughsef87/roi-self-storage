@@ -64,11 +64,11 @@ export default function Header() {
             <Link href="/specials" className="text-sm font-medium text-roi-steel hover:text-roi-red transition-colors">
               Specials
             </Link>
+            <Link href="/case-studies" className="text-sm font-medium text-roi-steel hover:text-roi-red transition-colors">
+              Case Studies
+            </Link>
             <Link href="/#sizes" className="text-sm font-medium text-roi-steel hover:text-roi-red transition-colors">
               Pricing
-            </Link>
-            <Link href="/#process" className="text-sm font-medium text-roi-steel hover:text-roi-red transition-colors">
-              Our Process
             </Link>
             <Link href="/#faq" className="text-sm font-medium text-roi-steel hover:text-roi-red transition-colors">
               FAQ
@@ -127,8 +127,8 @@ export default function Header() {
             </div>
             <div className="border-t border-gray-100 pt-2 space-y-1">
               <Link href="/specials" onClick={() => setMobileOpen(false)} className="block text-sm font-medium text-roi-steel py-2">Specials</Link>
+              <Link href="/case-studies" onClick={() => setMobileOpen(false)} className="block text-sm font-medium text-roi-steel py-2">Case Studies</Link>
               <Link href="/#sizes" onClick={() => setMobileOpen(false)} className="block text-sm font-medium text-roi-steel py-2">Pricing</Link>
-              <Link href="/#process" onClick={() => setMobileOpen(false)} className="block text-sm font-medium text-roi-steel py-2">Our Process</Link>
               <Link href="/#faq" onClick={() => setMobileOpen(false)} className="block text-sm font-medium text-roi-steel py-2">FAQ</Link>
             </div>
             <div className="pt-3 border-t border-gray-100">

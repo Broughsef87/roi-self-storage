@@ -1,0 +1,37 @@
+Subject: ROI Self Storage Website — Need a few things from your end
+
+Hey [Name],
+
+The new self storage site is built and live on a staging URL. Before we connect your domain and finalize everything, I need a few things from you:
+
+--- DOMAIN CONNECTION ---
+
+1. What's the exact domain you want to use? (e.g. roiselfstorage.com)
+2. Where is the domain registered? (GoDaddy, Namecheap, Google Domains, etc.)
+3. Do you have login access to the DNS settings? Once we're ready to go live, I'll send you two DNS records to add — takes about 2 minutes. Or if you'd rather, you can share registrar access and I'll handle it.
+
+--- SITE CONTENT ---
+
+I built the site with reasonable placeholder content based on your existing roimetalbuildings.com site, but I need you to verify or replace the following:
+
+4. PRICING — I have ballpark ranges for building packages (e.g. 2,400 sq ft / ~20 units / $35K-$55K up to 50,000+ sq ft). Are these in the right ballpark or do you want to adjust? Happy to remove pricing entirely if you'd rather keep it quote-only.
+
+5. BUILDING TYPES — I have five categories listed: Single-Story Drive-Up, Climate Controlled, Multi-Story, Boat & RV Storage, and Mixed-Use Commercial. Anything to add, remove, or rename?
+
+6. LEAD TIMES — I have "8-14 weeks" for manufacturing. Accurate for storage buildings specifically?
+
+7. TESTIMONIALS — I need 2-3 real customer quotes with first name and city/state. Even short ones work. If you don't have any handy, I can remove the section for now and add them later.
+
+8. STATS — I'm using "90+ years combined experience" and "50 states served" from your main site. Still accurate for this division?
+
+9. FAQ — I wrote 7 questions and answers covering timelines, building codes, sizing, ROI expectations, climate control, nationwide delivery, etc. I'll send a link so you can review and flag anything that needs correcting.
+
+10. FORM SUBMISSIONS — Where should quote requests go? An email address, a CRM, or something else? Right now the form collects name, phone, email, building type, size, location, and project details.
+
+No rush on all of it at once — if you can get me #1-3 first, I can get the domain pointed while we dial in the content.
+
+Here's the staging link so you can see where we're at: https://roi-self-storage-broughsef87s-projects.vercel.app
+
+Let me know if you have any questions.
+
+[Your name]
