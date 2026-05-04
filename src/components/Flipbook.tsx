@@ -50,29 +50,31 @@ export default function Flipbook({ folder, pageCount, aspectRatio = 1.55, title,
     setIsMounted(true);
   }, []);
 
-  // Compute responsive book size — bigger and more featured
+  // Compute responsive book size — fills the viewport
   useEffect(() => {
     function updateSize() {
       const el = containerRef.current;
       if (!el) return;
-      const containerWidth = el.clientWidth;
+      const viewportW = window.innerWidth;
       const viewportH = window.innerHeight;
-      const isMobile = window.innerWidth < 768;
+      const isMobile = viewportW < 768;
 
-      // Each page width: full width on mobile, half spread on desktop
-      const pageW = isMobile ? containerWidth : containerWidth / 2;
-      // Bumped up max page size — bigger, more presence
-      const maxPageW = isMobile ? 700 : 900;
-      const finalPageW = Math.min(pageW, maxPageW);
-      let finalPageH = Math.round(finalPageW / aspectRatio);
+      // Use 95% of the viewport width for the spread (or single page on mobile).
+      // Cap height at 88% of viewport so the book always fits on screen.
+      const maxSpreadW = Math.min(viewportW * 0.95, 2400);
+      const pageW = isMobile ? maxSpreadW : maxSpreadW / 2;
+      let pageH = Math.round(pageW / aspectRatio);
 
-      // Cap height to viewport so the book always fits comfortably on screen
-      const maxH = Math.round(viewportH * 0.82);
-      if (finalPageH > maxH) {
-        finalPageH = maxH;
+      const maxH = Math.round(viewportH * 0.88);
+      if (pageH > maxH) {
+        pageH = maxH;
+        // recompute width from height to preserve aspect ratio
+        const wFromH = Math.round(pageH * aspectRatio);
+        setSize({ w: wFromH, h: pageH });
+        return;
       }
 
-      setSize({ w: finalPageW, h: finalPageH });
+      setSize({ w: pageW, h: pageH });
     }
     updateSize();
     window.addEventListener("resize", updateSize);
@@ -95,13 +97,13 @@ export default function Flipbook({ folder, pageCount, aspectRatio = 1.55, title,
   return (
     <div className="w-full">
       {(title || downloadHref) && (
-        <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-          {title && <h3 className="text-xl lg:text-2xl font-bold text-roi-navy">{title}</h3>}
+        <div className="flex items-center justify-between mb-6 flex-wrap gap-3 max-w-7xl mx-auto px-4">
+          {title && <h3 className="text-xl lg:text-2xl font-bold text-current">{title}</h3>}
           {downloadHref && (
             <a
               href={downloadHref}
               download
-              className="inline-flex items-center gap-2 text-sm font-semibold text-roi-red hover:text-roi-darkred transition-colors"
+              className="inline-flex items-center gap-2 bg-roi-red hover:bg-roi-darkred text-white font-semibold text-sm px-5 py-2.5 rounded-md transition-colors"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -121,9 +123,9 @@ export default function Flipbook({ folder, pageCount, aspectRatio = 1.55, title,
               height={size.h}
               size="stretch"
               minWidth={300}
-              maxWidth={1400}
+              maxWidth={2000}
               minHeight={200}
-              maxHeight={1000}
+              maxHeight={1600}
               maxShadowOpacity={0.5}
               showCover={false}
               mobileScrollSupport={true}

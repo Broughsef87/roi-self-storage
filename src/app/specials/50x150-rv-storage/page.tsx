@@ -98,10 +98,10 @@ export default function Special50x150RVPage() {
         </div>
       </section>
 
-      {/* =================== BLUEPRINTS FLIPBOOK =================== */}
+      {/* =================== BLUEPRINTS FLIPBOOK (full-bleed) =================== */}
       <section className="py-16 lg:py-24 bg-roi-navy">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="text-center mb-10">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-10">
+          <div className="text-center">
             <div className="text-xs font-semibold text-roi-red uppercase tracking-wider mb-3">
               Engineering Drawings
             </div>
@@ -113,16 +113,21 @@ export default function Special50x150RVPage() {
               slab plan, floor plan. This is the same drawing set we deliver with every order.
             </p>
           </div>
-          <div className="bg-roi-light rounded-xl p-6 lg:p-10 shadow-2xl">
-            <Flipbook
-              folder="50x150-rv-storage"
-              pageCount={7}
-              aspectRatio={1.55}
-              title="50' × 150' × 16' RV Storage — Drawing Set"
-              downloadHref="/blueprints/50x150-rv-storage/blueprint.pdf"
-            />
-          </div>
-          <p className="mt-6 text-center text-xs text-gray-500">
+        </div>
+
+        {/* Full-bleed wrapper so the book can grow to ~95vw */}
+        <div className="w-full px-2 sm:px-4 text-white">
+          <Flipbook
+            folder="50x150-rv-storage"
+            pageCount={7}
+            aspectRatio={1.55}
+            title="50' × 150' × 16' RV Storage — Drawing Set"
+            downloadHref="/blueprints/50x150-rv-storage/blueprint.pdf"
+          />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <p className="mt-8 text-center text-xs text-gray-500">
             For approval only — not for construction. Final stamped drawings are issued with your order.
           </p>
         </div>
