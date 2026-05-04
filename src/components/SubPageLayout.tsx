@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Header from "./Header";
 import Footer from "./Footer";
 import QuoteForm from "./QuoteForm";
@@ -6,9 +7,11 @@ interface SubPageLayoutProps {
   title: string;
   subtitle: string;
   children: React.ReactNode;
+  /** Optional render image displayed on the right side of the hero on desktop */
+  heroImage?: { src: string; alt: string };
 }
 
-export default function SubPageLayout({ title, subtitle, children }: SubPageLayoutProps) {
+export default function SubPageLayout({ title, subtitle, children, heroImage }: SubPageLayoutProps) {
   return (
     <>
       <Header />
@@ -24,27 +27,41 @@ export default function SubPageLayout({ title, subtitle, children }: SubPageLayo
           }}
         />
         <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-[1.1] tracking-tight">
-              {title}
-            </h1>
-            <p className="mt-4 text-lg text-gray-300 leading-relaxed max-w-xl">
-              {subtitle}
-            </p>
-            <div className="mt-6 flex flex-col sm:flex-row gap-4">
-              <a
-                href="#quote"
-                className="inline-flex items-center justify-center bg-roi-red text-white font-semibold px-7 py-3.5 rounded-md hover:bg-roi-darkred transition-colors text-sm"
-              >
-                Get Your Free Quote
-              </a>
-              <a
-                href="tel:8653169009"
-                className="inline-flex items-center justify-center border border-white/20 text-white font-medium px-7 py-3.5 rounded-md hover:bg-white/5 transition-colors text-sm"
-              >
-                Call (865) 316-9009
-              </a>
+          <div className={heroImage ? "grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center" : ""}>
+            <div className={heroImage ? "max-w-2xl" : "max-w-3xl"}>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-[1.1] tracking-tight">
+                {title}
+              </h1>
+              <p className="mt-4 text-lg text-gray-300 leading-relaxed max-w-xl">
+                {subtitle}
+              </p>
+              <div className="mt-6 flex flex-col sm:flex-row gap-4">
+                <a
+                  href="#quote"
+                  className="inline-flex items-center justify-center bg-roi-red text-white font-semibold px-7 py-3.5 rounded-md hover:bg-roi-darkred transition-colors text-sm"
+                >
+                  Get Your Free Quote
+                </a>
+                <a
+                  href="tel:8653169009"
+                  className="inline-flex items-center justify-center border border-white/20 text-white font-medium px-7 py-3.5 rounded-md hover:bg-white/5 transition-colors text-sm"
+                >
+                  Call (865) 316-9009
+                </a>
+              </div>
             </div>
+            {heroImage && (
+              <div className="relative aspect-square lg:aspect-[4/3] rounded-xl overflow-hidden bg-roi-dark/40 shadow-2xl ring-1 ring-white/10">
+                <Image
+                  src={heroImage.src}
+                  alt={heroImage.alt}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 600px"
+                  priority
+                />
+              </div>
+            )}
           </div>
         </div>
       </section>
