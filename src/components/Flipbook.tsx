@@ -112,7 +112,6 @@ export default function Flipbook({ folder, pageCount, aspectRatio = 1.55, title,
         {size && (
           <>
             <div className="w-full flex justify-center">
-              {/* @ts-expect-error react-pageflip types are loose */}
               <HTMLFlipBook
                 ref={bookRef}
                 width={size.w}
