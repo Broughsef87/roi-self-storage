@@ -39,7 +39,7 @@ export default function Special50x150RVPage() {
       subtitle="Room for everything that matters. 10 oversized 15×50 bays with 12×14 Janus Model 1000 doors. Built for Class A motorhomes, fifth wheels, and large trailers."
       heroImage={{
         src: "/specials/50x150-rv-storage-render.png",
-        alt: "Rendering of the 50' × 150' × 16' RV Starter storage building with red roll-up doors",
+        alt: "Rendering of the 50' × 150' × 16' RV Starter storage building with red trim and navy roll-up doors",
       }}
     >
       <section className="py-16 lg:py-24 bg-white">
