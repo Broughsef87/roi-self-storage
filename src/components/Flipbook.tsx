@@ -44,6 +44,10 @@ export default function Flipbook({ folder, pageCount, aspectRatio = 1.55, title,
   const bookRef = useRef<any>(null);
   const [size, setSize] = useState<{ w: number; h: number; mobile: boolean } | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const goPrev = () => bookRef.current?.pageFlip()?.flipPrev();
+  const goNext = () => bookRef.current?.pageFlip()?.flipNext();
 
   useEffect(() => {
     setIsMounted(true);
@@ -138,6 +142,7 @@ export default function Flipbook({ folder, pageCount, aspectRatio = 1.55, title,
             style={{ background: "transparent" }}
             className=""
             startPage={0}
+            onFlip={(e: any) => setCurrentPage(e.data)}
           >
             {pages.map((p) => (
               <Page
@@ -150,6 +155,47 @@ export default function Flipbook({ folder, pageCount, aspectRatio = 1.55, title,
           </HTMLFlipBook>
         )}
       </div>
+
+      {/* Controls — prev / page indicator / next */}
+      {size && (
+        <div className="mt-8 flex flex-col items-center gap-3">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={goPrev}
+              disabled={currentPage === 0}
+              className="w-12 h-12 rounded-full border-2 border-current/30 hover:border-current bg-current/5 hover:bg-current/10 transition-colors flex items-center justify-center cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+              aria-label="Previous page"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.25}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            <div className="text-center min-w-[120px]">
+              <div className="text-2xl font-bold tabular-nums">
+                {currentPage + 1}
+                <span className="text-current/40 font-normal mx-1.5">/</span>
+                <span className="text-current/60">{pageCount}</span>
+              </div>
+              <div className="text-[10px] uppercase tracking-wider text-current/60 mt-0.5">Page</div>
+            </div>
+
+            <button
+              onClick={goNext}
+              disabled={currentPage >= pageCount - 1}
+              className="w-12 h-12 rounded-full border-2 border-current/30 hover:border-current bg-current/5 hover:bg-current/10 transition-colors flex items-center justify-center cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+              aria-label="Next page"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.25}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+          <p className="text-xs text-current/60">
+            Click the arrows or drag a page corner to flip
+          </p>
+        </div>
+      )}
     </div>
   );
 }
