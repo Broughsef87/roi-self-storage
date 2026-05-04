@@ -41,9 +41,8 @@ const Page = forwardRef<HTMLDivElement, { src: string; alt: string; pageNum: num
 );
 
 export default function Flipbook({ folder, pageCount, aspectRatio = 1.55, title, downloadHref }: FlipbookProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
   const bookRef = useRef<any>(null);
-  const [size, setSize] = useState<{ w: number; h: number } | null>(null);
+  const [size, setSize] = useState<{ w: number; h: number; mobile: boolean } | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -53,28 +52,24 @@ export default function Flipbook({ folder, pageCount, aspectRatio = 1.55, title,
   // Compute responsive book size — fills the viewport
   useEffect(() => {
     function updateSize() {
-      const el = containerRef.current;
-      if (!el) return;
       const viewportW = window.innerWidth;
       const viewportH = window.innerHeight;
       const isMobile = viewportW < 768;
 
-      // Use 95% of the viewport width for the spread (or single page on mobile).
-      // Cap height at 88% of viewport so the book always fits on screen.
-      const maxSpreadW = Math.min(viewportW * 0.95, 2400);
-      const pageW = isMobile ? maxSpreadW : maxSpreadW / 2;
+      // Desktop: two-page spread fills 95% of viewport width.
+      // Mobile: single page fills 95% of viewport width.
+      // In both cases cap height at 85% of viewport so the book fits on screen.
+      const targetSpreadW = Math.min(viewportW * 0.95, 2800);
+      let pageW = isMobile ? targetSpreadW : targetSpreadW / 2;
       let pageH = Math.round(pageW / aspectRatio);
 
-      const maxH = Math.round(viewportH * 0.88);
+      const maxH = Math.round(viewportH * 0.85);
       if (pageH > maxH) {
         pageH = maxH;
-        // recompute width from height to preserve aspect ratio
-        const wFromH = Math.round(pageH * aspectRatio);
-        setSize({ w: wFromH, h: pageH });
-        return;
+        pageW = Math.round(pageH * aspectRatio);
       }
 
-      setSize({ w: pageW, h: pageH });
+      setSize({ w: pageW, h: pageH, mobile: isMobile });
     }
     updateSize();
     window.addEventListener("resize", updateSize);
@@ -88,8 +83,8 @@ export default function Flipbook({ folder, pageCount, aspectRatio = 1.55, title,
 
   if (!isMounted) {
     return (
-      <div ref={containerRef} className="w-full">
-        <div className="aspect-[1.55] w-full bg-gray-100 rounded-lg animate-pulse" />
+      <div className="w-full">
+        <div className="aspect-[3.1] w-full bg-gray-100 rounded-lg animate-pulse" />
       </div>
     );
   }
@@ -114,45 +109,45 @@ export default function Flipbook({ folder, pageCount, aspectRatio = 1.55, title,
         </div>
       )}
 
-      <div ref={containerRef} className="w-full flex justify-center">
+      <div className="w-full flex justify-center">
         {size && (
-          <div className="flipbook-shell">
-            <HTMLFlipBook
-              ref={bookRef}
-              width={size.w}
-              height={size.h}
-              size="stretch"
-              minWidth={300}
-              maxWidth={2000}
-              minHeight={200}
-              maxHeight={1600}
-              maxShadowOpacity={0.5}
-              showCover={false}
-              mobileScrollSupport={true}
-              drawShadow={true}
-              flippingTime={750}
-              usePortrait={true}
-              startZIndex={0}
-              autoSize={false}
-              clickEventForward={false}
-              useMouseEvents={true}
-              swipeDistance={30}
-              showPageCorners={true}
-              disableFlipByClick={false}
-              style={{ background: "transparent" }}
-              className=""
-              startPage={0}
-            >
-              {pages.map((p) => (
-                <Page
-                  key={p.pageNum}
-                  src={p.src}
-                  alt={`Blueprint page ${p.pageNum} of ${pageCount}`}
-                  pageNum={p.pageNum}
-                />
-              ))}
-            </HTMLFlipBook>
-          </div>
+          <HTMLFlipBook
+            // Re-mount whenever dimensions or portrait/landscape flip
+            key={`${size.w}x${size.h}-${size.mobile ? "p" : "l"}`}
+            ref={bookRef}
+            width={size.w}
+            height={size.h}
+            size="fixed"
+            minWidth={200}
+            maxWidth={3000}
+            minHeight={150}
+            maxHeight={2000}
+            maxShadowOpacity={0.5}
+            showCover={false}
+            mobileScrollSupport={true}
+            drawShadow={true}
+            flippingTime={750}
+            usePortrait={size.mobile}
+            startZIndex={0}
+            autoSize={false}
+            clickEventForward={false}
+            useMouseEvents={true}
+            swipeDistance={30}
+            showPageCorners={true}
+            disableFlipByClick={false}
+            style={{ background: "transparent" }}
+            className=""
+            startPage={0}
+          >
+            {pages.map((p) => (
+              <Page
+                key={p.pageNum}
+                src={p.src}
+                alt={`Blueprint page ${p.pageNum} of ${pageCount}`}
+                pageNum={p.pageNum}
+              />
+            ))}
+          </HTMLFlipBook>
         )}
       </div>
     </div>
