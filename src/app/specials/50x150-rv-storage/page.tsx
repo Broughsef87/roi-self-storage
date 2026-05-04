@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import SubPageLayout from "@/components/SubPageLayout";
 import PageFAQ from "@/components/PageFAQ";
+import Flipbook from "@/components/Flipbook";
 
 export const metadata: Metadata = {
   title: "The RV Starter: 50x150x16 RV Storage | ROI Self Storage",
@@ -93,6 +94,36 @@ export default function Special50x150RVPage() {
 
           <p className="mt-8 text-xs text-gray-400">
             Pricing is for immediate sale and subject to change based on material availability.
+          </p>
+        </div>
+      </section>
+
+      {/* =================== BLUEPRINTS FLIPBOOK =================== */}
+      <section className="py-16 lg:py-24 bg-roi-navy">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <div className="text-xs font-semibold text-roi-red uppercase tracking-wider mb-3">
+              Engineering Drawings
+            </div>
+            <h2 className="text-3xl lg:text-4xl font-bold text-white tracking-tight">
+              Browse the actual blueprints
+            </h2>
+            <p className="mt-3 text-gray-400 max-w-2xl mx-auto">
+              Flip through every page of the engineering package — structural notes, framing,
+              slab plan, floor plan. This is the same drawing set we deliver with every order.
+            </p>
+          </div>
+          <div className="bg-roi-light rounded-xl p-6 lg:p-10 shadow-2xl">
+            <Flipbook
+              folder="50x150-rv-storage"
+              pageCount={7}
+              aspectRatio={1.55}
+              title="50' × 150' × 16' RV Storage — Drawing Set"
+              downloadHref="/blueprints/50x150-rv-storage/blueprint.pdf"
+            />
+          </div>
+          <p className="mt-6 text-center text-xs text-gray-500">
+            For approval only — not for construction. Final stamped drawings are issued with your order.
           </p>
         </div>
       </section>
