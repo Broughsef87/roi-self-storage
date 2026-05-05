@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 interface Review {
   name: string;
@@ -120,22 +120,82 @@ function StarRow({ rating }: { rating: number }) {
 }
 
 export default function GoogleReviews() {
+  const scrollerRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+
+  /** Returns each card's outer width (including gap) and how many fit in the viewport */
+  const measure = useCallback(() => {
+    const el = scrollerRef.current;
+    if (!el) return null;
+    const cards = el.querySelectorAll<HTMLElement>("[data-review-card]");
+    const first = cards[0];
+    if (!first) return null;
+    const cardW = first.getBoundingClientRect().width;
+    const gap = parseFloat(getComputedStyle(el).columnGap || getComputedStyle(el).gap || "0") || 0;
+    const step = cardW + gap;
+    const visibleCount = Math.max(1, Math.round(el.clientWidth / step));
+    return { step, cardW, gap, visibleCount, total: cards.length, scroller: el };
+  }, []);
+
+  /** Scroll so card at `index` becomes the leftmost visible card. */
+  const scrollToIndex = useCallback((index: number, smooth = true) => {
+    const m = measure();
+    if (!m) return;
+    const maxIndex = Math.max(0, m.total - m.visibleCount);
+    const clamped = Math.min(Math.max(index, 0), maxIndex);
+    m.scroller.scrollTo({ left: clamped * m.step, behavior: smooth ? "smooth" : "auto" });
+  }, [measure]);
+
+  /** Advance one card. If past the last possible left-card index, wrap to 0. */
+  const advance = useCallback((delta: number) => {
+    const m = measure();
+    if (!m) return;
+    const maxIndex = Math.max(0, m.total - m.visibleCount);
+    let next = active + delta;
+    if (next > maxIndex) next = 0;
+    if (next < 0) next = maxIndex;
+    setActive(next);
+    scrollToIndex(next);
+  }, [active, measure, scrollToIndex]);
 
   // Auto-advance every 5s
   useEffect(() => {
     if (paused) return;
-    const id = setInterval(() => {
-      setActive((a) => (a + 1) % reviews.length);
-    }, 5000);
+    const id = setInterval(() => advance(1), 5000);
     return () => clearInterval(id);
-  }, [paused]);
+  }, [paused, advance]);
 
-  // Determine visible cards (3 on desktop, 1 on mobile — handled via CSS)
+  // Keep `active` in sync when user manually scrolls (e.g. swipes)
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const m = measure();
+        if (!m) return;
+        const idx = Math.round(el.scrollLeft / m.step);
+        setActive(idx);
+      });
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, [measure]);
+
+  // Re-clamp when the window resizes (visible count may change)
+  useEffect(() => {
+    const onResize = () => scrollToIndex(active, false);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [active, scrollToIndex]);
+
   return (
-    <section className="py-16 lg:py-24 bg-roi-light overflow-hidden">
+    <section className="py-16 lg:py-24 bg-roi-light">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-10">
@@ -169,58 +229,54 @@ export default function GoogleReviews() {
           </div>
         </div>
 
-        {/* Carousel */}
+        {/* Carousel — native scroll-snap so all the math is handled by the browser */}
         <div
-          ref={containerRef}
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
           className="relative"
         >
-          <div className="overflow-hidden">
-            <div
-              className="flex transition-transform duration-700 ease-in-out gap-4 lg:gap-6"
-              style={{
-                transform: `translateX(calc(-${active} * (100% / 1) - ${active} * 1rem))`,
-              }}
-            >
-              {reviews.map((r, i) => (
-                <div
-                  key={i}
-                  className="shrink-0 w-full sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-3rem)/3)] bg-white rounded-xl border border-gray-200 p-6 lg:p-7 shadow-sm"
-                  aria-hidden={i !== active}
-                >
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className={`w-11 h-11 rounded-full ${r.color} flex items-center justify-center text-white font-bold text-sm shrink-0`}>
-                      {r.initials}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="font-semibold text-roi-navy truncate">{r.name}</div>
-                        <GoogleLogo />
-                      </div>
-                      <div className="text-xs text-gray-400 mt-0.5">{r.date}</div>
-                    </div>
+          <div
+            ref={scrollerRef}
+            className="flex gap-4 lg:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 -mx-2 px-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            style={{ scrollSnapType: "x mandatory" }}
+          >
+            {reviews.map((r, i) => (
+              <article
+                key={i}
+                data-review-card
+                className="snap-start shrink-0 w-full sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-3rem)/3)] bg-white rounded-xl border border-gray-200 p-6 lg:p-7 shadow-sm"
+              >
+                <div className="flex items-start gap-3 mb-4">
+                  <div className={`w-11 h-11 rounded-full ${r.color} flex items-center justify-center text-white font-bold text-sm shrink-0`}>
+                    {r.initials}
                   </div>
-                  <StarRow rating={r.rating} />
-                  <p className="mt-3 text-sm text-roi-steel leading-relaxed line-clamp-6">
-                    {r.text}
-                  </p>
-                  {r.project && (
-                    <div className="mt-4 pt-4 border-t border-gray-100">
-                      <span className="text-xs font-semibold text-roi-red uppercase tracking-wider">
-                        {r.project}
-                      </span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="font-semibold text-roi-navy truncate">{r.name}</div>
+                      <GoogleLogo />
                     </div>
-                  )}
+                    <div className="text-xs text-gray-400 mt-0.5">{r.date}</div>
+                  </div>
                 </div>
-              ))}
-            </div>
+                <StarRow rating={r.rating} />
+                <p className="mt-3 text-sm text-roi-steel leading-relaxed line-clamp-6">
+                  {r.text}
+                </p>
+                {r.project && (
+                  <div className="mt-4 pt-4 border-t border-gray-100">
+                    <span className="text-xs font-semibold text-roi-red uppercase tracking-wider">
+                      {r.project}
+                    </span>
+                  </div>
+                )}
+              </article>
+            ))}
           </div>
 
           {/* Controls */}
           <div className="flex items-center justify-between mt-8">
             <button
-              onClick={() => setActive((a) => (a - 1 + reviews.length) % reviews.length)}
+              onClick={() => advance(-1)}
               className="w-10 h-10 rounded-full border border-gray-300 bg-white text-roi-navy hover:bg-roi-navy hover:text-white hover:border-roi-navy transition-colors flex items-center justify-center cursor-pointer"
               aria-label="Previous review"
             >
@@ -234,7 +290,7 @@ export default function GoogleReviews() {
               {reviews.map((_, i) => (
                 <button
                   key={i}
-                  onClick={() => setActive(i)}
+                  onClick={() => { setActive(i); scrollToIndex(i); }}
                   className={`transition-all rounded-full cursor-pointer ${
                     i === active ? "w-8 h-2 bg-roi-red" : "w-2 h-2 bg-gray-300 hover:bg-gray-400"
                   }`}
@@ -244,7 +300,7 @@ export default function GoogleReviews() {
             </div>
 
             <button
-              onClick={() => setActive((a) => (a + 1) % reviews.length)}
+              onClick={() => advance(1)}
               className="w-10 h-10 rounded-full border border-gray-300 bg-white text-roi-navy hover:bg-roi-navy hover:text-white hover:border-roi-navy transition-colors flex items-center justify-center cursor-pointer"
               aria-label="Next review"
             >
