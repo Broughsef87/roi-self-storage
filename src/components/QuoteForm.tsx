@@ -4,10 +4,44 @@ import { useState } from "react";
 
 export default function QuoteForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSubmitted(true);
+    if (submitting) return;
+
+    setError(null);
+    setSubmitting(true);
+
+    const formData = new FormData(e.currentTarget);
+    const payload = Object.fromEntries(formData.entries());
+
+    try {
+      const res = await fetch("/api/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+
+      if (!res.ok || !data.ok) {
+        setError(
+          data.error ||
+            "Something went wrong on our end. Please call (865) 316-9009 or try again in a moment."
+        );
+        setSubmitting(false);
+        return;
+      }
+
+      setSubmitted(true);
+    } catch {
+      setError(
+        "Couldn't reach our server. Check your connection and try again, or call (865) 316-9009."
+      );
+      setSubmitting(false);
+    }
   }
 
   if (submitted) {
@@ -35,7 +69,8 @@ export default function QuoteForm() {
             id="name"
             name="name"
             required
-            className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors"
+            disabled={submitting}
+            className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors disabled:bg-gray-50 disabled:text-gray-400"
             placeholder="John Smith"
           />
         </div>
@@ -48,7 +83,8 @@ export default function QuoteForm() {
             id="phone"
             name="phone"
             required
-            className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors"
+            disabled={submitting}
+            className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors disabled:bg-gray-50 disabled:text-gray-400"
             placeholder="(555) 123-4567"
           />
         </div>
@@ -62,7 +98,8 @@ export default function QuoteForm() {
           id="email"
           name="email"
           required
-          className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors"
+          disabled={submitting}
+          className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors disabled:bg-gray-50 disabled:text-gray-400"
           placeholder="john@company.com"
         />
       </div>
@@ -74,7 +111,8 @@ export default function QuoteForm() {
           <select
             id="buildingType"
             name="buildingType"
-            className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors bg-white"
+            disabled={submitting}
+            className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors bg-white disabled:bg-gray-50 disabled:text-gray-400"
           >
             <option value="">Select a type...</option>
             <option value="standard">Standard Storage</option>
@@ -92,7 +130,8 @@ export default function QuoteForm() {
           <select
             id="size"
             name="size"
-            className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors bg-white"
+            disabled={submitting}
+            className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors bg-white disabled:bg-gray-50 disabled:text-gray-400"
           >
             <option value="">Select size range...</option>
             <option value="small">Under 5,000 sq ft</option>
@@ -111,7 +150,8 @@ export default function QuoteForm() {
           type="text"
           id="location"
           name="location"
-          className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors"
+          disabled={submitting}
+          className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors disabled:bg-gray-50 disabled:text-gray-400"
           placeholder="Nashville, TN"
         />
       </div>
@@ -123,15 +163,41 @@ export default function QuoteForm() {
           id="details"
           name="details"
           rows={3}
-          className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors resize-none"
+          disabled={submitting}
+          className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors resize-none disabled:bg-gray-50 disabled:text-gray-400"
           placeholder="Number of units, timeline, special requirements..."
         />
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-md p-3 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
       <button
         type="submit"
-        className="w-full bg-roi-red text-white font-semibold py-3.5 px-6 rounded-md hover:bg-roi-navy transition-colors text-sm cursor-pointer"
+        disabled={submitting}
+        className="w-full bg-roi-red text-white font-semibold py-3.5 px-6 rounded-md hover:bg-roi-navy transition-colors text-sm cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
-        Request My Free Quote
+        {submitting ? (
+          <>
+            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" className="opacity-25" />
+              <path
+                d="M4 12a8 8 0 018-8"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+                fill="none"
+                className="opacity-75"
+              />
+            </svg>
+            Sending...
+          </>
+        ) : (
+          "Request My Free Quote"
+        )}
       </button>
       <p className="text-xs text-gray-400 text-center">
         No pressure. No obligation. Just straight numbers.
