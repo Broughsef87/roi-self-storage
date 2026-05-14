@@ -14,13 +14,13 @@ import { NextResponse } from "next/server";
  *
  * Env vars consumed:
  *   METHOD_API_KEY     (required)  — Method CRM API key
- *   METHOD_TABLE       (optional)  — defaults to "Contact"
+ *   METHOD_TABLE       (optional)  — defaults to "Contacts"
  *   RESEND_API_KEY     (optional)  — enables backup email
  *   RESEND_FROM        (optional)  — e.g. "leads@roiselfstoragebuildings.com"
  *   NOTIFY_EMAIL       (optional)  — defaults to info@roimetalbuildings.com
  */
 
-const METHOD_API_BASE = "https://rest.method.me/api/v3";
+const METHOD_API_BASE = "https://rest.method.me/api/v1";
 
 type Payload = {
   name?: string;
@@ -57,19 +57,23 @@ async function pushToMethod(p: Payload): Promise<{ ok: boolean; error?: string }
   const apiKey = process.env.METHOD_API_KEY;
   if (!apiKey) return { ok: false, error: "METHOD_API_KEY not configured" };
 
-  const table = process.env.METHOD_TABLE || "Contact";
+  const table = process.env.METHOD_TABLE || "Contacts";
   const { firstName, lastName } = splitName(p.name ?? "");
 
-  // Method's Contact table expects FirstName / LastName / Email / Phone / Notes.
-  // If a custom field doesn't exist, Method will return a 400 and we'll see it
-  // in the logs — but the common base fields below are safe across most accounts.
+  // Method's Contacts schema: FirstName / LastName / Email / Phone / Note (singular).
+  // Lead-only entries set IsLeadStatusOnly=true and EntityType="Customer Lead" so
+  // they show up in the Leads view rather than as full Customers.
   const body: Record<string, unknown> = {
     FirstName: firstName,
     LastName: lastName,
     Email: p.email ?? "",
     Phone: p.phone ?? "",
-    Notes: buildNotes(p),
-    LeadSource: "ROI Self Storage Website",
+    Note: buildNotes(p),
+    LeadSource: "Website",
+    LeadStatus: "1 - New",
+    IsLeadStatusOnly: true,
+    EntityType: "Customer Lead",
+    IsActive: true,
   };
 
   try {
