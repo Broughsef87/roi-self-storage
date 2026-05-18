@@ -16,11 +16,26 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
+  // Canonical base URL. Without this, Next.js infers it from the Vercel preview
+  // URL and Google can flag the apex (no-www) version as a "Page with redirect"
+  // since the canonical tag wouldn't pin it to www.
+  metadataBase: new URL("https://www.roiselfstoragebuildings.com"),
+  alternates: {
+    canonical: "/",
+  },
   title: "ROI Self Storage | Pre-Engineered Metal Storage Buildings",
   description:
     "Custom metal self storage buildings engineered for maximum ROI. From mini-storage to climate-controlled facilities. Nationwide delivery. Call (865) 316-9009.",
   keywords:
     "self storage buildings, metal storage buildings, mini storage, climate controlled storage, pre-engineered metal buildings",
+  openGraph: {
+    type: "website",
+    url: "https://www.roiselfstoragebuildings.com",
+    siteName: "ROI Self Storage",
+    title: "ROI Self Storage | Pre-Engineered Metal Storage Buildings",
+    description:
+      "Custom metal self storage buildings engineered for maximum ROI. Standard, climate controlled, boat & RV, flex, and retrofit configurations. Nationwide delivery.",
+  },
   icons: {
     icon: [
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
