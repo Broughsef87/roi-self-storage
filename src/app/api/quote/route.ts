@@ -13,11 +13,14 @@ import { NextResponse } from "next/server";
  * internally on new Contact creation.
  *
  * Env vars consumed:
- *   METHOD_API_KEY     (required)  — Method CRM API key
- *   METHOD_TABLE       (optional)  — defaults to "Contacts"
- *   RESEND_API_KEY     (optional)  — enables backup email
- *   RESEND_FROM        (optional)  — e.g. "leads@roiselfstoragebuildings.com"
- *   NOTIFY_EMAIL       (optional)  — defaults to info@roimetalbuildings.com
+ *   METHOD_API_KEY            (required)  — Method CRM API key
+ *   METHOD_TABLE              (optional)  — defaults to "Contacts"
+ *   METHOD_LEAD_ASSIGNEE_ID   (optional)  — Method user RecordID for default
+ *                                            lead assignee. Defaults to 5 (Dave Maxe).
+ *                                            4=Lisa, 5=Dave, 10=Blaise, 12=Jamie, 14=Steven.
+ *   RESEND_API_KEY            (optional)  — enables backup email
+ *   RESEND_FROM               (optional)  — e.g. "leads@roiselfstoragebuildings.com"
+ *   NOTIFY_EMAIL              (optional)  — defaults to info@roimetalbuildings.com
  */
 
 const METHOD_API_BASE = "https://rest.method.me/api/v1";
@@ -129,10 +132,18 @@ async function pushToMethod(p: Payload): Promise<{ ok: boolean; error?: string; 
     // ActivityType_RecordID:   2  = "Phone Call Outgoing" (what Method's existing
     //                              web-to-lead flow uses; surfaces in sales workflow)
     // ActivityStatus_RecordID: 1  = "Not Started"
-    // AssignedTo_RecordID:     not set — Method routes per their own rules.
+    // AssignedTo_RecordID:     REQUIRED by Method. Configurable via env var.
+    //                          Known IDs in their account:
+    //                            4  = Lisa Wirth
+    //                            5  = Dave Maxe (default)
+    //                            10 = Blaise Roper
+    //                            12 = Jamie Lawson
+    //                            14 = Steven Braisted
+    const assignedToId = Number(process.env.METHOD_LEAD_ASSIGNEE_ID || 5);
     const activityBody = {
       ActivityType_RecordID: 2,
       ActivityStatus_RecordID: 1,
+      AssignedTo_RecordID: assignedToId,
       Contacts: contactId,
       Comments: buildActivityComments(p),
     };
@@ -145,14 +156,10 @@ async function pushToMethod(p: Payload): Promise<{ ok: boolean; error?: string; 
     });
     if (!activityRes.ok) {
       const text = await activityRes.text().catch(() => "");
+      // Contact was created but Activity failed — log it, still treat as success
+      // (so the lead isn't lost) but warn so we can diagnose.
       console.warn(`[quote] Activity creation failed for contact ${contactId}: ${activityRes.status} ${text.slice(0, 500)}`);
-      // TEMP DEBUG: return the activity error in the response so we can see why
-      // it's failing in production. Remove this once verified working.
-      return {
-        ok: true,
-        contactId,
-        error: `Activity step failed ${activityRes.status}: ${text.slice(0, 400)}`,
-      };
+      return { ok: true, contactId };
     }
     const activityIdRaw = (await activityRes.text()).trim().replace(/^"|"$/g, "");
     const activityId = Number(activityIdRaw);
@@ -279,14 +286,5 @@ export async function POST(req: Request) {
     console.warn("[quote] Email skipped/failed (Method push succeeded):", emailRes.error);
   }
 
-  // TEMP DEBUG: expose contactId / activityId / any partial errors in the
-  // response so we can verify both steps fired from outside. Strip once stable.
-  return NextResponse.json({
-    ok: true,
-    debug: {
-      contactId: methodRes.contactId,
-      activityId: methodRes.activityId,
-      methodWarning: methodRes.error || null,
-    },
-  });
+  return NextResponse.json({ ok: true });
 }
