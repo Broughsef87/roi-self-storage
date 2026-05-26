@@ -14,7 +14,6 @@ import { NextResponse } from "next/server";
  *
  * Env vars consumed:
  *   METHOD_API_KEY            (required)  — Method CRM API key
- *   METHOD_TABLE              (optional)  — defaults to "Contacts"
  *   METHOD_LEAD_ASSIGNEE_ID   (optional)  — Method user RecordID for default
  *                                            lead assignee. Defaults to 5 (Dave Maxe).
  *                                            4=Lisa, 5=Dave, 10=Blaise, 12=Jamie, 14=Steven.
@@ -34,18 +33,6 @@ type Payload = {
   location?: string;
   details?: string;
 };
-
-function buildNotes(p: Payload): string {
-  const lines = [
-    p.buildingType ? `Building type: ${p.buildingType}` : null,
-    p.size ? `Approximate size: ${p.size}` : null,
-    p.location ? `Project location: ${p.location}` : null,
-    p.details ? `Details: ${p.details}` : null,
-    "",
-    "Submitted from roiselfstoragebuildings.com quote form",
-  ];
-  return lines.filter((l) => l !== null).join("\n");
-}
 
 function splitName(full: string): { firstName: string; lastName: string } {
   const trimmed = (full || "").trim();
@@ -77,30 +64,48 @@ function buildActivityComments(p: Payload): string {
 
 /**
  * Push a lead to Method CRM in TWO steps:
- *   1. Create a Contact (basic info — name, email, phone, note)
- *   2. Create an Activity linked to the Contact with ActivityType
- *      "Phone Call Outgoing" (RecordID 2) and Status "Not Started"
- *      (RecordID 1). This is what surfaces in their sales workflow.
+ *   1. Create a CUSTOMER record (NOT a Contact — see below) flagged as a
+ *      "Customer Lead" so it shows up in their Leads view.
+ *   2. Create an Activity linked to it with ActivityType "Phone Call
+ *      Outgoing" assigned to a salesperson. This is what surfaces as a
+ *      task in the sales workflow.
  *
- * Important: Method's REST API silently drops lead-classification fields
- * (IsLeadStatusOnly, EntityType, LeadStatus, LeadSource) when posted to
- * /Contacts. The Activity is the mechanism Method itself uses to flag
- * new web-to-lead submissions — matching their existing pattern in the
- * Activity table.
+ * CRITICAL — why /Customer instead of /Contacts:
+ *   POSTing to /tables/Contacts SILENTLY DROPS lead-classification fields
+ *   (EntityType, IsLeadStatusOnly, IsActive, LeadStatus, LeadSource).
+ *   The records get created but with all those fields NULL, so they're
+ *   invisible in Method's UI — the UI filters by those flags.
+ *
+ *   POSTing to /tables/Customer with EntityType="Customer Lead" + IsActive=true
+ *   + IsLeadStatusOnly=true creates a record that DOES appear in the Leads
+ *   view. Verified by inspecting real existing leads in the account.
  */
 async function pushToMethod(p: Payload): Promise<{ ok: boolean; error?: string; contactId?: number; activityId?: number }> {
   const apiKey = process.env.METHOD_API_KEY;
   if (!apiKey) return { ok: false, error: "METHOD_API_KEY not configured" };
 
-  const contactsTable = process.env.METHOD_TABLE || "Contacts";
   const { firstName, lastName } = splitName(p.name ?? "");
+  const fullName = `${firstName} ${lastName}`.trim() || (p.email ?? "");
 
-  const contactBody = {
+  // Customer table requires Name. The lead-flag fields below are what makes
+  // it appear under Method's Leads view rather than the Customers view.
+  // LeadStatus/LeadSource use enum values from Method's LeadStatus/LeadSource
+  // reference tables:
+  //   LeadStatus "1 - Has Need (Warm)" (RecordID 5) — fits a web-form prospect
+  //   LeadSource "Web" (RecordID 9)
+  const customerBody = {
+    Name: fullName,
     FirstName: firstName,
     LastName: lastName,
     Email: p.email ?? "",
     Phone: p.phone ?? "",
-    Note: buildNotes(p),
+    EntityType: "Customer Lead",
+    IsActive: true,
+    IsLeadStatusOnly: true,
+    LeadStatus: "1 - Has Need (Warm)",
+    LeadStatus_RecordID: 5,
+    LeadSource: "Web",
+    LeadSource_RecordID: 9,
   };
 
   const headers = {
@@ -110,22 +115,22 @@ async function pushToMethod(p: Payload): Promise<{ ok: boolean; error?: string; 
   };
 
   try {
-    // --- Step 1: Create the Contact -----------------------------------
-    const contactRes = await fetch(`${METHOD_API_BASE}/tables/${encodeURIComponent(contactsTable)}`, {
+    // --- Step 1: Create the Customer (lead) ---------------------------
+    const contactRes = await fetch(`${METHOD_API_BASE}/tables/Customer`, {
       method: "POST",
       headers,
-      body: JSON.stringify(contactBody),
+      body: JSON.stringify(customerBody),
       signal: AbortSignal.timeout(15000),
     });
     if (!contactRes.ok) {
       const text = await contactRes.text().catch(() => "");
-      return { ok: false, error: `Method Contacts ${contactRes.status}: ${text.slice(0, 500)}` };
+      return { ok: false, error: `Method Customer ${contactRes.status}: ${text.slice(0, 500)}` };
     }
-    // Method returns the bare RecordID as the response body (e.g. `6646`).
+    // Method returns the bare RecordID as the response body.
     const contactIdRaw = (await contactRes.text()).trim().replace(/^"|"$/g, "");
     const contactId = Number(contactIdRaw);
     if (!Number.isFinite(contactId)) {
-      return { ok: false, error: `Method Contacts returned non-numeric ID: ${contactIdRaw.slice(0, 100)}` };
+      return { ok: false, error: `Method Customer returned non-numeric ID: ${contactIdRaw.slice(0, 100)}` };
     }
 
     // --- Step 2: Create the Activity ---------------------------------
