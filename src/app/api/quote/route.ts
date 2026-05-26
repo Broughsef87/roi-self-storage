@@ -63,50 +63,46 @@ function buildActivityComments(p: Payload): string {
 }
 
 /**
- * Push a lead to Method CRM in TWO steps:
- *   1. Create a CUSTOMER record (NOT a Contact — see below) flagged as a
- *      "Customer Lead" so it shows up in their Leads view.
- *   2. Create an Activity linked to it with ActivityType "Phone Call
- *      Outgoing" assigned to a salesperson. This is what surfaces as a
- *      task in the sales workflow.
+ * Push a lead to Method CRM in THREE steps:
+ *   1. POST /Customer with EntityType="Customer Lead" + IsActive=true +
+ *      IsLeadStatusOnly=true. This creates the LEAD entity that surfaces
+ *      in Lisa's Leads view in Method's UI.
+ *   2. POST /Contacts with Entity_RecordID=<customerId>. This creates the
+ *      individual-person Contact record linked to the Customer. The Contact
+ *      auto-inherits EntityType/IsLeadStatusOnly/IsActive from the Customer.
+ *   3. POST /Activity with Contacts=<contactId>, ActivityType="Phone Call
+ *      Outgoing", AssignedTo=<salesperson>. This is the actionable task
+ *      that surfaces in Dave's (or whoever's) sales workflow.
  *
- * CRITICAL — why /Customer instead of /Contacts:
- *   POSTing to /tables/Contacts SILENTLY DROPS lead-classification fields
- *   (EntityType, IsLeadStatusOnly, IsActive, LeadStatus, LeadSource).
- *   The records get created but with all those fields NULL, so they're
- *   invisible in Method's UI — the UI filters by those flags.
+ * CRITICAL DISCOVERY — Method's REST API has THREE separate tables that look
+ * like the same thing but aren't:
+ *   /Customer (lead entity)   → /Contacts (person, linked via Entity_RecordID)
+ *                              → /Activity (task, linked via Contacts field)
  *
- *   POSTing to /tables/Customer with EntityType="Customer Lead" + IsActive=true
- *   + IsLeadStatusOnly=true creates a record that DOES appear in the Leads
- *   view. Verified by inspecting real existing leads in the account.
+ * Previous attempts that DIDN'T work:
+ *   - POSTing only to /Contacts silently dropped lead flags (records created
+ *     but invisible in UI because UI filters by EntityType/IsActive).
+ *   - POSTing only to /Customer creates the lead but Activity.Contacts only
+ *     accepts /Contacts RecordIDs, not /Customer RecordIDs, so no actionable
+ *     task surfaced for the sales team.
+ *
+ * If step 1 fails: hard error (lead is lost).
+ * If step 2 fails: Customer is in Method but no Contact/Activity — log warning.
+ * If step 3 fails: Customer + Contact exist (visible in UI) but no task —
+ *                  log warning, still return ok.
  */
-async function pushToMethod(p: Payload): Promise<{ ok: boolean; error?: string; contactId?: number; activityId?: number }> {
+async function pushToMethod(p: Payload): Promise<{
+  ok: boolean;
+  error?: string;
+  customerId?: number;
+  contactId?: number;
+  activityId?: number;
+}> {
   const apiKey = process.env.METHOD_API_KEY;
   if (!apiKey) return { ok: false, error: "METHOD_API_KEY not configured" };
 
   const { firstName, lastName } = splitName(p.name ?? "");
   const fullName = `${firstName} ${lastName}`.trim() || (p.email ?? "");
-
-  // Customer table requires Name. The lead-flag fields below are what makes
-  // it appear under Method's Leads view rather than the Customers view.
-  // LeadStatus/LeadSource use enum values from Method's LeadStatus/LeadSource
-  // reference tables:
-  //   LeadStatus "1 - Has Need (Warm)" (RecordID 5) — fits a web-form prospect
-  //   LeadSource "Web" (RecordID 9)
-  const customerBody = {
-    Name: fullName,
-    FirstName: firstName,
-    LastName: lastName,
-    Email: p.email ?? "",
-    Phone: p.phone ?? "",
-    EntityType: "Customer Lead",
-    IsActive: true,
-    IsLeadStatusOnly: true,
-    LeadStatus: "1 - Has Need (Warm)",
-    LeadStatus_RecordID: 5,
-    LeadSource: "Web",
-    LeadSource_RecordID: 9,
-  };
 
   const headers = {
     Authorization: `APIKey ${apiKey}`,
@@ -114,36 +110,82 @@ async function pushToMethod(p: Payload): Promise<{ ok: boolean; error?: string; 
     Accept: "application/json",
   };
 
-  try {
-    // --- Step 1: Create the Customer (lead) ---------------------------
-    const contactRes = await fetch(`${METHOD_API_BASE}/tables/Customer`, {
+  /** Posts JSON to Method and returns the new RecordID, or throws. */
+  async function postAndReadId(path: string, body: unknown): Promise<number> {
+    const res = await fetch(`${METHOD_API_BASE}${path}`, {
       method: "POST",
       headers,
-      body: JSON.stringify(customerBody),
+      body: JSON.stringify(body),
       signal: AbortSignal.timeout(15000),
     });
-    if (!contactRes.ok) {
-      const text = await contactRes.text().catch(() => "");
-      return { ok: false, error: `Method Customer ${contactRes.status}: ${text.slice(0, 500)}` };
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new Error(`${path} ${res.status}: ${text.slice(0, 400)}`);
     }
-    // Method returns the bare RecordID as the response body.
-    const contactIdRaw = (await contactRes.text()).trim().replace(/^"|"$/g, "");
-    const contactId = Number(contactIdRaw);
-    if (!Number.isFinite(contactId)) {
-      return { ok: false, error: `Method Customer returned non-numeric ID: ${contactIdRaw.slice(0, 100)}` };
-    }
+    const raw = (await res.text()).trim().replace(/^"|"$/g, "");
+    const id = Number(raw);
+    if (!Number.isFinite(id)) throw new Error(`${path} returned non-numeric ID: ${raw.slice(0, 100)}`);
+    return id;
+  }
 
-    // --- Step 2: Create the Activity ---------------------------------
-    // ActivityType_RecordID:   2  = "Phone Call Outgoing" (what Method's existing
-    //                              web-to-lead flow uses; surfaces in sales workflow)
-    // ActivityStatus_RecordID: 1  = "Not Started"
-    // AssignedTo_RecordID:     REQUIRED by Method. Configurable via env var.
-    //                          Known IDs in their account:
-    //                            4  = Lisa Wirth
-    //                            5  = Dave Maxe (default)
-    //                            10 = Blaise Roper
-    //                            12 = Jamie Lawson
-    //                            14 = Steven Braisted
+  let customerId: number | undefined;
+  let contactId: number | undefined;
+  let activityId: number | undefined;
+
+  try {
+    // --- Step 1: Create the Customer (lead entity) --------------------
+    // LeadStatus/LeadSource use enum values from Method's reference tables:
+    //   LeadStatus "1 - Has Need (Warm)" (RecordID 5) — fits a web-form prospect
+    //   LeadSource "Web" (RecordID 9)
+    const customerBody = {
+      Name: fullName,
+      FirstName: firstName,
+      LastName: lastName,
+      Email: p.email ?? "",
+      Phone: p.phone ?? "",
+      EntityType: "Customer Lead",
+      IsActive: true,
+      IsLeadStatusOnly: true,
+      LeadStatus: "1 - Has Need (Warm)",
+      LeadStatus_RecordID: 5,
+      LeadSource: "Web",
+      LeadSource_RecordID: 9,
+    };
+    customerId = await postAndReadId("/tables/Customer", customerBody);
+  } catch (err) {
+    return { ok: false, error: err instanceof Error ? err.message : "Customer create failed" };
+  }
+
+  try {
+    // --- Step 2: Create the Contact (linked person record) -----------
+    // Entity_RecordID links to the Customer above. The Contact auto-inherits
+    // EntityType / IsLeadStatusOnly / IsActive from the Customer.
+    const contactBody = {
+      FirstName: firstName,
+      LastName: lastName,
+      Email: p.email ?? "",
+      Phone: p.phone ?? "",
+      Entity_RecordID: customerId,
+    };
+    contactId = await postAndReadId("/tables/Contacts", contactBody);
+  } catch (err) {
+    // Customer was created — lead is visible. Just no actionable task.
+    console.warn(`[quote] Contact create failed (Customer ${customerId} exists):`, err instanceof Error ? err.message : err);
+    return { ok: true, customerId };
+  }
+
+  // --- Step 3: Create the Activity (task for the sales team) ----------
+  // ActivityType_RecordID:   2  = "Phone Call Outgoing" (matches Method's existing
+  //                              web-to-lead pattern; surfaces in sales workflow)
+  // ActivityStatus_RecordID: 1  = "Not Started"
+  // AssignedTo_RecordID:     REQUIRED by Method. Configurable via env var.
+  //                          Known user RecordIDs:
+  //                            4  = Lisa Wirth
+  //                            5  = Dave Maxe (default)
+  //                            10 = Blaise Roper
+  //                            12 = Jamie Lawson
+  //                            14 = Steven Braisted
+  try {
     const assignedToId = Number(process.env.METHOD_LEAD_ASSIGNEE_ID || 5);
     const activityBody = {
       ActivityType_RecordID: 2,
@@ -152,31 +194,14 @@ async function pushToMethod(p: Payload): Promise<{ ok: boolean; error?: string; 
       Contacts: contactId,
       Comments: buildActivityComments(p),
     };
-
-    const activityRes = await fetch(`${METHOD_API_BASE}/tables/Activity`, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(activityBody),
-      signal: AbortSignal.timeout(15000),
-    });
-    if (!activityRes.ok) {
-      const text = await activityRes.text().catch(() => "");
-      // Contact was created but Activity failed — log it, still treat as success
-      // (so the lead isn't lost) but warn so we can diagnose.
-      console.warn(`[quote] Activity creation failed for contact ${contactId}: ${activityRes.status} ${text.slice(0, 500)}`);
-      return { ok: true, contactId };
-    }
-    const activityIdRaw = (await activityRes.text()).trim().replace(/^"|"$/g, "");
-    const activityId = Number(activityIdRaw);
-
-    return {
-      ok: true,
-      contactId,
-      activityId: Number.isFinite(activityId) ? activityId : undefined,
-    };
+    activityId = await postAndReadId("/tables/Activity", activityBody);
   } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : "Unknown error" };
+    // Customer + Contact exist (visible in UI). Just no actionable task.
+    console.warn(`[quote] Activity create failed (Customer ${customerId} + Contact ${contactId} exist):`, err instanceof Error ? err.message : err);
+    return { ok: true, customerId, contactId };
   }
+
+  return { ok: true, customerId, contactId, activityId };
 }
 
 async function sendBackupEmail(p: Payload): Promise<{ ok: boolean; error?: string }> {
