@@ -1,0 +1,151 @@
+/**
+ * JSON-LD schema builders. Each returns a plain object ready to be
+ * dropped into a <script type="application/ld+json"> tag.
+ *
+ * Reference all schemas back to the LocalBusiness via @id so search
+ * engines understand they describe the same entity.
+ */
+
+import { BUSINESS, SITE_URL, siteUrl } from "./site";
+
+export const BUSINESS_ID = `${SITE_URL}/#business`;
+
+/** LocalBusiness + AggregateRating. Emit once sitewide in root layout. */
+export function localBusinessSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": BUSINESS_ID,
+    name: BUSINESS.name,
+    alternateName: BUSINESS.alternateName,
+    description: BUSINESS.description,
+    url: BUSINESS.url,
+    telephone: BUSINESS.telephone,
+    email: BUSINESS.email,
+    image: BUSINESS.logo,
+    logo: BUSINESS.logo,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: BUSINESS.address.streetAddress,
+      addressLocality: BUSINESS.address.addressLocality,
+      addressRegion: BUSINESS.address.addressRegion,
+      postalCode: BUSINESS.address.postalCode,
+      addressCountry: BUSINESS.address.addressCountry,
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: BUSINESS.geo.latitude,
+      longitude: BUSINESS.geo.longitude,
+    },
+    openingHoursSpecification: [
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: [...BUSINESS.hours.days],
+        opens: BUSINESS.hours.opens,
+        closes: BUSINESS.hours.closes,
+      },
+    ],
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: BUSINESS.aggregateRating.ratingValue,
+      reviewCount: BUSINESS.aggregateRating.reviewCount,
+      bestRating: BUSINESS.aggregateRating.bestRating,
+      worstRating: BUSINESS.aggregateRating.worstRating,
+    },
+    parentOrganization: {
+      "@type": "Organization",
+      name: BUSINESS.parentOrganization.name,
+      url: BUSINESS.parentOrganization.url,
+    },
+    areaServed: {
+      "@type": "Country",
+      name: "United States",
+    },
+  };
+}
+
+export interface FAQItem {
+  q: string;
+  a: string;
+}
+
+export function faqPageSchema(items: FAQItem[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+    })),
+  };
+}
+
+export interface ServiceInput {
+  serviceType: string;
+  name: string;
+  description: string;
+  /** Lowest per-square-foot price (USD). Used for UnitPriceSpecification. */
+  minPricePerSqFt?: number;
+}
+
+export function serviceSchema(input: ServiceInput) {
+  const obj: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    serviceType: input.serviceType,
+    name: input.name,
+    description: input.description,
+    provider: { "@id": BUSINESS_ID },
+    areaServed: {
+      "@type": "Country",
+      name: "United States",
+    },
+  };
+
+  if (typeof input.minPricePerSqFt === "number") {
+    obj.offers = {
+      "@type": "Offer",
+      priceCurrency: "USD",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        priceType: "https://schema.org/MinimumPrice",
+        price: input.minPricePerSqFt.toFixed(2),
+        priceCurrency: "USD",
+        referenceQuantity: {
+          "@type": "QuantitativeValue",
+          value: "1",
+          // FTK = square feet (UN/CEFACT unit code)
+          unitCode: "FTK",
+        },
+      },
+    };
+  }
+
+  return obj;
+}
+
+export interface BreadcrumbCrumb {
+  name: string;
+  /** Path under the site, e.g. "/case-studies". Omit for the final crumb (current page) per schema.org guidance. */
+  path?: string;
+}
+
+export function breadcrumbSchema(crumbs: BreadcrumbCrumb[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: crumbs.map((c, i) => {
+      const item: Record<string, unknown> = {
+        "@type": "ListItem",
+        position: i + 1,
+        name: c.name,
+      };
+      if (c.path) item.item = siteUrl(c.path);
+      return item;
+    }),
+  };
+}

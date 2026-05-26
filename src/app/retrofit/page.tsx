@@ -1,12 +1,30 @@
 import type { Metadata } from "next";
 import SubPageLayout from "@/components/SubPageLayout";
 import PageFAQ from "@/components/PageFAQ";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/metadata";
+import { breadcrumbSchema, faqPageSchema, serviceSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Retrofit & Conversion Storage Buildings | ROI Self Storage",
   description:
     "Convert existing buildings into self storage at $7-$10/sq ft. The most cost-effective path to a storage facility. Call (865) 316-9009.",
-};
+  path: "/retrofit",
+});
+
+const breadcrumb = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Building Types" },
+  { name: "Retrofit / Conversion", path: "/retrofit" },
+]);
+
+const service = serviceSchema({
+  serviceType: "Self Storage Retrofit and Conversion",
+  name: "Self Storage Retrofit & Building Conversion",
+  description:
+    "Convert existing warehouses, retail spaces, and industrial buildings into self storage facilities. Lowest cost per square foot entry point in the industry. Building package $7-$10 per sq ft.",
+  minPricePerSqFt: 7,
+});
 
 const faqs = [
   {
@@ -37,6 +55,8 @@ const faqs = [
 
 export default function RetrofitPage() {
   return (
+    <>
+      <JsonLd id="retrofit-schema" data={[breadcrumb, service, faqPageSchema([...faqs])]} />
     <SubPageLayout
       title="Retrofit &amp; Conversion Storage Buildings"
       subtitle="Convert existing structures into profitable self storage facilities. The lowest cost per square foot entry point in the industry — ideal for owners with an existing building or shell."
@@ -117,5 +137,6 @@ export default function RetrofitPage() {
         </div>
       </section>
     </SubPageLayout>
+    </>
   );
 }

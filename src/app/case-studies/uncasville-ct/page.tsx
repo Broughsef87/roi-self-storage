@@ -2,12 +2,26 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import SubPageLayout from "@/components/SubPageLayout";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/metadata";
+import { breadcrumbSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Uncasville, CT Case Study — 27,600 sq ft | ROI Self Storage",
   description:
     "27,600 sq ft three-building self storage project in Uncasville, Connecticut. 159 units, standing seam roofing, factory-applied moisture barriers. Call (865) 316-9009.",
-};
+  path: "/case-studies/uncasville-ct",
+  ogImage: {
+    url: "/case-studies/uncasville-ct/01.jpg",
+    alt: "Uncasville, Connecticut 27,600 sq ft self storage project",
+  },
+});
+
+const breadcrumb = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Case Studies", path: "/case-studies" },
+  { name: "Uncasville, CT — 27,600 sq ft Self Storage" },
+]);
 
 const buildings = [
   { type: "Gable", dims: "30 × 280 × 9.5", pitch: "0.25", roof: "Standing seam", doors: "9 × 8 roll-up" },
@@ -26,6 +40,8 @@ const features = [
 
 export default function UncasvillePage() {
   return (
+    <>
+      <JsonLd id="uncasville-breadcrumb" data={breadcrumb} />
     <SubPageLayout
       title="Uncasville, CT — 27,600 sq ft Self Storage"
       subtitle="Three-building turnkey self storage installation delivering 27,600 sq ft of secure, low-maintenance storage space across 159 units."
@@ -196,5 +212,6 @@ export default function UncasvillePage() {
         </div>
       </section>
     </SubPageLayout>
+    </>
   );
 }

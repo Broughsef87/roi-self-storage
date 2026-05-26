@@ -1,12 +1,29 @@
 import type { Metadata } from "next";
 import SubPageLayout from "@/components/SubPageLayout";
 import PageFAQ from "@/components/PageFAQ";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/metadata";
+import { breadcrumbSchema, faqPageSchema, serviceSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Self Storage Doors | ROI Self Storage",
   description:
     "Commercial-grade self storage roll-up doors in all standard sizes. Sheet doors, roll-up doors, and swing doors for every storage application. Call (865) 316-9009.",
-};
+  path: "/storage-doors",
+});
+
+const breadcrumb = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Components" },
+  { name: "Storage Doors", path: "/storage-doors" },
+]);
+
+const service = serviceSchema({
+  serviceType: "Self Storage Door Supply",
+  name: "Commercial-Grade Self Storage Doors",
+  description:
+    "Commercial roll-up doors, sheet curtain doors, swing doors, and overhead sectional doors for self storage facilities. Patented S2F Latch system with dual padlock support. 2-3 week lead times. Available in 12 color options.",
+});
 
 const faqs = [
   {
@@ -37,6 +54,8 @@ const faqs = [
 
 export default function StorageDoorsPage() {
   return (
+    <>
+      <JsonLd id="doors-schema" data={[breadcrumb, service, faqPageSchema([...faqs])]} />
     <SubPageLayout
       title="Self Storage Doors"
       subtitle="Commercial-grade roll-up doors, sheet doors, and specialty doors for every self storage application. The door is the most-used component in your building — we don't cut corners."
@@ -111,5 +130,6 @@ export default function StorageDoorsPage() {
         </div>
       </section>
     </SubPageLayout>
+    </>
   );
 }

@@ -2,12 +2,26 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import SubPageLayout from "@/components/SubPageLayout";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/metadata";
+import { breadcrumbSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Securit-Storage Case Study — Anderson, IN | ROI Self Storage",
   description:
     "5,500 sq ft two-building self storage project in Anderson, Indiana. 47 units, 4-day erection, delivered on time and on budget. Call (865) 316-9009.",
-};
+  path: "/case-studies/securit-storage",
+  ogImage: {
+    url: "/case-studies/securit-storage/01.jpg",
+    alt: "Securit-Storage facility — Anderson, Indiana",
+  },
+});
+
+const breadcrumb = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Case Studies", path: "/case-studies" },
+  { name: "Securit-Storage — Anderson, IN" },
+]);
 
 const specs = [
   { label: "Project Type", value: "Standard drive-up self storage (new build)" },
@@ -23,6 +37,8 @@ const specs = [
 
 export default function SecuritStoragePage() {
   return (
+    <>
+      <JsonLd id="securit-breadcrumb" data={breadcrumb} />
     <SubPageLayout
       title="Securit-Storage — Anderson, Indiana"
       subtitle="Two-building self storage development delivering 5,500 sq ft of rentable space across a balanced mix of 5×10, 10×10, 10×15, and 10×20 units. Erected in 4 days."
@@ -171,5 +187,6 @@ export default function SecuritStoragePage() {
         </div>
       </section>
     </SubPageLayout>
+    </>
   );
 }

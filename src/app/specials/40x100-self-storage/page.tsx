@@ -1,12 +1,22 @@
 import type { Metadata } from "next";
 import SubPageLayout from "@/components/SubPageLayout";
 import PageFAQ from "@/components/PageFAQ";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/metadata";
+import { breadcrumbSchema, faqPageSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "The Basic: 40x100 Self Storage Building | ROI Self Storage",
   description:
     "40x100 self storage building special. 20 units (10x20), 26ga color walls, premium doors. $35,417. Call (865) 316-9009.",
-};
+  path: "/specials/40x100-self-storage",
+});
+
+const breadcrumb = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Specials", path: "/specials" },
+  { name: "The Basic — 40' × 100'", path: "/specials/40x100-self-storage" },
+]);
 
 const faqs = [
   {
@@ -37,6 +47,8 @@ const faqs = [
 
 export default function Special40x100Page() {
   return (
+    <>
+      <JsonLd id="special-40x100" data={[breadcrumb, faqPageSchema([...faqs])]} />
     <SubPageLayout
       title={`"The Basic" — 40' × 100' Self Storage`}
       subtitle="Designed for the 10×20 enthusiast. 20 back-to-back units optimized for maximum rentable square footage with minimal wasted space."
@@ -111,5 +123,6 @@ export default function Special40x100Page() {
         </div>
       </section>
     </SubPageLayout>
+    </>
   );
 }

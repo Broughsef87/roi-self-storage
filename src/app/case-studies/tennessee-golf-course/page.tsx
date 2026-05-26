@@ -2,12 +2,26 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import SubPageLayout from "@/components/SubPageLayout";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/metadata";
+import { breadcrumbSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Gallatin TN Golf Course Storage Case Study | ROI Self Storage",
   description:
     "Tennessee country club golf course replaced deteriorating wooden storage with 28 steel-framed metal storage units. 10×294×8.5 building. Call (865) 316-9009.",
-};
+  path: "/case-studies/tennessee-golf-course",
+  ogImage: {
+    url: "/case-studies/tennessee-golf/hero.jpg",
+    alt: "Gallatin, TN golf course storage units — ROI Self Storage",
+  },
+});
+
+const breadcrumb = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Case Studies", path: "/case-studies" },
+  { name: "Gallatin, TN — Golf Course Storage" },
+]);
 
 const features = [
   { title: "10×294×8.5 Metal Storage Building", desc: "Long, narrow footprint with 0.5/12 optimized roof pitch for drainage." },
@@ -22,6 +36,8 @@ const galleryImages = ["01", "02", "041", "05", "06", "07", "08", "09", "101", "
 
 export default function GolfCoursePage() {
   return (
+    <>
+      <JsonLd id="golf-breadcrumb" data={breadcrumb} />
     <SubPageLayout
       title="Gallatin, TN — Golf Course Storage"
       subtitle="A Tennessee country club replaced deteriorating wooden storage units with 28 steel-framed metal storage units. The result: a sleek, modern facility that reflects the prestige of the club."
@@ -202,5 +218,6 @@ export default function GolfCoursePage() {
         </div>
       </section>
     </SubPageLayout>
+    </>
   );
 }

@@ -2,12 +2,26 @@ import type { Metadata } from "next";
 import SubPageLayout from "@/components/SubPageLayout";
 import PageFAQ from "@/components/PageFAQ";
 import Flipbook from "@/components/Flipbook";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/metadata";
+import { breadcrumbSchema, faqPageSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "The RV Starter: 50x150x16 RV Storage | ROI Self Storage",
   description:
     "50x150x16 RV storage building special. 10 units (15x50), 12x14 Janus doors, 16' eave. $66,937. Call (865) 316-9009.",
-};
+  path: "/specials/50x150-rv-storage",
+  ogImage: {
+    url: "/specials/50x150-rv-storage-render.png",
+    alt: "50' × 150' × 16' RV Starter storage building render",
+  },
+});
+
+const breadcrumb = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Specials", path: "/specials" },
+  { name: "The RV Starter — 50' × 150' × 16'", path: "/specials/50x150-rv-storage" },
+]);
 
 const faqs = [
   {
@@ -34,6 +48,8 @@ const faqs = [
 
 export default function Special50x150RVPage() {
   return (
+    <>
+      <JsonLd id="special-50x150" data={[breadcrumb, faqPageSchema([...faqs])]} />
     <SubPageLayout
       title={`"The RV Starter" — 50' × 150' × 16'`}
       subtitle="Room for everything that matters. 10 oversized 15×50 bays with 12×14 Janus Model 1000 doors. Built for Class A motorhomes, fifth wheels, and large trailers."
@@ -144,5 +160,6 @@ export default function Special50x150RVPage() {
         </div>
       </section>
     </SubPageLayout>
+    </>
   );
 }

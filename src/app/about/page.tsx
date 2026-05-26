@@ -1,12 +1,21 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import SubPageLayout from "@/components/SubPageLayout";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/metadata";
+import { breadcrumbSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "About | ROI Self Storage",
   description:
     "ROI Self Storage is a division of ROI Metal Buildings. Over 100 years of combined expertise transforming the metal building and self storage industry through transparency, quality, and unparalleled customer service.",
-};
+  path: "/about",
+});
+
+const breadcrumb = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "About" },
+]);
 
 const values = [
   { title: "Quality", desc: "We source only the highest quality materials and value quality relationships based on honesty and integrity." },
@@ -37,6 +46,8 @@ function LinkedInIcon() {
 
 export default function AboutPage() {
   return (
+    <>
+      <JsonLd id="about-breadcrumb" data={breadcrumb} />
     <SubPageLayout
       title="About ROI Self Storage"
       subtitle="Our journey began with a simple yet powerful vision: to transform the metal building and self storage industry through transparency, quality, and unparalleled customer service."
@@ -216,5 +227,6 @@ export default function AboutPage() {
         </div>
       </section>
     </SubPageLayout>
+    </>
   );
 }

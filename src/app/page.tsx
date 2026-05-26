@@ -1,8 +1,22 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import QuoteForm from "@/components/QuoteForm";
 import FAQ from "@/components/FAQ";
 import GoogleReviews from "@/components/GoogleReviews";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/metadata";
+import { faqPageSchema } from "@/lib/schema";
+import { HOME_FAQS } from "@/data/home-faqs";
+
+export const metadata: Metadata = pageMetadata({
+  title: "ROI Self Storage | Pre-Engineered Metal Storage Buildings",
+  description:
+    "Custom metal self storage buildings engineered for maximum ROI. From mini-storage to climate-controlled facilities. Nationwide delivery. Call (865) 316-9009.",
+  path: "/",
+  keywords:
+    "self storage buildings, metal storage buildings, mini storage, climate controlled storage, pre-engineered metal buildings",
+});
 
 /* ------------------------------------------------------------------ */
 /*  SVG icons used inline to avoid dependency                          */
@@ -123,6 +137,7 @@ const steps = [
 export default function Home() {
   return (
     <>
+      <JsonLd id="home-faq" data={faqPageSchema([...HOME_FAQS])} />
       <Header />
 
       {/* =================== HERO =================== */}

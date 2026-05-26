@@ -1,12 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SubPageLayout from "@/components/SubPageLayout";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/metadata";
+import { breadcrumbSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Self Storage Specials | ROI Self Storage",
   description:
     "Pre-designed self storage building packages at competitive prices. 40x100, 30x150, 35x120 boat, and 50x150 RV configurations. Call (865) 316-9009.",
-};
+  path: "/specials",
+});
+
+const breadcrumb = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Specials" },
+]);
 
 const specials = [
   {
@@ -45,6 +54,8 @@ const specials = [
 
 export default function SpecialsPage() {
   return (
+    <>
+      <JsonLd id="specials-breadcrumb" data={breadcrumb} />
     <SubPageLayout
       title="Self Storage Specials"
       subtitle="Pre-designed building packages at competitive prices. These are our most requested configurations — engineered, priced, and ready to customize for your site."
@@ -92,5 +103,6 @@ export default function SpecialsPage() {
         </div>
       </section>
     </SubPageLayout>
+    </>
   );
 }

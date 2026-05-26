@@ -1,12 +1,30 @@
 import type { Metadata } from "next";
 import SubPageLayout from "@/components/SubPageLayout";
 import PageFAQ from "@/components/PageFAQ";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/metadata";
+import { breadcrumbSchema, faqPageSchema, serviceSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Climate Controlled Storage Buildings | ROI Self Storage",
   description:
     "Insulated, HVAC-ready climate controlled self storage buildings. $17-$20/sq ft building packages. Premium rents, premium returns. Call (865) 316-9009.",
-};
+  path: "/climate-controlled",
+});
+
+const breadcrumb = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Building Types" },
+  { name: "Climate Controlled", path: "/climate-controlled" },
+]);
+
+const service = serviceSchema({
+  serviceType: "Climate Controlled Self Storage Building Manufacturing",
+  name: "Climate Controlled Self Storage Buildings",
+  description:
+    "Insulated, HVAC-equipped pre-engineered metal self storage buildings. Premium revenue product that commands 25-50% rent premium over standard drive-up. Building package $17-$20 per sq ft.",
+  minPricePerSqFt: 17,
+});
 
 const faqs = [
   {
@@ -37,6 +55,8 @@ const faqs = [
 
 export default function ClimateControlledPage() {
   return (
+    <>
+      <JsonLd id="climate-schema" data={[breadcrumb, service, faqPageSchema([...faqs])]} />
     <SubPageLayout
       title="Climate Controlled Storage Buildings"
       subtitle="Insulated, HVAC-equipped self storage buildings that command 25-50% premium rents. The highest revenue-per-square-foot option in the self storage market."
@@ -143,5 +163,6 @@ export default function ClimateControlledPage() {
         </div>
       </section>
     </SubPageLayout>
+    </>
   );
 }

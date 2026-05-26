@@ -1,12 +1,30 @@
 import type { Metadata } from "next";
 import SubPageLayout from "@/components/SubPageLayout";
 import PageFAQ from "@/components/PageFAQ";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/metadata";
+import { breadcrumbSchema, faqPageSchema, serviceSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Boat Storage Buildings | ROI Self Storage",
   description:
     "Metal boat storage buildings with tall eave heights and extra-wide doors. $12-$15/sq ft building packages. Covered and enclosed options. Call (865) 316-9009.",
-};
+  path: "/boat-storage",
+});
+
+const breadcrumb = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Building Types" },
+  { name: "Boat Storage", path: "/boat-storage" },
+]);
+
+const service = serviceSchema({
+  serviceType: "Boat Storage Building Manufacturing",
+  name: "Metal Boat Storage Buildings",
+  description:
+    "Tall clear-span steel structures with extra-wide doors and high eave heights for boats, trailers, and marine equipment. Covered and fully enclosed configurations. Building package $12-$15 per sq ft.",
+  minPricePerSqFt: 12,
+});
 
 const faqs = [
   {
@@ -33,6 +51,8 @@ const faqs = [
 
 export default function BoatStoragePage() {
   return (
+    <>
+      <JsonLd id="boat-schema" data={[breadcrumb, service, faqPageSchema([...faqs])]} />
     <SubPageLayout
       title="Boat Storage Buildings"
       subtitle="Tall clear-span structures with extra-wide doors and high eave heights. Protect your customers' boats from weather, UV damage, and theft while generating premium rental income."
@@ -112,5 +132,6 @@ export default function BoatStoragePage() {
         </div>
       </section>
     </SubPageLayout>
+    </>
   );
 }

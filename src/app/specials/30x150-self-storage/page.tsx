@@ -2,12 +2,22 @@ import type { Metadata } from "next";
 import SubPageLayout from "@/components/SubPageLayout";
 import PageFAQ from "@/components/PageFAQ";
 import Flipbook from "@/components/Flipbook";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/metadata";
+import { breadcrumbSchema, faqPageSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "The Beginner: 30x150 Self Storage Building | ROI Self Storage",
   description:
     "30x150 self storage building special. 30 mixed units (10x20, 10x15, 10x10). $39,779. Call (865) 316-9009.",
-};
+  path: "/specials/30x150-self-storage",
+});
+
+const breadcrumb = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Specials", path: "/specials" },
+  { name: "The Beginner — 30' × 150'", path: "/specials/30x150-self-storage" },
+]);
 
 const faqs = [
   {
@@ -38,6 +48,8 @@ const faqs = [
 
 export default function Special30x150Page() {
   return (
+    <>
+      <JsonLd id="special-30x150" data={[breadcrumb, faqPageSchema([...faqs])]} />
     <SubPageLayout
       title={`"The Beginner" — 30' × 150' Self Storage`}
       subtitle="New to self storage, or just have a good market for the basics? Mixed-unit layout captures a wider tenant base and reduces vacancy risk."
@@ -165,5 +177,6 @@ export default function Special30x150Page() {
         </div>
       </section>
     </SubPageLayout>
+    </>
   );
 }

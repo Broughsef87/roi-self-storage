@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, DM_Sans } from "next/font/google";
 import "./globals.css";
+import JsonLd from "@/components/JsonLd";
+import { localBusinessSchema } from "@/lib/schema";
+import { SITE_URL } from "@/lib/site";
 
 const inter = Inter({
   variable: "--font-geist-sans",
@@ -15,27 +18,19 @@ const dmSans = DM_Sans({
   weight: ["400", "500", "700"],
 });
 
+/**
+ * Sitewide metadata. Per Lu's SEO dispatch:
+ *   - DO NOT set a sitewide canonical here. Each page sets its own via
+ *     `pageMetadata(...)` so subpage signal isn't consolidated into the
+ *     homepage.
+ *   - DO NOT set sitewide openGraph/twitter here. Each page owns its own
+ *     so social shares of any subpage show the correct card.
+ *
+ * What stays in this root metadata: `metadataBase` (so relative paths
+ * in page metadata resolve to www), icons, manifest.
+ */
 export const metadata: Metadata = {
-  // Canonical base URL. Without this, Next.js infers it from the Vercel preview
-  // URL and Google can flag the apex (no-www) version as a "Page with redirect"
-  // since the canonical tag wouldn't pin it to www.
-  metadataBase: new URL("https://www.roiselfstoragebuildings.com"),
-  alternates: {
-    canonical: "/",
-  },
-  title: "ROI Self Storage | Pre-Engineered Metal Storage Buildings",
-  description:
-    "Custom metal self storage buildings engineered for maximum ROI. From mini-storage to climate-controlled facilities. Nationwide delivery. Call (865) 316-9009.",
-  keywords:
-    "self storage buildings, metal storage buildings, mini storage, climate controlled storage, pre-engineered metal buildings",
-  openGraph: {
-    type: "website",
-    url: "https://www.roiselfstoragebuildings.com",
-    siteName: "ROI Self Storage",
-    title: "ROI Self Storage | Pre-Engineered Metal Storage Buildings",
-    description:
-      "Custom metal self storage buildings engineered for maximum ROI. Standard, climate controlled, boat & RV, flex, and retrofit configurations. Nationwide delivery.",
-  },
+  metadataBase: new URL(SITE_URL),
   icons: {
     icon: [
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
@@ -56,6 +51,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${dmSans.variable} antialiased`}>
+      <head>
+        {/* LocalBusiness + AggregateRating — emitted once sitewide. Per-page
+            schemas (FAQPage, Service, BreadcrumbList) reference this via @id. */}
+        <JsonLd id="local-business" data={localBusinessSchema()} />
+      </head>
       <body>{children}</body>
     </html>
   );

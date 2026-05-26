@@ -1,12 +1,30 @@
 import type { Metadata } from "next";
 import SubPageLayout from "@/components/SubPageLayout";
 import PageFAQ from "@/components/PageFAQ";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/metadata";
+import { breadcrumbSchema, faqPageSchema, serviceSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "RV Storage Buildings | ROI Self Storage",
   description:
     "Metal RV storage buildings with 16'+ eave heights and wide drive-through bays. $12-$15/sq ft. Covered and enclosed options. Call (865) 316-9009.",
-};
+  path: "/rv-storage",
+});
+
+const breadcrumb = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Building Types" },
+  { name: "RV Storage", path: "/rv-storage" },
+]);
+
+const service = serviceSchema({
+  serviceType: "RV Storage Building Manufacturing",
+  name: "Metal RV Storage Buildings",
+  description:
+    "Extra-tall, extra-wide metal buildings engineered for Class A motorhomes, fifth wheels, travel trailers, and toy haulers. 16'+ eave heights, wide bays, drive-through configurations. Building package $12-$15 per sq ft.",
+  minPricePerSqFt: 12,
+});
 
 const faqs = [
   {
@@ -33,6 +51,8 @@ const faqs = [
 
 export default function RVStoragePage() {
   return (
+    <>
+      <JsonLd id="rv-schema" data={[breadcrumb, service, faqPageSchema([...faqs])]} />
     <SubPageLayout
       title="RV Storage Buildings"
       subtitle="Extra-tall, extra-wide metal buildings engineered for Class A motorhomes, fifth wheels, travel trailers, and toy haulers. A high-demand, high-margin storage niche."
@@ -112,5 +132,6 @@ export default function RVStoragePage() {
         </div>
       </section>
     </SubPageLayout>
+    </>
   );
 }

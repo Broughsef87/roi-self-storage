@@ -1,12 +1,22 @@
 import type { Metadata } from "next";
 import SubPageLayout from "@/components/SubPageLayout";
 import PageFAQ from "@/components/PageFAQ";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/metadata";
+import { breadcrumbSchema, faqPageSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "The Small Boat: 35x120x12 Boat Storage | ROI Self Storage",
   description:
     "35x120x12 boat storage building special. 10x10 doors, 12' eave height, single slope roof. $32,800. Call (865) 316-9009.",
-};
+  path: "/specials/35x120-boat-storage",
+});
+
+const breadcrumb = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Specials", path: "/specials" },
+  { name: "The Small Boat — 35' × 120' × 12'", path: "/specials/35x120-boat-storage" },
+]);
 
 const faqs = [
   {
@@ -33,6 +43,8 @@ const faqs = [
 
 export default function Special35x120BoatPage() {
   return (
+    <>
+      <JsonLd id="special-35x120" data={[breadcrumb, faqPageSchema([...faqs])]} />
     <SubPageLayout
       title={`"The Small Boat" — 35' × 120' × 12'`}
       subtitle="Have property in a great fishing spot? This building accommodates most small to medium boats with 10×10 doors and an extra 3.5' of height for larger, taller boats."
@@ -103,5 +115,6 @@ export default function Special35x120BoatPage() {
         </div>
       </section>
     </SubPageLayout>
+    </>
   );
 }

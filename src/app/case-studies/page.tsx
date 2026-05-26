@@ -2,12 +2,21 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import SubPageLayout from "@/components/SubPageLayout";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/metadata";
+import { breadcrumbSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Case Studies | ROI Self Storage",
   description:
     "Real self storage projects delivered by ROI. From 5,500 sq ft drive-up facilities to 27,600 sq ft multi-building installations. Call (865) 316-9009.",
-};
+  path: "/case-studies",
+});
+
+const breadcrumb = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Case Studies" },
+]);
 
 const studies = [
   {
@@ -41,6 +50,8 @@ const studies = [
 
 export default function CaseStudiesPage() {
   return (
+    <>
+      <JsonLd id="case-studies-breadcrumb" data={breadcrumb} />
     <SubPageLayout
       title="Case Studies"
       subtitle="Real projects, real results. From small drive-up facilities to multi-building complexes — see what ROI has delivered for self storage operators across the country."
@@ -87,5 +98,6 @@ export default function CaseStudiesPage() {
         </div>
       </section>
     </SubPageLayout>
+    </>
   );
 }

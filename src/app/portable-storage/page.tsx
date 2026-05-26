@@ -1,12 +1,29 @@
 import type { Metadata } from "next";
 import SubPageLayout from "@/components/SubPageLayout";
 import PageFAQ from "@/components/PageFAQ";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/metadata";
+import { breadcrumbSchema, faqPageSchema, serviceSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Portable Self Storage Containers | ROI Self Storage",
   description:
     "Pre-constructed portable self storage containers. Relocatable, quick to deploy, no foundation required. Call (865) 316-9009.",
-};
+  path: "/portable-storage",
+});
+
+const breadcrumb = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Building Types" },
+  { name: "Portable Containers", path: "/portable-storage" },
+]);
+
+const service = serviceSchema({
+  serviceType: "Portable Self Storage Container Manufacturing",
+  name: "Portable Self Storage Containers",
+  description:
+    "Pre-constructed, relocatable steel storage containers. No foundation required. Standard 8x10, 8x20, and 8x40 sizes plus custom dimensions. Ideal for testing markets, supplementing existing facilities, or leased-land operations.",
+});
 
 const faqs = [
   {
@@ -33,6 +50,8 @@ const faqs = [
 
 export default function PortableStoragePage() {
   return (
+    <>
+      <JsonLd id="portable-schema" data={[breadcrumb, service, faqPageSchema([...faqs])]} />
     <SubPageLayout
       title="Portable Self Storage Containers"
       subtitle="Pre-constructed, relocatable storage containers. No foundation required. The fastest path from order to revenue in the storage industry."
@@ -85,5 +104,6 @@ export default function PortableStoragePage() {
         </div>
       </section>
     </SubPageLayout>
+    </>
   );
 }

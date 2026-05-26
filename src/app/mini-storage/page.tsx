@@ -1,12 +1,30 @@
 import type { Metadata } from "next";
 import SubPageLayout from "@/components/SubPageLayout";
 import PageFAQ from "@/components/PageFAQ";
+import JsonLd from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/metadata";
+import { breadcrumbSchema, faqPageSchema, serviceSchema } from "@/lib/schema";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Mini Storage Buildings | ROI Self Storage",
   description:
     "Pre-engineered mini storage buildings from ROI. Standard drive-up units starting at $10-$12/sq ft. Custom sizes, nationwide delivery. Call (865) 316-9009.",
-};
+  path: "/mini-storage",
+});
+
+const breadcrumb = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Building Types" },
+  { name: "Mini Storage", path: "/mini-storage" },
+]);
+
+const service = serviceSchema({
+  serviceType: "Mini Storage Building Manufacturing",
+  name: "Pre-Engineered Mini Storage Buildings",
+  description:
+    "Single-story drive-up self storage buildings with individual roll-up doors. Custom engineered for site-specific wind, snow, and seismic loads. Building package $10-$12 per sq ft.",
+  minPricePerSqFt: 10,
+});
 
 const faqs = [
   {
@@ -37,6 +55,8 @@ const faqs = [
 
 export default function MiniStoragePage() {
   return (
+    <>
+      <JsonLd id="mini-storage-schema" data={[breadcrumb, service, faqPageSchema([...faqs])]} />
     <SubPageLayout
       title="Mini Storage Buildings"
       subtitle="The most popular self storage format in the industry. Simple drive-up access, roll-up doors, and low operating costs. Engineered for first-time and experienced operators alike."
@@ -175,5 +195,6 @@ export default function MiniStoragePage() {
         </div>
       </section>
     </SubPageLayout>
+    </>
   );
 }
