@@ -66,30 +66,30 @@ function buildActivityComments(p: Payload): string {
  * Push a lead to Method CRM in THREE steps:
  *   1. POST /Customer with EntityType="Customer Lead" + IsActive=true +
  *      IsLeadStatusOnly=true. This creates the LEAD entity that surfaces
- *      in Lisa's Leads view in Method's UI.
- *   2. POST /Contacts with Entity_RecordID=<customerId>. This creates the
- *      individual-person Contact record linked to the Customer. The Contact
- *      auto-inherits EntityType/IsLeadStatusOnly/IsActive from the Customer.
+ *      in Lisa's Leads view in Method's UI. Method AUTOMATICALLY creates
+ *      a linked Primary Contact (Entity_RecordID=<customerId>) as a side
+ *      effect — we do NOT create a second one.
+ *   2. GET /Contacts?filter=Entity_RecordID eq <customerId> to find the
+ *      RecordID of the auto-created Primary Contact. We need this for the
+ *      Activity link in step 3.
  *   3. POST /Activity with Contacts=<contactId>, ActivityType="Phone Call
  *      Outgoing", AssignedTo=<salesperson>. This is the actionable task
  *      that surfaces in Dave's (or whoever's) sales workflow.
  *
- * CRITICAL DISCOVERY — Method's REST API has THREE separate tables that look
- * like the same thing but aren't:
- *   /Customer (lead entity)   → /Contacts (person, linked via Entity_RecordID)
- *                              → /Activity (task, linked via Contacts field)
- *
- * Previous attempts that DIDN'T work:
- *   - POSTing only to /Contacts silently dropped lead flags (records created
- *     but invisible in UI because UI filters by EntityType/IsActive).
- *   - POSTing only to /Customer creates the lead but Activity.Contacts only
- *     accepts /Contacts RecordIDs, not /Customer RecordIDs, so no actionable
- *     task surfaced for the sales team.
+ * CRITICAL Method API quirks (learned the hard way):
+ *   - Method's filter syntax is BARE `filter=` (not OData `$filter=`).
+ *     OData-style $filter / $orderby are silently ignored — they appear
+ *     to work but actually return the first 10 records by RecordID.
+ *   - /Customer auto-spawns a /Contacts record with the same person fields
+ *     (FirstName/LastName/Email/Phone). Posting a second /Contacts with
+ *     Entity_RecordID=<customerId> creates a DUPLICATE that pollutes the UI.
+ *   - Activity.Contacts requires a /Contacts RecordID, not a /Customer one.
+ *   - The Primary Contact cannot be deleted without deleting the Customer.
  *
  * If step 1 fails: hard error (lead is lost).
- * If step 2 fails: Customer is in Method but no Contact/Activity — log warning.
- * If step 3 fails: Customer + Contact exist (visible in UI) but no task —
+ * If step 2 fails: Customer is in Method (visible in UI) but no Activity —
  *                  log warning, still return ok.
+ * If step 3 fails: same as above.
  */
 async function pushToMethod(p: Payload): Promise<{
   ok: boolean;
@@ -128,6 +128,26 @@ async function pushToMethod(p: Payload): Promise<{
     return id;
   }
 
+  /**
+   * Look up the auto-created Primary Contact for a Customer. Method spawns
+   * this asynchronously, so we retry briefly. Uses Method's BARE `filter=`
+   * syntax (NOT OData `$filter=`, which is silently ignored).
+   */
+  async function findPrimaryContactId(customerRecordId: number): Promise<number | undefined> {
+    const url = `${METHOD_API_BASE}/tables/Contacts?filter=${encodeURIComponent(`Entity_RecordID eq ${customerRecordId}`)}`;
+    for (let attempt = 0; attempt < 4; attempt++) {
+      if (attempt > 0) await new Promise((r) => setTimeout(r, 500 * attempt));
+      const res = await fetch(url, { headers, signal: AbortSignal.timeout(10000) });
+      if (!res.ok) continue;
+      const data = (await res.json().catch(() => null)) as
+        | { count?: number; value?: Array<{ RecordID?: number }> }
+        | null;
+      const hit = data?.value?.find((c) => typeof c?.RecordID === "number");
+      if (hit?.RecordID) return hit.RecordID;
+    }
+    return undefined;
+  }
+
   let customerId: number | undefined;
   let contactId: number | undefined;
   let activityId: number | undefined;
@@ -156,21 +176,13 @@ async function pushToMethod(p: Payload): Promise<{
     return { ok: false, error: err instanceof Error ? err.message : "Customer create failed" };
   }
 
-  try {
-    // --- Step 2: Create the Contact (linked person record) -----------
-    // Entity_RecordID links to the Customer above. The Contact auto-inherits
-    // EntityType / IsLeadStatusOnly / IsActive from the Customer.
-    const contactBody = {
-      FirstName: firstName,
-      LastName: lastName,
-      Email: p.email ?? "",
-      Phone: p.phone ?? "",
-      Entity_RecordID: customerId,
-    };
-    contactId = await postAndReadId("/tables/Contacts", contactBody);
-  } catch (err) {
-    // Customer was created — lead is visible. Just no actionable task.
-    console.warn(`[quote] Contact create failed (Customer ${customerId} exists):`, err instanceof Error ? err.message : err);
+  // --- Step 2: Look up the Primary Contact Method auto-created -------
+  // Method spawns this Contact as a side effect of Customer creation.
+  // We must NOT create a second Contact (that's the duplicate Lisa saw).
+  contactId = await findPrimaryContactId(customerId);
+  if (!contactId) {
+    // Lead is visible in Method UI; we just can't attach an Activity to it.
+    console.warn(`[quote] Could not locate auto-created Contact for Customer ${customerId} — skipping Activity.`);
     return { ok: true, customerId };
   }
 
