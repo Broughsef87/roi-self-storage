@@ -145,10 +145,14 @@ async function pushToMethod(p: Payload): Promise<{ ok: boolean; error?: string; 
     });
     if (!activityRes.ok) {
       const text = await activityRes.text().catch(() => "");
-      // Contact was created but Activity failed — log it, still treat as success
-      // (so the lead isn't lost) but warn so we can diagnose.
-      console.warn(`[quote] Activity creation failed for contact ${contactId}: ${activityRes.status} ${text.slice(0, 300)}`);
-      return { ok: true, contactId };
+      console.warn(`[quote] Activity creation failed for contact ${contactId}: ${activityRes.status} ${text.slice(0, 500)}`);
+      // TEMP DEBUG: return the activity error in the response so we can see why
+      // it's failing in production. Remove this once verified working.
+      return {
+        ok: true,
+        contactId,
+        error: `Activity step failed ${activityRes.status}: ${text.slice(0, 400)}`,
+      };
     }
     const activityIdRaw = (await activityRes.text()).trim().replace(/^"|"$/g, "");
     const activityId = Number(activityIdRaw);
@@ -275,5 +279,14 @@ export async function POST(req: Request) {
     console.warn("[quote] Email skipped/failed (Method push succeeded):", emailRes.error);
   }
 
-  return NextResponse.json({ ok: true });
+  // TEMP DEBUG: expose contactId / activityId / any partial errors in the
+  // response so we can verify both steps fired from outside. Strip once stable.
+  return NextResponse.json({
+    ok: true,
+    debug: {
+      contactId: methodRes.contactId,
+      activityId: methodRes.activityId,
+      methodWarning: methodRes.error || null,
+    },
+  });
 }
