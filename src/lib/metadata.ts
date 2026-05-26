@@ -19,8 +19,6 @@ interface PageMetaInput {
     height?: number;
     alt?: string;
   };
-  /** Optional keywords (rarely useful for SEO these days but harmless). */
-  keywords?: string;
 }
 
 /**
@@ -47,7 +45,6 @@ export function pageMetadata(input: PageMetaInput): Metadata {
   return {
     title: input.title,
     description: input.description,
-    ...(input.keywords ? { keywords: input.keywords } : {}),
     alternates: {
       canonical: url,
     },
