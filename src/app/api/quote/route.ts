@@ -53,47 +53,111 @@ function splitName(full: string): { firstName: string; lastName: string } {
   return { firstName, lastName };
 }
 
-async function pushToMethod(p: Payload): Promise<{ ok: boolean; error?: string }> {
+function buildActivityComments(p: Payload): string {
+  // HTML format to match what Method's existing web-to-lead activities use.
+  // Activity Comments are rendered as HTML in Method's UI.
+  const escape = (s: string | undefined) =>
+    (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  const lines = [
+    `<p><strong>Review your Quote Lead</strong></p>`,
+    p.buildingType ? `<p>Interest in: ${escape(p.buildingType)}</p>` : null,
+    p.size ? `<p>Approximate Size: ${escape(p.size)}</p>` : null,
+    p.location ? `<p>Project Location: ${escape(p.location)}</p>` : null,
+    p.phone ? `<p>Phone: ${escape(p.phone)}</p>` : null,
+    p.email ? `<p>Email: ${escape(p.email)}</p>` : null,
+    p.details ? `<p>Details: ${escape(p.details)}</p>` : null,
+    `<p><em>Submitted from roiselfstoragebuildings.com</em></p>`,
+  ];
+  return lines.filter(Boolean).join("");
+}
+
+/**
+ * Push a lead to Method CRM in TWO steps:
+ *   1. Create a Contact (basic info — name, email, phone, note)
+ *   2. Create an Activity linked to the Contact with ActivityType
+ *      "Phone Call Outgoing" (RecordID 2) and Status "Not Started"
+ *      (RecordID 1). This is what surfaces in their sales workflow.
+ *
+ * Important: Method's REST API silently drops lead-classification fields
+ * (IsLeadStatusOnly, EntityType, LeadStatus, LeadSource) when posted to
+ * /Contacts. The Activity is the mechanism Method itself uses to flag
+ * new web-to-lead submissions — matching their existing pattern in the
+ * Activity table.
+ */
+async function pushToMethod(p: Payload): Promise<{ ok: boolean; error?: string; contactId?: number; activityId?: number }> {
   const apiKey = process.env.METHOD_API_KEY;
   if (!apiKey) return { ok: false, error: "METHOD_API_KEY not configured" };
 
-  const table = process.env.METHOD_TABLE || "Contacts";
+  const contactsTable = process.env.METHOD_TABLE || "Contacts";
   const { firstName, lastName } = splitName(p.name ?? "");
 
-  // Method's Contacts schema: FirstName / LastName / Email / Phone / Note (singular).
-  // Lead-only entries set IsLeadStatusOnly=true and EntityType="Customer Lead" so
-  // they show up in the Leads view rather than as full Customers.
-  const body: Record<string, unknown> = {
+  const contactBody = {
     FirstName: firstName,
     LastName: lastName,
     Email: p.email ?? "",
     Phone: p.phone ?? "",
     Note: buildNotes(p),
-    LeadSource: "Website",
-    LeadStatus: "1 - New",
-    IsLeadStatusOnly: true,
-    EntityType: "Customer Lead",
-    IsActive: true,
+  };
+
+  const headers = {
+    Authorization: `APIKey ${apiKey}`,
+    "Content-Type": "application/json",
+    Accept: "application/json",
   };
 
   try {
-    const res = await fetch(`${METHOD_API_BASE}/tables/${encodeURIComponent(table)}`, {
+    // --- Step 1: Create the Contact -----------------------------------
+    const contactRes = await fetch(`${METHOD_API_BASE}/tables/${encodeURIComponent(contactsTable)}`, {
       method: "POST",
-      headers: {
-        Authorization: `APIKey ${apiKey}`,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(body),
-      // Method can be slow on a cold call — give it 15s before bailing.
+      headers,
+      body: JSON.stringify(contactBody),
       signal: AbortSignal.timeout(15000),
     });
-
-    if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      return { ok: false, error: `Method ${res.status}: ${text.slice(0, 500)}` };
+    if (!contactRes.ok) {
+      const text = await contactRes.text().catch(() => "");
+      return { ok: false, error: `Method Contacts ${contactRes.status}: ${text.slice(0, 500)}` };
     }
-    return { ok: true };
+    // Method returns the bare RecordID as the response body (e.g. `6646`).
+    const contactIdRaw = (await contactRes.text()).trim().replace(/^"|"$/g, "");
+    const contactId = Number(contactIdRaw);
+    if (!Number.isFinite(contactId)) {
+      return { ok: false, error: `Method Contacts returned non-numeric ID: ${contactIdRaw.slice(0, 100)}` };
+    }
+
+    // --- Step 2: Create the Activity ---------------------------------
+    // ActivityType_RecordID:   2  = "Phone Call Outgoing" (what Method's existing
+    //                              web-to-lead flow uses; surfaces in sales workflow)
+    // ActivityStatus_RecordID: 1  = "Not Started"
+    // AssignedTo_RecordID:     not set — Method routes per their own rules.
+    const activityBody = {
+      ActivityType_RecordID: 2,
+      ActivityStatus_RecordID: 1,
+      Contacts: contactId,
+      Comments: buildActivityComments(p),
+    };
+
+    const activityRes = await fetch(`${METHOD_API_BASE}/tables/Activity`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(activityBody),
+      signal: AbortSignal.timeout(15000),
+    });
+    if (!activityRes.ok) {
+      const text = await activityRes.text().catch(() => "");
+      // Contact was created but Activity failed — log it, still treat as success
+      // (so the lead isn't lost) but warn so we can diagnose.
+      console.warn(`[quote] Activity creation failed for contact ${contactId}: ${activityRes.status} ${text.slice(0, 300)}`);
+      return { ok: true, contactId };
+    }
+    const activityIdRaw = (await activityRes.text()).trim().replace(/^"|"$/g, "");
+    const activityId = Number(activityIdRaw);
+
+    return {
+      ok: true,
+      contactId,
+      activityId: Number.isFinite(activityId) ? activityId : undefined,
+    };
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : "Unknown error" };
   }
