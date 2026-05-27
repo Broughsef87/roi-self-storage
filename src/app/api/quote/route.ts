@@ -156,7 +156,11 @@ async function pushToMethod(p: Payload): Promise<{
     // --- Step 1: Create the Customer (lead entity) --------------------
     // LeadStatus/LeadSource use enum values from Method's reference tables:
     //   LeadStatus "1 - Has Need (Warm)" (RecordID 5) — fits a web-form prospect
-    //   LeadSource "Web" (RecordID 9)
+    //   LeadSource "Web - ROI Self Storage" (RecordID 26) — dedicated tag
+    //     Lisa created so self-storage leads are distinguishable from the
+    //     parent ROI Metal Buildings web form.
+    //   SalesTaxCode "TN-Loudon" — matches Method's existing web-to-lead
+    //     pattern. Without this the UI displays leads as "tax exempt".
     const customerBody = {
       Name: fullName,
       FirstName: firstName,
@@ -166,10 +170,12 @@ async function pushToMethod(p: Payload): Promise<{
       EntityType: "Customer Lead",
       IsActive: true,
       IsLeadStatusOnly: true,
+      IsTaxable: true,
+      SalesTaxCode: "TN-Loudon",
       LeadStatus: "1 - Has Need (Warm)",
       LeadStatus_RecordID: 5,
-      LeadSource: "Web",
-      LeadSource_RecordID: 9,
+      LeadSource: "Web - ROI Self Storage",
+      LeadSource_RecordID: 26,
     };
     customerId = await postAndReadId("/tables/Customer", customerBody);
   } catch (err) {
