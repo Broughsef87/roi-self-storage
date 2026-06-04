@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Inter, DM_Sans } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import JsonLd from "@/components/JsonLd";
 import { localBusinessSchema } from "@/lib/schema";
 import { SITE_URL } from "@/lib/site";
+
+const GA_MEASUREMENT_ID = "G-5TJ6GV81X9";
 
 const inter = Inter({
   variable: "--font-geist-sans",
@@ -56,7 +59,25 @@ export default function RootLayout({
             schemas (FAQPage, Service, BreadcrumbList) reference this via @id. */}
         <JsonLd id="local-business" data={localBusinessSchema()} />
       </head>
-      <body>{children}</body>
+      <body>
+        {/* Google Analytics 4 (gtag.js). Loaded via next/script with the
+            "afterInteractive" strategy so it doesn't block first paint but
+            still fires on every route — the App Router auto-tracks SPA
+            pageviews because gtag's config call subscribes to history changes. */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
+        {children}
+      </body>
     </html>
   );
 }
