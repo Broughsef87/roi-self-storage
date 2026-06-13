@@ -78,7 +78,7 @@ const buildingTypes = [
   {
     name: "Climate Controlled",
     desc: "Insulated, HVAC-equipped buildings that command premium rents. Ideal for markets with temperature-sensitive demand.",
-    price: "$17\u2013$20 / sq ft",
+    price: "$15\u2013$20 / sq ft",
     tag: "Premium Revenue",
   },
   {
@@ -119,7 +119,7 @@ const benefits = [
 
 const pricingData = [
   { type: "Standard Storage", building: "$10\u2013$12", erection: "$3.50\u2013$6.00", concrete: "$10\u2013$15", total: "$23.50\u2013$33.00", avg: "$28.25" },
-  { type: "Climate Controlled", building: "$17\u2013$20", erection: "$5\u2013$7", concrete: "$10\u2013$15", total: "$32\u2013$42", avg: "$37" },
+  { type: "Climate Controlled", building: "$15\u2013$20", erection: "$5\u2013$7", concrete: "$10\u2013$15", total: "$30\u2013$42", avg: "$36" },
   { type: "Boat & RV Storage", building: "$12\u2013$15", erection: "$3.50\u2013$6.00", concrete: "$10\u2013$15", total: "$25.50\u2013$36.00", avg: "$30.75" },
   { type: "Flex Spaces", building: "$16+", erection: "$8\u2013$12", concrete: "$12+", total: "$36+", avg: "$40+" },
   { type: "Retrofit / Conversion", building: "$7\u2013$10", erection: "$3.50\u2013$6.00", concrete: "Varies", total: "$10.50\u2013$16.00+", avg: "~$13.25+" },
