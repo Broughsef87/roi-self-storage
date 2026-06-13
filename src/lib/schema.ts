@@ -139,9 +139,10 @@ export interface ProductInput {
 
 /**
  * Product schema for a building product line (e.g. mini storage buildings).
- * Brand points at the LocalBusiness; per-sq-ft pricing is expressed as an
- * AggregateOffer with a UnitPriceSpecification (FTK = square feet) so the
- * "from $X/sf" range is machine-readable without implying a fixed unit price.
+ * The product carries a Brand (ROI) and is offeredBy the LocalBusiness via
+ * @id; per-sq-ft pricing is expressed as an AggregateOffer with a
+ * UnitPriceSpecification (FTK = square feet) so the "from $X/sf" range is
+ * machine-readable without implying a fixed unit price.
  */
 export function productSchema(input: ProductInput) {
   const obj: Record<string, unknown> = {

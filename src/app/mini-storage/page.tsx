@@ -103,10 +103,10 @@ export default function MiniStoragePage() {
                 Mini storage is a strong fit when:
               </h3>
               <ul className="space-y-3 text-sm text-roi-steel">
-                <li className="flex gap-2"><span className="text-roi-red shrink-0">&#10003;</span> Your market wants standard drive-up units with vehicle access to the door.</li>
-                <li className="flex gap-2"><span className="text-roi-red shrink-0">&#10003;</span> Land cost supports a single-story footprint.</li>
-                <li className="flex gap-2"><span className="text-roi-red shrink-0">&#10003;</span> You want lower operating costs — no elevators, less HVAC, simpler maintenance.</li>
-                <li className="flex gap-2"><span className="text-roi-red shrink-0">&#10003;</span> You&apos;re building your first facility or adding standard units to a portfolio.</li>
+                <li className="flex gap-2"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Your market wants standard drive-up units with vehicle access to the door.</li>
+                <li className="flex gap-2"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Land cost supports a single-story footprint.</li>
+                <li className="flex gap-2"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> You want lower operating costs — no elevators, less HVAC, simpler maintenance.</li>
+                <li className="flex gap-2"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> You&apos;re building your first facility or adding standard units to a portfolio.</li>
               </ul>
             </div>
             <div className="bg-white rounded-lg p-8 border border-gray-200">
@@ -114,14 +114,14 @@ export default function MiniStoragePage() {
                 Look at other formats when:
               </h3>
               <ul className="space-y-3 text-sm text-roi-steel">
-                <li className="flex gap-2"><span className="text-gray-300 shrink-0">&#10007;</span> Land is expensive or constrained — multi-story may pencil better per acre.</li>
+                <li className="flex gap-2"><span aria-hidden="true" className="text-gray-300 shrink-0">&#10007;</span> Land is expensive or constrained — multi-story may pencil better per acre.</li>
                 <li className="flex gap-2">
-                  <span className="text-gray-300 shrink-0">&#10007;</span>
+                  <span aria-hidden="true" className="text-gray-300 shrink-0">&#10007;</span>
                   <span>Your market demands climate-controlled units at a premium. (See{" "}
                     <Link href="/climate-controlled" className="text-roi-red font-semibold hover:underline">climate-controlled storage buildings</Link>.)</span>
                 </li>
                 <li className="flex gap-2">
-                  <span className="text-gray-300 shrink-0">&#10007;</span>
+                  <span aria-hidden="true" className="text-gray-300 shrink-0">&#10007;</span>
                   <span>You&apos;re storing boats and RVs, which need larger bays and door heights. (See{" "}
                     <Link href="/boat-storage" className="text-roi-red font-semibold hover:underline">boat/RV storage buildings</Link>.)</span>
                 </li>
@@ -146,11 +146,11 @@ export default function MiniStoragePage() {
             <div>
               <h3 className="text-lg font-bold text-roi-navy mb-4">ROI&apos;s scope</h3>
               <ul className="space-y-3 text-sm text-roi-steel">
-                <li className="flex gap-2"><span className="text-roi-red shrink-0">&#10003;</span> Design and engineering of the metal building system for your dimensions, loads, and code environment.</li>
-                <li className="flex gap-2"><span className="text-roi-red shrink-0">&#10003;</span> Manufacturing of the steel building package.</li>
-                <li className="flex gap-2"><span className="text-roi-red shrink-0">&#10003;</span> Roll-up doors and partition options.</li>
-                <li className="flex gap-2"><span className="text-roi-red shrink-0">&#10003;</span> Stamped engineering drawings.</li>
-                <li className="flex gap-2"><span className="text-roi-red shrink-0">&#10003;</span> Nationwide delivery.</li>
+                <li className="flex gap-2"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Design and engineering of the metal building system for your dimensions, loads, and code environment.</li>
+                <li className="flex gap-2"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Manufacturing of the steel building package.</li>
+                <li className="flex gap-2"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Roll-up doors and partition options.</li>
+                <li className="flex gap-2"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Stamped engineering drawings.</li>
+                <li className="flex gap-2"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Nationwide delivery.</li>
               </ul>
             </div>
             <div>
@@ -196,11 +196,11 @@ export default function MiniStoragePage() {
             package only, excluding concrete and sitework). The drivers that move your number:
           </p>
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-3 max-w-3xl">
-            <div className="flex gap-2 text-sm text-roi-steel"><span className="text-roi-red shrink-0">&#10003;</span> The steel package — size, spans, heights, bay spacing.</div>
-            <div className="flex gap-2 text-sm text-roi-steel"><span className="text-roi-red shrink-0">&#10003;</span> Load requirements — wind, snow, and live loads.</div>
-            <div className="flex gap-2 text-sm text-roi-steel"><span className="text-roi-red shrink-0">&#10003;</span> Doors and partitions — count and type.</div>
-            <div className="flex gap-2 text-sm text-roi-steel"><span className="text-roi-red shrink-0">&#10003;</span> Region and the steel market.</div>
-            <div className="flex gap-2 text-sm text-roi-steel"><span className="text-roi-red shrink-0">&#10003;</span> Schedule.</div>
+            <div className="flex gap-2 text-sm text-roi-steel"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> The steel package — size, spans, heights, bay spacing.</div>
+            <div className="flex gap-2 text-sm text-roi-steel"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Load requirements — wind, snow, and live loads.</div>
+            <div className="flex gap-2 text-sm text-roi-steel"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Doors and partitions — count and type.</div>
+            <div className="flex gap-2 text-sm text-roi-steel"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Region and the steel market.</div>
+            <div className="flex gap-2 text-sm text-roi-steel"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Schedule.</div>
           </div>
           <p className="mt-8 text-roi-steel leading-relaxed max-w-3xl text-sm">
             For the full line-item breakdown including erection and concrete ranges, see the{" "}
