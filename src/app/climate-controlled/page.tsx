@@ -8,7 +8,7 @@ import { breadcrumbSchema, faqPageSchema, serviceSchema } from "@/lib/schema";
 export const metadata: Metadata = pageMetadata({
   title: "Climate Controlled Storage Buildings | ROI Self Storage",
   description:
-    "Insulated, HVAC-ready climate controlled self storage buildings. $17-$20/sq ft building packages. Premium rents, premium returns. Call (865) 316-9009.",
+    "Insulated, HVAC-ready climate controlled self storage buildings. $15-$20/sq ft building packages. Premium rents, premium returns. Call (865) 316-9009.",
   path: "/climate-controlled",
 });
 
@@ -21,8 +21,8 @@ const service = serviceSchema({
   serviceType: "Climate Controlled Self Storage Building Manufacturing",
   name: "Climate Controlled Self Storage Buildings",
   description:
-    "Insulated, HVAC-equipped pre-engineered metal self storage buildings. Premium revenue product that commands 25-50% rent premium over standard drive-up. Building package $17-$20 per sq ft.",
-  minPricePerSqFt: 17,
+    "Insulated, HVAC-equipped pre-engineered metal self storage buildings. Premium revenue product that commands 25-50% rent premium over standard drive-up. Building package $15-$20 per sq ft.",
+  minPricePerSqFt: 15,
 });
 
 const faqs = [
@@ -110,7 +110,7 @@ export default function ClimateControlledPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div className="bg-white rounded-lg p-6 border border-gray-200">
               <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Building Package</div>
-              <div className="text-2xl font-bold text-roi-navy">$17–$20/sf</div>
+              <div className="text-2xl font-bold text-roi-navy">$15–$20/sf</div>
             </div>
             <div className="bg-white rounded-lg p-6 border border-gray-200">
               <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">+ Erection &amp; Concrete</div>
@@ -118,7 +118,7 @@ export default function ClimateControlledPage() {
             </div>
             <div className="bg-roi-navy rounded-lg p-6">
               <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Est. Total Build</div>
-              <div className="text-2xl font-bold text-white">$32–$42/sf</div>
+              <div className="text-2xl font-bold text-white">$30–$42/sf</div>
             </div>
           </div>
           <p className="mt-4 text-xs text-gray-400">
