@@ -128,6 +128,61 @@ export function serviceSchema(input: ServiceInput) {
   return obj;
 }
 
+export interface ProductInput {
+  name: string;
+  description: string;
+  /** Lowest per-square-foot building-package price (USD). */
+  minPricePerSqFt?: number;
+  /** Highest per-square-foot building-package price (USD), for an AggregateOffer range. */
+  maxPricePerSqFt?: number;
+}
+
+/**
+ * Product schema for a building product line (e.g. mini storage buildings).
+ * The product carries a Brand (ROI) and is offeredBy the LocalBusiness via
+ * @id; per-sq-ft pricing is expressed as an AggregateOffer with a
+ * UnitPriceSpecification (FTK = square feet) so the "from $X/sf" range is
+ * machine-readable without implying a fixed unit price.
+ */
+export function productSchema(input: ProductInput) {
+  const obj: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: input.name,
+    description: input.description,
+    brand: {
+      "@type": "Brand",
+      name: BUSINESS.name,
+    },
+  };
+
+  if (typeof input.minPricePerSqFt === "number") {
+    const offer: Record<string, unknown> = {
+      "@type": "AggregateOffer",
+      priceCurrency: "USD",
+      lowPrice: input.minPricePerSqFt.toFixed(2),
+      ...(typeof input.maxPricePerSqFt === "number"
+        ? { highPrice: input.maxPricePerSqFt.toFixed(2) }
+        : {}),
+      offeredBy: { "@id": BUSINESS_ID },
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        price: input.minPricePerSqFt.toFixed(2),
+        priceCurrency: "USD",
+        referenceQuantity: {
+          "@type": "QuantitativeValue",
+          value: "1",
+          // FTK = square feet (UN/CEFACT unit code)
+          unitCode: "FTK",
+        },
+      },
+    };
+    obj.offers = offer;
+  }
+
+  return obj;
+}
+
 export interface BreadcrumbCrumb {
   name: string;
   /** Path under the site, e.g. "/case-studies". Omit for the final crumb (current page) per schema.org guidance. */

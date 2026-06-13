@@ -4,12 +4,12 @@ import SubPageLayout from "@/components/SubPageLayout";
 import PageFAQ from "@/components/PageFAQ";
 import JsonLd from "@/components/JsonLd";
 import { pageMetadata } from "@/lib/metadata";
-import { breadcrumbSchema, faqPageSchema, serviceSchema } from "@/lib/schema";
+import { breadcrumbSchema, faqPageSchema, serviceSchema, productSchema } from "@/lib/schema";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Mini Storage Buildings | ROI Self Storage",
+  title: "Mini Storage Buildings | Pre-Engineered Steel Self Storage | ROI",
   description:
-    "Pre-engineered mini storage buildings from ROI. Standard drive-up units starting at $10-$12/sq ft. Custom sizes, nationwide delivery. Call (865) 316-9009.",
+    "Metal mini storage buildings engineered around your unit mix and pro forma. Roll-up doors, low operating cost, nationwide delivery. Building package from $10-12/sf.",
   path: "/mini-storage",
 });
 
@@ -22,183 +22,246 @@ const service = serviceSchema({
   serviceType: "Mini Storage Building Manufacturing",
   name: "Pre-Engineered Mini Storage Buildings",
   description:
-    "Single-story drive-up self storage buildings with individual roll-up doors. Custom engineered for site-specific wind, snow, and seismic loads. Building package $10-$12 per sq ft.",
+    "Single-story drive-up self storage buildings with individual roll-up doors. Engineered for site-specific wind, snow, and seismic loads around your unit mix and net rentable square feet. Building package $10-$12 per sq ft.",
   minPricePerSqFt: 10,
+});
+
+const product = productSchema({
+  name: "Mini Storage Building (Pre-Engineered Steel)",
+  description:
+    "Pre-engineered steel mini storage building system — primary frames, secondary framing, cladding, bracing, roll-up doors, and partitions — engineered to your site, loads, dimensions, and local code. Building package only; excludes concrete and sitework.",
+  minPricePerSqFt: 10,
+  maxPricePerSqFt: 12,
 });
 
 const faqs = [
   {
-    q: "What is the most common mini storage building size?",
-    a: "The most popular configurations are 30\u2019\u00d7150\u2019 and 40\u2019\u00d7100\u2019. These sizes balance unit count with cost efficiency and fit most standard lot configurations.",
+    q: "How much does a mini storage building cost?",
+    a: "Standard mini storage building packages typically start around $10-12/sq ft (national average, building package only, excluding concrete and sitework). Your real cost depends on size, spans, loads, door count, and region — send dimensions for a project range.",
   },
   {
-    q: "How many units can I fit in a mini storage building?",
-    a: "It depends on your unit mix. A 40\u2019\u00d7100\u2019 building typically holds 20-30 units with a standard mix of 5\u00d710, 10\u00d710, and 10\u00d720 sizes. We\u2019ll help you optimize the layout for your market.",
+    q: "What sizes do mini storage buildings come in?",
+    a: "Buildings are engineered to your site and unit mix rather than sold in fixed sizes — bay dimensions, widths, and heights are set by the layout you need. Tell us the unit mix you want to rent and we'll size the building to it.",
   },
   {
-    q: "What unit sizes should I offer?",
-    a: "The most in-demand sizes are 5\u00d710, 10\u00d710, 10\u00d715, and 10\u00d720. Your ideal mix depends on your local market. We recommend a blend of small and mid-size units to maximize occupancy and revenue per square foot.",
-  },
-  {
-    q: "Do mini storage buildings come with roll-up doors?",
-    a: "Yes. Standard configurations include commercial-grade roll-up doors on every unit. We offer multiple door sizes and styles to match your unit mix and operational needs.",
+    q: "How long does it take to build a mini storage facility?",
+    a: "Manufacturing typically takes several weeks after drawing approval, then delivery and erection. Most projects reach operational in a few months depending on sitework, permitting, and install scope.",
   },
   {
     q: "Can I expand a mini storage facility later?",
-    a: "Absolutely. We engineer buildings with future expansion in mind. Additional buildings can tie into your existing facility seamlessly, letting you grow as demand increases.",
+    a: "Yes — facilities are commonly expanded by adding units or buildings as demand grows, and existing structures can sometimes be converted to add rentable space. (See conversions and expansions.)",
   },
   {
-    q: "How long does it take to get a mini storage building operational?",
-    a: "Building packages ship in 8-14 weeks. With site prep running in parallel, most facilities are operational within 4-6 months of placing the order.",
+    q: "What's the difference between mini storage and climate-controlled?",
+    a: "Mini storage is typically single-story, drive-up, and non-conditioned — lower cost to build and operate. Climate-controlled adds insulation, conditioning, and interior hallway systems for a premium unit type.",
   },
 ];
 
 export default function MiniStoragePage() {
   return (
     <>
-      <JsonLd id="mini-storage-schema" data={[breadcrumb, service, faqPageSchema([...faqs])]} />
+      <JsonLd id="mini-storage-schema" data={[breadcrumb, service, product, faqPageSchema([...faqs])]} />
     <SubPageLayout
-      title="Mini Storage Buildings"
-      subtitle="The most popular self storage format in the industry. Simple drive-up access, roll-up doors, and low operating costs. Engineered for first-time and experienced operators alike."
+      title="Mini Storage Buildings: Pre-Engineered Steel for Self Storage Facilities"
+      subtitle="The standard, most common format in the industry — single-story, drive-up units with roll-up doors, simple access, and low operating costs. Engineered around the unit mix your market and pro forma call for."
     >
       {/* Overview */}
       <section className="py-16 lg:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-            <div>
-              <h2 className="text-3xl font-bold text-roi-navy tracking-tight">
-                Built for predictable occupancy and smooth operations
-              </h2>
-              <p className="mt-4 text-roi-steel leading-relaxed">
-                Mini storage buildings are the backbone of the self storage industry. Single-story,
-                drive-up access with individual roll-up doors on every unit. No elevators, no hallways,
-                no common areas to maintain. Tenants drive up, open their unit, and go.
-              </p>
-              <p className="mt-4 text-roi-steel leading-relaxed">
-                Every detail — from hallway layout to door spacing — influences how efficiently
-                your facility runs. Our buildings are designed for fast move-ins, fast turnovers,
-                and minimal downtime between tenants.
-              </p>
-              <p className="mt-4 text-roi-steel leading-relaxed">
-                Already own a warehouse or shell? A{" "}
-                <Link href="/retrofit" className="text-roi-red font-semibold hover:underline">
-                  building conversion
-                </Link>{" "}
-                can be the lowest-cost path to the same drive-up mini storage layout.
-              </p>
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold text-roi-navy tracking-tight">
-                A structure that protects your revenue
-              </h2>
-              <p className="mt-4 text-roi-steel leading-relaxed">
-                Steel buildings resist moisture, pests, and weather shifts — reducing maintenance
-                calls and keeping your rentable square footage performing year-round. Fire-resistant
-                construction with minimum 26ga 80KSI exterior panels and 40-year paint warranties.
-              </p>
-              <p className="mt-4 text-roi-steel leading-relaxed">
-                Building orientation, sun exposure, wind direction, and driveway alignment all
-                influence tenant satisfaction and traffic flow. We engineer every facility with
-                these operational details in mind.
-              </p>
-            </div>
-          </div>
+        <div className="max-w-3xl mx-auto px-6 lg:px-8">
+          <p className="text-lg text-roi-steel leading-relaxed">
+            A mini storage building is a single-story, drive-up self storage building — the
+            standard, most common format in the industry. Rows of units with roll-up doors,
+            simple drive-up access, and low operating costs. For first-time facility owners and
+            developers expanding a portfolio, it&apos;s usually the most direct, fastest-to-revenue
+            way into self storage. ROI engineers, manufactures, and delivers the pre-engineered
+            steel building package; you build the facility around the unit mix your market and
+            pro forma call for.
+          </p>
+          <p className="mt-6 text-roi-steel leading-relaxed">
+            A quick note on terms: &ldquo;pre-engineered metal building&rdquo; (PEMB) is common
+            buyer language, and it&apos;s accurate — modern systems are still engineered for your
+            site, loads, dimensions, and local code. What you&apos;re buying is an engineered metal
+            building system: primary frames, secondary framing, cladding, and bracing designed to
+            work together, plus the{" "}
+            <Link href="/storage-doors" className="text-roi-red font-semibold hover:underline">
+              roll-up doors
+            </Link>{" "}
+            and partitions that make it a storage facility.
+          </p>
         </div>
       </section>
 
-      {/* Features Grid */}
+      {/* Best for / not best for */}
       <section className="py-16 lg:py-24 bg-roi-light">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-roi-navy tracking-tight mb-10">
-            What&apos;s included
+            Best for / not best for
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              { title: "Pre-Engineered Steel Frame", desc: "Red iron structural framing custom designed for your site\u2019s wind, snow, and seismic loads." },
-              { title: "Min. 26ga 80KSI Exterior Panels", desc: "Commercial-grade galvanized steel wall and roof panels with 40-year paint warranties." },
-              { title: "Commercial Roll-Up Doors", desc: "Individual roll-up doors on every unit. Standard and custom sizes available." },
-              { title: "Interior Partition Walls", desc: "Steel partitions to divide the building into individual rental units. Single or double-sided options." },
-              { title: "Stamped Engineering", desc: "PE-stamped drawings for your permit application. Engineered to local building codes." },
-              { title: "Erection Guide", desc: "Detailed assembly instructions and anchor bolt plans for your erection crew or general contractor." },
-            ].map((f) => (
-              <div key={f.title} className="bg-white rounded-lg border border-gray-200 p-6">
-                <h3 className="font-bold text-roi-navy mb-2">{f.title}</h3>
-                <p className="text-sm text-roi-steel leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="bg-white rounded-lg p-8 border border-gray-200">
+              <h3 className="text-lg font-bold text-roi-navy mb-4">
+                Mini storage is a strong fit when:
+              </h3>
+              <ul className="space-y-3 text-sm text-roi-steel">
+                <li className="flex gap-2"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Your market wants standard drive-up units with vehicle access to the door.</li>
+                <li className="flex gap-2"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Land cost supports a single-story footprint.</li>
+                <li className="flex gap-2"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> You want lower operating costs — no elevators, less HVAC, simpler maintenance.</li>
+                <li className="flex gap-2"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> You&apos;re building your first facility or adding standard units to a portfolio.</li>
+              </ul>
+            </div>
+            <div className="bg-white rounded-lg p-8 border border-gray-200">
+              <h3 className="text-lg font-bold text-roi-navy mb-4">
+                Look at other formats when:
+              </h3>
+              <ul className="space-y-3 text-sm text-roi-steel">
+                <li className="flex gap-2"><span aria-hidden="true" className="text-gray-300 shrink-0">&#10007;</span> Land is expensive or constrained — multi-story may pencil better per acre.</li>
+                <li className="flex gap-2">
+                  <span aria-hidden="true" className="text-gray-300 shrink-0">&#10007;</span>
+                  <span>Your market demands climate-controlled units at a premium. (See{" "}
+                    <Link href="/climate-controlled" className="text-roi-red font-semibold hover:underline">climate-controlled storage buildings</Link>.)</span>
+                </li>
+                <li className="flex gap-2">
+                  <span aria-hidden="true" className="text-gray-300 shrink-0">&#10007;</span>
+                  <span>You&apos;re storing boats and RVs, which need larger bays and door heights. (See{" "}
+                    <Link href="/boat-storage" className="text-roi-red font-semibold hover:underline">boat/RV storage buildings</Link>.)</span>
+                </li>
+              </ul>
+            </div>
           </div>
+          <p className="mt-8 text-roi-steel leading-relaxed max-w-3xl">
+            Not sure which way your site leans? That&apos;s a layout conversation —{" "}
+            <a href="#quote" className="text-roi-red font-semibold hover:underline">send us the site and target unit mix</a>{" "}
+            and we&apos;ll help you compare.
+          </p>
         </div>
       </section>
 
-      {/* Pricing Band */}
+      {/* What's included and what isn't */}
       <section className="py-16 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-roi-navy tracking-tight mb-4">
-            Mini storage pricing
+          <h2 className="text-3xl font-bold text-roi-navy tracking-tight mb-10">
+            What&apos;s included — and what isn&apos;t
           </h2>
-          <p className="text-roi-steel leading-relaxed max-w-2xl mb-10">
-            Building package pricing for standard mini storage starts at $10–$12 per square foot.
-            Estimated total build cost including erection and concrete runs $23.50–$33.00/sf
-            (national average ~$28.25/sf).
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div className="bg-roi-light rounded-lg p-6 border border-gray-200">
-              <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Building Package</div>
-              <div className="text-2xl font-bold text-roi-navy">$10–$12/sf</div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+              <h3 className="text-lg font-bold text-roi-navy mb-4">ROI&apos;s scope</h3>
+              <ul className="space-y-3 text-sm text-roi-steel">
+                <li className="flex gap-2"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Design and engineering of the metal building system for your dimensions, loads, and code environment.</li>
+                <li className="flex gap-2"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Manufacturing of the steel building package.</li>
+                <li className="flex gap-2"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Roll-up doors and partition options.</li>
+                <li className="flex gap-2"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Stamped engineering drawings.</li>
+                <li className="flex gap-2"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Nationwide delivery.</li>
+              </ul>
             </div>
-            <div className="bg-roi-light rounded-lg p-6 border border-gray-200">
-              <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">+ Erection &amp; Concrete</div>
-              <div className="text-2xl font-bold text-roi-navy">$13.50–$21/sf</div>
-            </div>
-            <div className="bg-roi-navy rounded-lg p-6">
-              <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Est. Total Build</div>
-              <div className="text-2xl font-bold text-white">$23.50–$33/sf</div>
+            <div>
+              <h3 className="text-lg font-bold text-roi-navy mb-4">What ROI doesn&apos;t do</h3>
+              <p className="text-sm text-roi-steel leading-relaxed">
+                ROI doesn&apos;t pour concrete or act as your on-site general contractor.
+                Foundations, sitework, and erection are handled by your contractor. We&apos;re
+                upfront about that scope because it keeps your budget honest.
+              </p>
             </div>
           </div>
-          <p className="mt-4 text-xs text-gray-400">
-            Estimates include building package + steel erection + concrete/site work (national averages).
-            Does not include land, permits, utilities, or other soft costs. ROI does not perform concrete
-            services. Actual costs vary by location, zoning, wind and snow loads.
+        </div>
+      </section>
+
+      {/* Designed around unit mix */}
+      <section className="py-16 lg:py-24 bg-roi-navy">
+        <div className="max-w-3xl mx-auto px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-white tracking-tight mb-6">
+            Designed around your unit mix and net rentable square feet
+          </h2>
+          <p className="text-gray-300 leading-relaxed">
+            The building decision and the revenue model are the same conversation. Bay dimensions,
+            aisle widths, and the building footprint determine how many units of each size you can
+            fit — which sets your net rentable square feet (NRSF) and unit mix, which sets what the
+            facility earns. &ldquo;Engineered around your pro forma, not the other way around&rdquo;
+            means we size the system to the mix you want to rent rather than forcing your mix into a
+            generic box. <a href="#quote" className="text-roi-red font-semibold hover:underline">Send us your target unit mix</a>{" "}
+            (or your market&apos;s demand) and the site, and we&apos;ll work the layout against it.
           </p>
         </div>
       </section>
 
-      {/* Upgrades */}
+      {/* What drives cost */}
       <section className="py-16 lg:py-24 bg-roi-light">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-roi-navy tracking-tight mb-4">
-            Available upgrades
+            What drives mini storage building cost
           </h2>
-          <p className="text-roi-steel leading-relaxed max-w-2xl mb-8">
-            Every building can be customized to match your market, climate, and operational strategy.
+          <p className="text-roi-steel leading-relaxed max-w-3xl">
+            We don&apos;t publish a single cost-per-square-foot number, because an honest one
+            doesn&apos;t exist without your project&apos;s details. As a starting point, standard
+            mini storage building packages run about $10-12/sq ft (national average, building
+            package only, excluding concrete and sitework). The drivers that move your number:
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              "Standing seam roofing",
-              "Moisture barriers",
-              "Insulated metal panels",
-              "Double-sided partitions",
-              "Climate control prep",
-              "Gutters & downspouts",
-              "Canopy / awning extensions",
-              "Custom color matching",
-            ].map((u) => (
-              <div key={u} className="flex items-center gap-2.5 bg-white rounded-md border border-gray-200 px-4 py-3">
-                <span className="text-roi-red shrink-0">&#10003;</span>
-                <span className="text-sm text-roi-navy font-medium">{u}</span>
-              </div>
-            ))}
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-3 max-w-3xl">
+            <div className="flex gap-2 text-sm text-roi-steel"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> The steel package — size, spans, heights, bay spacing.</div>
+            <div className="flex gap-2 text-sm text-roi-steel"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Load requirements — wind, snow, and live loads.</div>
+            <div className="flex gap-2 text-sm text-roi-steel"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Doors and partitions — count and type.</div>
+            <div className="flex gap-2 text-sm text-roi-steel"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Region and the steel market.</div>
+            <div className="flex gap-2 text-sm text-roi-steel"><span aria-hidden="true" className="text-roi-red shrink-0">&#10003;</span> Schedule.</div>
           </div>
+          <p className="mt-8 text-roi-steel leading-relaxed max-w-3xl text-sm">
+            For the full line-item breakdown including erection and concrete ranges, see the{" "}
+            <Link href="/#sizes" className="text-roi-red font-semibold hover:underline">pricing guide</Link>.
+            For a real number, <a href="#quote" className="text-roi-red font-semibold hover:underline">send your dimensions</a>.
+          </p>
+        </div>
+      </section>
+
+      {/* Timeline */}
+      <section className="py-16 lg:py-24 bg-white">
+        <div className="max-w-3xl mx-auto px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-roi-navy tracking-tight mb-6">Timeline</h2>
+          <p className="text-roi-steel leading-relaxed">
+            Manufacturing lead time typically runs several weeks once drawings are approved,
+            followed by delivery and field erection by your contractor. A realistic mini storage
+            project — from order to operational — is commonly a few months, depending on sitework
+            readiness, permitting, submittals, and install scope. We&apos;ll give you a
+            project-specific timeline with your quote. Already own a building? A{" "}
+            <Link href="/retrofit" className="text-roi-red font-semibold hover:underline">
+              warehouse conversion
+            </Link>{" "}
+            can shorten the path further.
+          </p>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="py-16 lg:py-24 bg-white">
+      <section className="py-16 lg:py-24 bg-roi-light">
         <div className="max-w-3xl mx-auto px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-roi-navy tracking-tight mb-10">
-            Mini storage FAQ
+            Frequently asked questions
           </h2>
           <PageFAQ items={faqs} />
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-16 lg:py-20 bg-white">
+        <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center">
+          <h2 className="text-2xl lg:text-3xl font-bold text-roi-navy tracking-tight">
+            Get a custom layout and quote.
+          </h2>
+          <p className="mt-4 text-roi-steel leading-relaxed">
+            Send us your site and target unit mix and we&apos;ll work up a building that fits your
+            pro forma — with a real price and timeline.
+          </p>
+          <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="#quote"
+              className="inline-flex items-center justify-center bg-roi-red text-white font-semibold px-7 py-3.5 rounded-md hover:bg-roi-darkred transition-colors text-sm"
+            >
+              Get a Custom Layout
+            </a>
+            <a
+              href="tel:8653169009"
+              className="inline-flex items-center justify-center border border-gray-300 text-roi-navy font-medium px-7 py-3.5 rounded-md hover:bg-roi-light transition-colors text-sm"
+            >
+              Call (865) 316-9009
+            </a>
+          </div>
         </div>
       </section>
     </SubPageLayout>
