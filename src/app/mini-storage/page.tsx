@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import SubPageLayout from "@/components/SubPageLayout";
 import PageFAQ from "@/components/PageFAQ";
 import JsonLd from "@/components/JsonLd";
@@ -77,6 +78,13 @@ export default function MiniStoragePage() {
                 Every detail — from hallway layout to door spacing — influences how efficiently
                 your facility runs. Our buildings are designed for fast move-ins, fast turnovers,
                 and minimal downtime between tenants.
+              </p>
+              <p className="mt-4 text-roi-steel leading-relaxed">
+                Already own a warehouse or shell? A{" "}
+                <Link href="/retrofit" className="text-roi-red font-semibold hover:underline">
+                  building conversion
+                </Link>{" "}
+                can be the lowest-cost path to the same drive-up mini storage layout.
               </p>
             </div>
             <div>

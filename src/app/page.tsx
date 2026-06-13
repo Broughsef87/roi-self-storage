@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import QuoteForm from "@/components/QuoteForm";
@@ -212,7 +213,12 @@ export default function Home() {
             </h2>
             <p className="mt-4 text-roi-steel leading-relaxed">
               Whether you&apos;re building your first 20-unit facility or expanding a portfolio,
-              we engineer the right structure for your market and revenue goals.
+              we engineer the right structure for your market and revenue goals. Already own a
+              building or shell? A{" "}
+              <Link href="/retrofit" className="text-roi-red font-semibold hover:underline">
+                warehouse-to-self-storage conversion
+              </Link>{" "}
+              is often the lowest-cost path in.
             </p>
           </div>
 
