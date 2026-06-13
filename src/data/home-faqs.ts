@@ -13,7 +13,7 @@ export const HOME_FAQS = [
   },
   {
     q: "How much does a self storage building cost?",
-    a: "Building packages range from $7-$20 per square foot depending on type. Standard storage runs $10-$12/sf, climate controlled is $15-$20/sf, boat & RV is $12-$15/sf, and retrofits start at $7-$10/sf. When you add erection ($3.50-$6.00/sf) and concrete/site work ($10-$15/sf), total estimated build costs range from roughly $23-$41/sf depending on building type. These are national averages — your actual costs will depend on location, zoning, wind and snow loads, and current steel market.",
+    a: "Building packages range from $7-$20 per square foot depending on type. Standard storage runs $10-$12/sf, climate controlled is $15-$20/sf, boat & RV is $12-$15/sf, and retrofits start at $7-$10/sf. When you add erection ($3.50-$6.00/sf) and concrete/site work ($10-$15/sf), total estimated build costs range from roughly $23-$42/sf depending on building type. These are national averages — your actual costs will depend on location, zoning, wind and snow loads, and current steel market.",
   },
   {
     q: "Can I add climate control later?",
