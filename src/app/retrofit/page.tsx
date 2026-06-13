@@ -222,20 +222,6 @@ export default function RetrofitPage() {
             up, depending on door count, partitions, climate control, and how much the existing
             structure needs.
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
-            <div className="bg-white rounded-lg p-6 border border-gray-200">
-              <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Building Package</div>
-              <div className="text-2xl font-bold text-roi-navy">$7&ndash;$10/sf</div>
-            </div>
-            <div className="bg-white rounded-lg p-6 border border-gray-200">
-              <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">+ Erection</div>
-              <div className="text-2xl font-bold text-roi-navy">$3.50&ndash;$6/sf</div>
-            </div>
-            <div className="bg-roi-navy rounded-lg p-6">
-              <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Est. Total</div>
-              <div className="text-2xl font-bold text-white">$10.50&ndash;$16+/sf</div>
-            </div>
-          </div>
           <p className="mt-6 text-roi-steel leading-relaxed max-w-3xl text-sm">
             Cost drivers include the steel package, doors, hallway systems and partitions,
             insulation and climate-control coordination, height and spans, load requirements,
