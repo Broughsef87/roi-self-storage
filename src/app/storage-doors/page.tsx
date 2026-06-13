@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import SubPageLayout from "@/components/SubPageLayout";
 import PageFAQ from "@/components/PageFAQ";
 import JsonLd from "@/components/JsonLd";
 import { pageMetadata } from "@/lib/metadata";
-import { breadcrumbSchema, faqPageSchema, serviceSchema } from "@/lib/schema";
+import { breadcrumbSchema, faqPageSchema, serviceSchema, productSchema } from "@/lib/schema";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Self Storage Doors | ROI Self Storage",
+  title: "Self Storage Roll-Up Doors | New Builds & Replacement | ROI",
   description:
-    "Commercial-grade self storage roll-up doors in all standard sizes. Sheet doors, roll-up doors, and swing doors for every storage application. Call (865) 316-9009.",
+    "Roll-up doors for self storage — sizing, options, and how doors affect unit layout and revenue. New construction and replacement. Get a component quote.",
   path: "/storage-doors",
 });
 
@@ -19,9 +20,15 @@ const breadcrumb = breadcrumbSchema([
 
 const service = serviceSchema({
   serviceType: "Self Storage Door Supply",
-  name: "Commercial-Grade Self Storage Doors",
+  name: "Self Storage Roll-Up Doors & Commercial Storage Doors",
   description:
-    "Commercial roll-up doors, sheet curtain doors, swing doors, and overhead sectional doors for self storage facilities. Patented S2F Latch system with dual padlock support. 2-3 week lead times. Available in 12 color options.",
+    "Commercial roll-up doors, sheet curtain doors, swing doors, and overhead sectional doors for self storage facilities — supplied as part of a complete building package and for component or replacement orders. Patented S2F Latch system with dual padlock support.",
+});
+
+const product = productSchema({
+  name: "Self Storage Roll-Up Door",
+  description:
+    "Commercial-grade steel roll-up door for self storage units. Sized to your unit schedule, available in galvanized or painted finishes, insulated or non-insulated, with latching specified for access-control and smart-lock compatibility. Supplied for new construction and as replacement doors for existing facilities.",
 });
 
 const faqs = [
@@ -30,82 +37,152 @@ const faqs = [
     a: "We supply commercial-grade roll-up doors (the industry standard), sheet curtain doors, swing doors, and overhead sectional doors. The right choice depends on your unit size, access needs, and budget.",
   },
   {
-    q: "What are the standard self storage door sizes?",
-    a: "Common widths are 3\u2019, 4\u2019, 5\u2019, 6\u2019, 8\u2019, 10\u2019, and 12\u2019. Standard heights are 7\u2019 to 8\u2019 for standard units and 10\u2019 to 14\u2019+ for vehicle/boat/RV storage. Custom sizes are available.",
+    q: "What sizes do self storage roll-up doors come in?",
+    a: "Door width and height are set by your unit dimensions and the access you need, so they're specified to your project rather than sold in fixed sizes. Common widths run 3′ to 12′ with standard heights of 7′–8′ for standard units and 10′–14′+ for vehicle, boat, and RV storage. Send your unit schedule and we'll match doors to it.",
   },
   {
-    q: "What\u2019s the difference between roll-up and sheet doors?",
+    q: "What's the difference between roll-up and sheet doors?",
     a: "Roll-up doors coil into a drum above the opening and are the most common for self storage. Sheet curtain doors use corrugated steel panels and roll up similarly but are typically more economical. Both are commercial-grade and built for daily use.",
   },
   {
-    q: "Do doors come with locks?",
-    a: "Doors include the patented S2F Latch system which supports dual padlocks for added security. Cylinder lock options and smart lock integrations are available as upgrades for facilities that want centralized access control.",
+    q: "Can I replace roll-up doors on an existing facility?",
+    a: "Yes — we supply replacement doors for existing facilities, whether you're upgrading aging doors, repairing damage, or remixing unit sizes. We match your current frame dimensions and mounting configuration. Send your current door sizes and counts for a quote.",
   },
   {
-    q: "Can I order replacement doors for an existing facility?",
-    a: "Yes. We supply replacement doors in all standard sizes to fit existing frames. If you\u2019re upgrading or replacing worn doors on an existing facility, we can match your current configuration.",
+    q: "Do insulated roll-up doors matter for climate-controlled units?",
+    a: "For climate-controlled units, insulated doors are commonly specified to help maintain the conditioned envelope; standard drive-up units typically use non-insulated doors. The right choice depends on your facility type and operating plan.",
   },
   {
-    q: "Are insulated doors available?",
-    a: "Yes. Insulated door options are available for climate controlled units. They help maintain temperature consistency and reduce energy costs in heated/cooled buildings.",
+    q: "Do your doors work with smart locks and access control?",
+    a: "Doors include the patented S2F Latch system which supports dual padlocks, and latching can be specified with access-control and smart-lock compatibility in mind. Tell us the access system you're planning and we'll account for it.",
   },
 ];
 
 export default function StorageDoorsPage() {
   return (
     <>
-      <JsonLd id="doors-schema" data={[breadcrumb, service, faqPageSchema([...faqs])]} />
+      <JsonLd id="doors-schema" data={[breadcrumb, service, product, faqPageSchema([...faqs])]} />
     <SubPageLayout
-      title="Self Storage Doors"
-      subtitle="Commercial-grade roll-up doors, sheet doors, and specialty doors for every self storage application. The door is the most-used component in your building — we don't cut corners."
+      title="Self Storage Roll-Up Doors & Storage Door Systems"
+      subtitle="Roll-up doors are the most-used component in a self storage facility — one per unit, cycled thousands of times over the building's life. We supply them for new builds and as replacements, matched to your unit schedule."
     >
-      {/* Overview */}
+      {/* Overview / roll-up doors intro */}
       <section className="py-16 lg:py-24 bg-white">
+        <div className="max-w-3xl mx-auto px-6 lg:px-8">
+          <p className="text-lg text-roi-steel leading-relaxed">
+            Roll-up doors are the most-used component in a self storage facility — one per unit,
+            opened and closed thousands of times over the building&apos;s life. Whether you&apos;re
+            building new or upgrading an existing facility, the doors you choose affect your unit
+            layout, your tenant experience, and your operating costs. ROI supplies roll-up doors as
+            part of a complete building package and for component or replacement orders.
+          </p>
+          <p className="mt-6 text-roi-steel leading-relaxed">
+            Two kinds of buyers land here: developers and GCs specifying doors for new
+            construction, and owner-operators replacing or upgrading doors on an existing facility.
+            Both paths are below.
+          </p>
+        </div>
+      </section>
+
+      {/* Door options */}
+      <section className="py-16 lg:py-24 bg-roi-light">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-            <div>
-              <h2 className="text-3xl font-bold text-roi-navy tracking-tight">
-                Doors built for thousands of cycles
-              </h2>
-              <p className="mt-4 text-roi-steel leading-relaxed">
-                Self storage doors get opened and closed thousands of times over the life of
-                a facility. Every door we supply is commercial-grade, built for daily tenant
-                use, and backed by manufacturer warranties.
-              </p>
-              <p className="mt-4 text-roi-steel leading-relaxed">
-                From standard 4&apos;×7&apos; unit doors to oversized 14&apos;×16&apos; vehicle bays,
-                we supply the right door for every unit type in your facility.
+          <h2 className="text-3xl font-bold text-roi-navy tracking-tight mb-6">
+            Door options
+          </h2>
+          <p className="text-roi-steel leading-relaxed max-w-3xl mb-8">
+            Self storage roll-up doors vary by:
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <h3 className="font-bold text-roi-navy mb-2">Size</h3>
+              <p className="text-sm text-roi-steel leading-relaxed">Door width and height are set by the unit dimensions and the access you need.</p>
+            </div>
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <h3 className="font-bold text-roi-navy mb-2">Material &amp; coating</h3>
+              <p className="text-sm text-roi-steel leading-relaxed">Steel doors in galvanized or painted finishes; coating choices relate to corrosion exposure in your climate.</p>
+            </div>
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <h3 className="font-bold text-roi-navy mb-2">Insulated vs. non-insulated</h3>
+              <p className="text-sm text-roi-steel leading-relaxed">
+                Insulated doors are typically specified for{" "}
+                <Link href="/climate-controlled" className="text-roi-red font-semibold hover:underline">climate-controlled units</Link>;
+                non-insulated for standard drive-up.
               </p>
             </div>
-            <div>
-              <h2 className="text-3xl font-bold text-roi-navy tracking-tight">
-                Every size, every application
-              </h2>
-              <p className="mt-4 text-roi-steel leading-relaxed">
-                Standard self storage units, climate controlled hallway units, drive-up bays,
-                boat storage, RV storage — each application has specific door requirements.
-                We supply doors matched to your unit mix and building design.
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <h3 className="font-bold text-roi-navy mb-2">Latching &amp; security</h3>
+              <p className="text-sm text-roi-steel leading-relaxed">Latch and locking options, including compatibility with access-control and smart-lock systems.</p>
+            </div>
+          </div>
+          <p className="mt-8 text-roi-steel leading-relaxed max-w-3xl text-sm">
+            Specific door sizes, gauges, ratings, and performance characteristics are
+            project-dependent — we match doors to your unit schedule and code environment rather
+            than promising universal numbers.
+          </p>
+        </div>
+      </section>
+
+      {/* How doors affect layout and revenue */}
+      <section className="py-16 lg:py-24 bg-roi-navy">
+        <div className="max-w-3xl mx-auto px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-white tracking-tight mb-6">
+            How doors affect layout and revenue
+          </h2>
+          <p className="text-gray-300 leading-relaxed">
+            Doors aren&apos;t just a part — they shape the facility. Door width and placement
+            interact with unit dimensions and drive-aisle geometry, which affects how many units of
+            each size fit in the building, which affects your net rentable square feet and unit
+            mix. Get the door schedule right and the layout works; get it wrong and you lose
+            rentable units or create access problems. That&apos;s why we plan doors as part of the{" "}
+            <Link href="/mini-storage" className="text-roi-red font-semibold hover:underline">building layout</Link>,
+            not as an afterthought.
+          </p>
+        </div>
+      </section>
+
+      {/* New construction vs replacement */}
+      <section className="py-16 lg:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-roi-navy tracking-tight mb-10">
+            New construction vs. replacement
+          </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="bg-roi-light rounded-lg p-8 border border-gray-200">
+              <h3 className="text-lg font-bold text-roi-navy mb-3">New construction</h3>
+              <p className="text-sm text-roi-steel leading-relaxed">
+                Doors are specified as part of the building package, matched to your unit mix and
+                engineered openings. Ask for a package quote that includes the door schedule —
+                whether you&apos;re planning{" "}
+                <Link href="/mini-storage" className="text-roi-red font-semibold hover:underline">mini storage</Link> or a{" "}
+                <Link href="/retrofit" className="text-roi-red font-semibold hover:underline">building conversion</Link>.
               </p>
-              <p className="mt-4 text-roi-steel leading-relaxed">
-                Doors are included in every new building package. We also supply standalone
-                door orders for retrofits, expansions, and replacement projects.
+            </div>
+            <div className="bg-roi-light rounded-lg p-8 border border-gray-200">
+              <h3 className="text-lg font-bold text-roi-navy mb-3">Replacement &amp; upgrades</h3>
+              <p className="text-sm text-roi-steel leading-relaxed">
+                Facilities replace roll-up doors as they age, after damage, or when remixing units
+                (changing unit sizes to match demand). We supply replacement doors for existing
+                facilities —{" "}
+                <a href="#quote" className="text-roi-red font-semibold hover:underline">send your current door sizes and counts</a>{" "}
+                for a replacement quote.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Door Types */}
+      {/* Door Types (hub content) */}
       <section className="py-16 lg:py-24 bg-roi-light">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-roi-navy tracking-tight mb-10">
-            Door types
+            Door types we supply
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               { title: "Roll-Up Doors", desc: "The industry standard. Open drum concept with worm screw tensioning for simplified maintenance. Available in all standard widths and heights. 2–3 week lead times." },
               { title: "Sheet Curtain Doors", desc: "Corrugated steel panel doors. Economical option for large facilities. Durable, easy to maintain, and available in custom colors." },
-              { title: "Swing Doors", desc: "Hinged doors for units where roll-up isn\u2019t practical. Common for hallway-access climate controlled units and specialty applications." },
+              { title: "Swing Doors", desc: "Hinged doors for units where roll-up isn’t practical. Common for hallway-access climate controlled units and specialty applications." },
               { title: "Overhead Sectional Doors", desc: "Paneled doors that rise on tracks. Ideal for vehicle storage with wide, tall openings. Insulated options available." },
               { title: "Insulated Doors", desc: "Temperature-rated doors for climate controlled units. Maintain thermal envelope integrity and reduce HVAC costs." },
               { title: "Replacement Doors", desc: "Drop-in replacements for existing facilities. We match your current frame dimensions and mounting configuration." },
@@ -123,9 +200,37 @@ export default function StorageDoorsPage() {
       <section className="py-16 lg:py-24 bg-white">
         <div className="max-w-3xl mx-auto px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-roi-navy tracking-tight mb-10">
-            Storage door FAQ
+            Frequently asked questions
           </h2>
           <PageFAQ items={faqs} />
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-16 lg:py-20 bg-roi-light">
+        <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center">
+          <h2 className="text-2xl lg:text-3xl font-bold text-roi-navy tracking-tight">
+            Get a door quote — new build or replacement.
+          </h2>
+          <p className="mt-4 text-roi-steel leading-relaxed">
+            Specifying doors for a new facility, or replacing doors on an existing one? Send your
+            unit schedule (or current door sizes and counts) and we&apos;ll get you a component
+            quote.
+          </p>
+          <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="#quote"
+              className="inline-flex items-center justify-center bg-roi-red text-white font-semibold px-7 py-3.5 rounded-md hover:bg-roi-darkred transition-colors text-sm"
+            >
+              Get a Door Quote
+            </a>
+            <a
+              href="tel:8653169009"
+              className="inline-flex items-center justify-center border border-gray-300 text-roi-navy font-medium px-7 py-3.5 rounded-md hover:bg-roi-light transition-colors text-sm"
+            >
+              Call (865) 316-9009
+            </a>
+          </div>
         </div>
       </section>
     </SubPageLayout>
