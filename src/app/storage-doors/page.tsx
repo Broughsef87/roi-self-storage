@@ -63,7 +63,7 @@ export default function StorageDoorsPage() {
     <>
       <JsonLd id="doors-schema" data={[breadcrumb, service, product, faqPageSchema([...faqs])]} />
     <SubPageLayout
-      title="Self Storage Roll-Up Doors &amp; Storage Door Systems"
+      title="Self Storage Roll-Up Doors & Storage Door Systems"
       subtitle="Roll-up doors are the most-used component in a self storage facility — one per unit, cycled thousands of times over the building's life. We supply them for new builds and as replacements, matched to your unit schedule."
     >
       {/* Overview / roll-up doors intro */}
