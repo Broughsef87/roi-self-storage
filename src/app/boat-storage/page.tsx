@@ -14,7 +14,6 @@ export const metadata: Metadata = pageMetadata({
 
 const breadcrumb = breadcrumbSchema([
   { name: "Home", path: "/" },
-  { name: "Building Types" },
   { name: "Boat Storage", path: "/boat-storage" },
 ]);
 
