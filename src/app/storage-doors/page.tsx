@@ -136,7 +136,8 @@ export default function StorageDoorsPage() {
             mix. Get the door schedule right and the layout works; get it wrong and you lose
             rentable units or create access problems. That&apos;s why we plan doors as part of the{" "}
             <Link href="/mini-storage" className="text-roi-red font-semibold hover:underline">building layout</Link>,
-            not as an afterthought.
+            not as an afterthought. Door count and type also move the budget — see{" "}
+            <Link href="/resources/self-storage-building-cost" className="text-roi-red font-semibold hover:underline">what drives self-storage building cost</Link>.
           </p>
         </div>
       </section>

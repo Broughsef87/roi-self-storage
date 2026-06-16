@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import SubPageLayout from "@/components/SubPageLayout";
 import PageFAQ from "@/components/PageFAQ";
 import JsonLd from "@/components/JsonLd";
@@ -87,6 +88,13 @@ export default function PortableStoragePage() {
                 If your business outgrows a location or you find a better site, pick them up
                 and move them. The flexibility to relocate your inventory is a powerful
                 advantage that permanent buildings can&apos;t offer.
+              </p>
+              <p className="mt-4 text-roi-steel leading-relaxed">
+                Weighing containers against a permanent building? Read{" "}
+                <Link href="/resources/self-storage-building-cost" className="text-roi-red font-semibold hover:underline">
+                  what drives self-storage building cost
+                </Link>{" "}
+                to budget the comparison.
               </p>
             </div>
           </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import SubPageLayout from "@/components/SubPageLayout";
 import PageFAQ from "@/components/PageFAQ";
 import JsonLd from "@/components/JsonLd";
@@ -117,6 +118,12 @@ export default function RVStoragePage() {
           <p className="mt-4 text-xs text-gray-400">
             Estimates include building package + steel erection + concrete/site work (national averages).
             Does not include land, permits, utilities, or other soft costs. Actual costs vary by location.
+          </p>
+          <p className="mt-4 text-sm text-roi-steel">
+            New to budgeting a facility? Read{" "}
+            <Link href="/resources/self-storage-building-cost" className="text-roi-red font-semibold hover:underline">
+              what drives self-storage building cost
+            </Link>.
           </p>
         </div>
       </section>
