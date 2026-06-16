@@ -82,6 +82,18 @@
     <priority>0.7</priority>
   </url>
 
+  <!-- Legal -->
+  <url>
+    <loc>https://www.roiselfstoragebuildings.com/privacy</loc>
+    <lastmod>2026-06-16</lastmod>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.roiselfstoragebuildings.com/terms</loc>
+    <lastmod>2026-06-16</lastmod>
+    <priority>0.3</priority>
+  </url>
+
   <!-- Case studies -->
   <url>
     <loc>https://www.roiselfstoragebuildings.com/case-studies</loc>
