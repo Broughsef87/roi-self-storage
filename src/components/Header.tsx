@@ -77,6 +77,9 @@ export default function Header() {
             <Link href="/#sizes" className="text-sm font-medium text-roi-steel hover:text-roi-red transition-colors">
               Pricing
             </Link>
+            <Link href="/resources/self-storage-building-cost" className="text-sm font-medium text-roi-steel hover:text-roi-red transition-colors">
+              Cost Guide
+            </Link>
           </nav>
 
           {/* CTA */}
@@ -134,6 +137,7 @@ export default function Header() {
               <Link href="/case-studies" onClick={() => setMobileOpen(false)} className="block text-sm font-medium text-roi-steel py-2">Case Studies</Link>
               <Link href="/about" onClick={() => setMobileOpen(false)} className="block text-sm font-medium text-roi-steel py-2">About</Link>
               <Link href="/#sizes" onClick={() => setMobileOpen(false)} className="block text-sm font-medium text-roi-steel py-2">Pricing</Link>
+              <Link href="/resources/self-storage-building-cost" onClick={() => setMobileOpen(false)} className="block text-sm font-medium text-roi-steel py-2">Cost Guide</Link>
               <Link href="/#faq" onClick={() => setMobileOpen(false)} className="block text-sm font-medium text-roi-steel py-2">FAQ</Link>
             </div>
             <div className="pt-3 border-t border-gray-100">
