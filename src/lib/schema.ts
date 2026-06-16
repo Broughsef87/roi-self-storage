@@ -6,7 +6,7 @@
  * engines understand they describe the same entity.
  */
 
-import { BUSINESS, SITE_URL, siteUrl } from "./site";
+import { BUSINESS, SITE_URL, DEFAULT_OG_IMAGE, siteUrl } from "./site";
 
 export const BUSINESS_ID = `${SITE_URL}/#business`;
 
@@ -192,6 +192,8 @@ export interface ArticleInput {
   datePublished: string;
   /** ISO date (YYYY-MM-DD) of the last meaningful update. Defaults to datePublished. */
   dateModified?: string;
+  /** Article image URL (absolute or site-relative). Defaults to the sitewide OG image (1200x630). */
+  image?: string;
 }
 
 /**
@@ -205,6 +207,9 @@ export function articleSchema(input: ArticleInput) {
     "@type": "Article",
     headline: input.headline,
     description: input.description,
+    image: input.image
+      ? (input.image.startsWith("http") ? input.image : siteUrl(input.image))
+      : DEFAULT_OG_IMAGE.url,
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": siteUrl(input.path),
