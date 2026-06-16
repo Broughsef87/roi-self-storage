@@ -61,6 +61,7 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2 text-sm text-gray-400">
               <li><Link href="/#sizes" className="hover:text-white transition-colors">Pricing Guide</Link></li>
+              <li><Link href="/resources/self-storage-building-cost" className="hover:text-white transition-colors">Cost Guide</Link></li>
               <li><Link href="/specials" className="hover:text-white transition-colors">Specials</Link></li>
               <li><Link href="/case-studies" className="hover:text-white transition-colors">Case Studies</Link></li>
               <li><Link href="/about" className="hover:text-white transition-colors">About</Link></li>
