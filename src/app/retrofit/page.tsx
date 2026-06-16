@@ -199,6 +199,10 @@ export default function RetrofitPage() {
             <Link href="/#sizes" className="text-roi-red font-semibold hover:underline">
               pricing guide
             </Link>{" "}
+            and{" "}
+            <Link href="/resources/self-storage-building-cost" className="text-roi-red font-semibold hover:underline">
+              what drives self-storage building cost
+            </Link>{" "}
             for the full breakdown.
           </p>
           <p className="mt-4 text-gray-300 leading-relaxed max-w-3xl">

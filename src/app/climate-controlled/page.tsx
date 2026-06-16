@@ -182,7 +182,9 @@ export default function ClimateControlledPage() {
             interior layout, loads, region, and schedule. National-average starting points, not a
             quote — <a href="#quote" className="text-roi-red font-semibold hover:underline">send your project</a> for
             a real range. (See the{" "}
-            <Link href="/#sizes" className="text-roi-red font-semibold hover:underline">pricing guide</Link>.)
+            <Link href="/#sizes" className="text-roi-red font-semibold hover:underline">pricing guide</Link>{" "}
+            and{" "}
+            <Link href="/resources/self-storage-building-cost" className="text-roi-red font-semibold hover:underline">what drives self-storage building cost</Link>.)
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
             <div className="bg-white rounded-lg p-6 border border-gray-200">

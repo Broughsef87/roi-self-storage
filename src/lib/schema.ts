@@ -183,6 +183,50 @@ export function productSchema(input: ProductInput) {
   return obj;
 }
 
+export interface ArticleInput {
+  headline: string;
+  description: string;
+  /** Path under the site, e.g. "/resources/self-storage-building-cost". */
+  path: string;
+  /** ISO date (YYYY-MM-DD) the article was first published. */
+  datePublished: string;
+  /** ISO date (YYYY-MM-DD) of the last meaningful update. Defaults to datePublished. */
+  dateModified?: string;
+}
+
+/**
+ * Article schema for editorial/resource pages (e.g. the cost guide).
+ * Author + publisher resolve to the ROI organization (publisher carries the
+ * logo as an ImageObject, which Google requires for Article rich results).
+ */
+export function articleSchema(input: ArticleInput) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: input.headline,
+    description: input.description,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": siteUrl(input.path),
+    },
+    author: {
+      "@type": "Organization",
+      name: BUSINESS.name,
+      url: BUSINESS.url,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: BUSINESS.name,
+      logo: {
+        "@type": "ImageObject",
+        url: BUSINESS.logo,
+      },
+    },
+    datePublished: input.datePublished,
+    dateModified: input.dateModified ?? input.datePublished,
+  };
+}
+
 export interface BreadcrumbCrumb {
   name: string;
   /** Path under the site, e.g. "/case-studies". Omit for the final crumb (current page) per schema.org guidance. */

@@ -204,7 +204,9 @@ export default function MiniStoragePage() {
           </div>
           <p className="mt-8 text-roi-steel leading-relaxed max-w-3xl text-sm">
             For the full line-item breakdown including erection and concrete ranges, see the{" "}
-            <Link href="/#sizes" className="text-roi-red font-semibold hover:underline">pricing guide</Link>.
+            <Link href="/#sizes" className="text-roi-red font-semibold hover:underline">pricing guide</Link>{" "}
+            and{" "}
+            <Link href="/resources/self-storage-building-cost" className="text-roi-red font-semibold hover:underline">what drives self-storage building cost</Link>.
             For a real number, <a href="#quote" className="text-roi-red font-semibold hover:underline">send your dimensions</a>.
           </p>
         </div>

@@ -358,6 +358,7 @@ export default function Home() {
             <p><strong className="text-roi-navy">What&apos;s included:</strong> Building package (metal building kit) + steel erection + concrete/site work. All figures are per square foot, based on national averages.</p>
             <p><strong className="text-roi-navy">What&apos;s not included:</strong> Land, permits, utilities, design fees, financing, landscaping, or other soft costs. ROI does not perform concrete services — concrete figures are based on national averages for reference.</p>
             <p><strong className="text-roi-navy">Note:</strong> Actual costs vary by location, zoning, wind loads, snow loads, and current steel market. Flex space pricing ($16+) increases with finish level and specialization. Request a quote for your specific project.</p>
+            <p><strong className="text-roi-navy">Go deeper:</strong> <Link href="/resources/self-storage-building-cost" className="text-roi-red font-semibold hover:underline">What drives self-storage building cost</Link> breaks down every line that moves your number and how to build a defensible budget.</p>
           </div>
         </div>
       </section>
