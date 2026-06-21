@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import SubPageLayout from "@/components/SubPageLayout";
 import PageFAQ from "@/components/PageFAQ";
+import Flipbook from "@/components/Flipbook";
 import JsonLd from "@/components/JsonLd";
 import { pageMetadata } from "@/lib/metadata";
 import { breadcrumbSchema, faqPageSchema } from "@/lib/schema";
@@ -112,6 +113,41 @@ export default function Special40x100Page() {
 
           <p className="mt-8 text-xs text-gray-400">
             Pricing is for immediate sale and subject to change based on material availability. Custom loadings and designs available on request.
+          </p>
+        </div>
+      </section>
+
+      {/* =================== PROPOSAL FLIPBOOK (full-bleed) =================== */}
+      <section className="py-16 lg:py-24 bg-roi-navy">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-10">
+          <div className="text-center">
+            <div className="text-xs font-semibold text-roi-red uppercase tracking-wider mb-3">
+              Full Proposal
+            </div>
+            <h2 className="text-3xl lg:text-4xl font-bold text-white tracking-tight">
+              Browse the full proposal
+            </h2>
+            <p className="mt-3 text-gray-400 max-w-2xl mx-auto">
+              Flip through every page of the proposal — building specs, pricing, and
+              what&apos;s included. This is the same package we deliver with this special.
+            </p>
+          </div>
+        </div>
+
+        {/* Full-bleed wrapper so the book can grow to ~95vw */}
+        <div className="w-full px-2 sm:px-4 text-white">
+          <Flipbook
+            folder="40x100-self-storage"
+            pageCount={7}
+            aspectRatio={1.55}
+            title="40' × 100' Self Storage — Proposal"
+            downloadHref="/blueprints/40x100-self-storage/blueprint.pdf"
+          />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <p className="mt-8 text-center text-xs text-gray-500">
+            For approval only — not for construction. Final stamped drawings are issued with your order.
           </p>
         </div>
       </section>
