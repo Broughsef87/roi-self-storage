@@ -12,7 +12,7 @@ const PATH = "/resources/cost-calculator";
 export const metadata: Metadata = pageMetadata({
   title: "Self-Storage Building Cost & ROI Calculator | ROI Self Storage",
   description:
-    "Estimate self-storage building-package cost and project a rough investment payback. Honest ranges, every assumption labeled, scope exclusions stated. Building package from $7-12/sf.",
+    "Estimate self-storage building-package cost and project a rough investment payback. Honest ranges, every assumption labeled, scope exclusions stated. Building package from $7-20/sf.",
   path: PATH,
 });
 
@@ -36,7 +36,7 @@ const faqs = [
   },
   {
     q: "Do you have climate-controlled and boat/RV pricing?",
-    a: "Yes, but we don't publish a premium per-square-foot number we haven't verified. For climate-controlled and boat/RV builds the calculator shows the cost as pending verification and points you to a real quote, rather than displaying a fake-precise figure.",
+    a: "Yes. Climate-controlled building packages run about $15-20/sq ft ($30-42/sq ft estimated total build), and boat/RV run about $12-15/sq ft ($25.50-36/sq ft total). These are the same published bands shown on each building-type page. As always, your real number depends on your project and is confirmed in a written quote.",
   },
   {
     q: "Where do the rent and occupancy numbers come from?",
@@ -75,12 +75,13 @@ export default function CostCalculatorPage() {
               <ul className="space-y-2 list-disc pl-5">
                 <li><strong className="text-roi-navy">Standard drive-up:</strong> $10–12 / sq ft (building package).</li>
                 <li><strong className="text-roi-navy">Conversion / retrofit:</strong> $7–10 / sq ft (building package).</li>
-                <li>
-                  <strong className="text-roi-navy">Climate-controlled &amp; boat/RV:</strong> premium
-                  types that cost more than standard. We show these as pending verification rather
-                  than publishing an unconfirmed number.
-                </li>
+                <li><strong className="text-roi-navy">Climate-controlled:</strong> $15–20 / sq ft building package ($30–42 / sq ft estimated total build).</li>
+                <li><strong className="text-roi-navy">Boat &amp; RV:</strong> $12–15 / sq ft building package ($25.50–36 / sq ft estimated total build).</li>
               </ul>
+              <p>
+                These are the same published bands you&apos;ll find on each building-type page —
+                the calculator reads them from one shared source so the numbers never drift.
+              </p>
               <p>
                 <strong className="text-roi-navy">What&apos;s excluded:</strong> the estimate is the
                 building package only — it excludes concrete, foundations, sitework, general

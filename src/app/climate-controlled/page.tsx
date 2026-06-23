@@ -5,6 +5,7 @@ import PageFAQ from "@/components/PageFAQ";
 import JsonLd from "@/components/JsonLd";
 import { pageMetadata } from "@/lib/metadata";
 import { breadcrumbSchema, faqPageSchema, serviceSchema } from "@/lib/schema";
+import { PRICING } from "@/lib/pricing";
 
 export const metadata: Metadata = pageMetadata({
   title: "Climate-Controlled Storage Buildings | ROI Self Storage",
@@ -189,15 +190,15 @@ export default function ClimateControlledPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
             <div className="bg-white rounded-lg p-6 border border-gray-200">
               <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Building Package</div>
-              <div className="text-2xl font-bold text-roi-navy">$15&ndash;$20/sf</div>
+              <div className="text-2xl font-bold text-roi-navy">{PRICING.climate.buildingPackageLabel}</div>
             </div>
             <div className="bg-white rounded-lg p-6 border border-gray-200">
               <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">+ Erection &amp; Concrete</div>
-              <div className="text-2xl font-bold text-roi-navy">$15&ndash;$22/sf</div>
+              <div className="text-2xl font-bold text-roi-navy">{PRICING.climate.erectionConcreteLabel}</div>
             </div>
             <div className="bg-roi-navy rounded-lg p-6">
               <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Est. Total Build</div>
-              <div className="text-2xl font-bold text-white">$30&ndash;$42/sf</div>
+              <div className="text-2xl font-bold text-white">{PRICING.climate.estTotalLabel}</div>
             </div>
           </div>
           <p className="mt-4 text-xs text-gray-400">

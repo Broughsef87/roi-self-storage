@@ -36,6 +36,7 @@ export default function CostCalculator() {
   const [opexStr, setOpexStr] = useState("");
 
   const type = getBuildingType(typeKey)!;
+  const pricing = type.pricing;
   const sqft = Math.round(num(sqftStr));
 
   function onWidth(v: string) {
@@ -51,17 +52,18 @@ export default function CostCalculator() {
     if (w > 0 && l > 0) setSqftStr(String(Math.round(w * l)));
   }
 
-  const cost = useMemo(() => {
-    if (!type.confirmed || !type.band || sqft <= 0) return null;
-    return costRange(sqft, type.band);
-  }, [type, sqft]);
-
-  // Gate the pre-priced cross-sell to CONFIRMED types only — never surface a
-  // special's dollar price alongside an unconfirmed premium estimate.
-  const special = useMemo(
-    () => (sqft > 0 && type.confirmed ? closestSpecial(sqft, typeKey) : null),
-    [sqft, typeKey, type.confirmed]
+  // Primary: building-package range (published for every type).
+  const cost = useMemo(
+    () => (sqft > 0 ? costRange(sqft, pricing.buildingPackage) : null),
+    [sqft, pricing]
   );
+  // Secondary: estimated total build, where the site publishes a total band.
+  const estTotal = useMemo(
+    () => (sqft > 0 && pricing.estTotal ? costRange(sqft, pricing.estTotal) : null),
+    [sqft, pricing]
+  );
+
+  const special = useMemo(() => (sqft > 0 ? closestSpecial(sqft, typeKey) : null), [sqft, typeKey]);
 
   // --- ROI math ---
   const eff = num(effStr) / 100;
@@ -74,6 +76,7 @@ export default function CostCalculator() {
     rentableSqft > 0 && rent > 0 && occ > 0 ? rentableSqft * rent * 12 * occ : 0;
   const noi = grossRevenue > 0 && opex > 0 ? grossRevenue * (1 - opex) : 0;
 
+  // Payback uses the building-package range (Part 1), per spec.
   const payback = useMemo(() => {
     if (!cost || grossRevenue <= 0) return null;
     return { low: cost.low / grossRevenue, high: cost.high / grossRevenue };
@@ -81,17 +84,12 @@ export default function CostCalculator() {
 
   // --- Lead deep-link ---
   const quoteHref = useMemo(() => {
-    const dims = num(widthStr) > 0 && num(lengthStr) > 0 ? `${num(widthStr)}×${num(lengthStr)}` : `${sqft.toLocaleString()} sq ft`;
+    const dims =
+      num(widthStr) > 0 && num(lengthStr) > 0 ? `${num(widthStr)}×${num(lengthStr)}` : `${sqft.toLocaleString()} sq ft`;
     let summary = `${dims} ${type.label.toLowerCase()}`;
     if (sqft > 0) summary += ` ≈ ${sqft.toLocaleString()} sq ft`;
-    if (cost) {
-      summary += ` · est. package ${fmtUSDk(cost.low)}–${fmtUSDk(cost.high)}`;
-    } else if (!type.confirmed) {
-      summary += ` · ${type.label.toLowerCase()} pricing pending — request quote`;
-    }
-    if (payback) {
-      summary += ` · projected payback ~${payback.low.toFixed(1)}–${payback.high.toFixed(1)} yrs`;
-    }
+    if (cost) summary += ` · est. package ${fmtUSDk(cost.low)}–${fmtUSDk(cost.high)}`;
+    if (payback) summary += ` · projected payback ~${payback.low.toFixed(1)}–${payback.high.toFixed(1)} yrs`;
     const params = new URLSearchParams();
     params.set("bt", type.quoteValue);
     if (sqft > 0) params.set("sqft", String(sqft));
@@ -126,8 +124,7 @@ export default function CostCalculator() {
               >
                 {BUILDING_TYPES.map((t) => (
                   <option key={t.key} value={t.key}>
-                    {t.label}
-                    {!t.confirmed ? " (estimate pending)" : ""}
+                    {t.label} ({t.pricing.buildingPackageLabel})
                   </option>
                 ))}
               </select>
@@ -235,24 +232,33 @@ export default function CostCalculator() {
                   {fmtUSD(cost.low)} <span className="text-gray-400 font-normal">–</span> {fmtUSD(cost.high)}
                 </div>
                 <p className="mt-1 text-xs text-roi-steel">
-                  {sqft.toLocaleString()} sq ft × {type.band!.low}–{type.band!.high}/sq ft.{" "}
+                  {sqft.toLocaleString()} sq ft × {pricing.buildingPackageLabel}.{" "}
                   {loadTier === "high" && "Higher-load site — trend toward the top of the band. "}
                   {loadTier === "low" && "Lower-load site — trend toward the bottom of the band. "}
                 </p>
-              </>
-            ) : (
-              // Premium type, pending ROI verification — NO $ figure shown.
-              <div className="rounded-lg border border-amber-300 bg-amber-50 p-4">
-                <div className="text-sm font-semibold text-roi-navy mb-1">
-                  {type.label} pricing — estimate pending verification
+
+                {/* Secondary — estimated total build */}
+                <div className="mt-4 rounded-lg bg-white border border-gray-200 p-3">
+                  <div className="text-[11px] uppercase tracking-wider text-gray-400 mb-0.5">
+                    Estimated total build (excl. land &amp; soft costs)
+                  </div>
+                  {estTotal ? (
+                    <>
+                      <div className="text-lg font-bold text-roi-navy">
+                        {fmtUSD(estTotal.low)} <span className="text-gray-400 font-normal">–</span> {fmtUSD(estTotal.high)}
+                      </div>
+                      <div className="text-[11px] text-gray-400">
+                        Building package + erection &amp; concrete ({pricing.estTotalLabel} all-in).
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-xs text-roi-steel">
+                      {pricing.estTotalNote} — concrete &amp; sitework aren&apos;t in ROI&apos;s scope.
+                    </div>
+                  )}
                 </div>
-                <p className="text-xs text-roi-steel">
-                  {type.blurb} We&apos;re finalizing verified {type.label.toLowerCase()} pricing, so we
-                  won&apos;t show a number we can&apos;t stand behind. Request a quote and we&apos;ll
-                  give you a real range for your project.
-                </p>
-              </div>
-            )}
+              </>
+            ) : null}
             <p className="mt-3 text-[11px] leading-relaxed text-gray-500">{EXCLUDES}</p>
 
             {special && (

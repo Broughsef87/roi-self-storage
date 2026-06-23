@@ -5,6 +5,7 @@ import PageFAQ from "@/components/PageFAQ";
 import JsonLd from "@/components/JsonLd";
 import { pageMetadata } from "@/lib/metadata";
 import { breadcrumbSchema, faqPageSchema, serviceSchema } from "@/lib/schema";
+import { PRICING } from "@/lib/pricing";
 
 export const metadata: Metadata = pageMetadata({
   title: "Boat Storage Buildings | ROI Self Storage",
@@ -104,15 +105,15 @@ export default function BoatStoragePage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
             <div className="bg-white rounded-lg p-6 border border-gray-200">
               <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Building Package</div>
-              <div className="text-2xl font-bold text-roi-navy">$12–$15/sf</div>
+              <div className="text-2xl font-bold text-roi-navy">{PRICING.boat.buildingPackageLabel}</div>
             </div>
             <div className="bg-white rounded-lg p-6 border border-gray-200">
               <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">+ Erection &amp; Concrete</div>
-              <div className="text-2xl font-bold text-roi-navy">$13.50–$21/sf</div>
+              <div className="text-2xl font-bold text-roi-navy">{PRICING.boat.erectionConcreteLabel}</div>
             </div>
             <div className="bg-roi-navy rounded-lg p-6">
               <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Est. Total Build</div>
-              <div className="text-2xl font-bold text-white">$25.50–$36/sf</div>
+              <div className="text-2xl font-bold text-white">{PRICING.boat.estTotalLabel}</div>
             </div>
           </div>
           <p className="mt-4 text-xs text-gray-400">

@@ -2,29 +2,20 @@
  * Shared, pure helpers for the Cost + ROI calculator.
  *
  * Philosophy (mirrors /resources/self-storage-building-cost): honest ranges,
- * not fake precision. Cost is always a LOW–HIGH band. Premium building types
- * are gated behind ROI sign-off — no premium $ figure renders until confirmed.
+ * not fake precision. Cost is always a LOW–HIGH band. All $/sq ft bands come
+ * from the single source of truth in `pricing.ts` so the calculator can never
+ * drift from the published building-type pages.
  */
 
-export type BuildingTypeKey = "standard" | "retrofit" | "climate" | "boat-rv";
+import { PRICING, type Band, type TypePricing } from "./pricing";
 
-export interface CostBand {
-  /** $/sq ft, low end of the published band. */
-  low: number;
-  /** $/sq ft, high end of the published band. */
-  high: number;
-}
+export type BuildingTypeKey = "standard" | "retrofit" | "climate" | "boat-rv";
 
 export interface BuildingTypeConfig {
   key: BuildingTypeKey;
   label: string;
-  /** Published $/sq ft band. `null` while pending ROI verification. */
-  band: CostBand | null;
-  /**
-   * false = premium pricing NOT yet confirmed by ROI. While false, the UI must
-   * not render any $ figure for this type (see CostCalculator).
-   */
-  confirmed: boolean;
+  /** Published pricing (numbers + labels) from the shared source of truth. */
+  pricing: TypePricing;
   /** Short plain-language description. */
   blurb: string;
   /** Value used by the existing QuoteForm <select> — already aligned. */
@@ -32,52 +23,37 @@ export interface BuildingTypeConfig {
 }
 
 /**
- * Building-package $/sq ft bands.
- *
- * Standard + conversion are the published, confirmed bands already on the site.
- * Climate-controlled and boat/RV are PREMIUM types whose numbers ROI must
- * confirm before launch — they ship with `band: null, confirmed: false` so no
- * unverified premium number can render. When ROI provides figures, set the band
- * and flip `confirmed` to true (one-line change each).
+ * Building types offered in the calculator, each pointing at its published
+ * pricing. Boat and RV share an identical band, so they're one selectable
+ * "Boat / RV" option mapped to the QuoteForm "boat-rv" value.
  */
 export const BUILDING_TYPES: BuildingTypeConfig[] = [
   {
     key: "standard",
     label: "Standard drive-up",
-    band: { low: 10, high: 12 },
-    confirmed: true,
+    pricing: PRICING.standard,
     blurb: "Single-story, drive-up units with roll-up doors.",
     quoteValue: "standard",
   },
   {
     key: "retrofit",
     label: "Conversion / retrofit",
-    band: { low: 7, high: 10 },
-    confirmed: true,
+    pricing: PRICING.conversion,
     blurb: "Converting an existing building or shell into storage.",
     quoteValue: "retrofit",
   },
-  // --- PREMIUM TYPES — pending ROI sign-off. Do NOT ship $ figures unconfirmed. ---
-  // TODO: ROI-confirm climate-controlled $/sq ft band (insulation + interior
-  //       buildout + HVAC coordination push this above standard). When confirmed,
-  //       set band: { low: _, high: _ } and confirmed: true.
   {
     key: "climate",
     label: "Climate-controlled",
-    band: null,
-    confirmed: false,
-    blurb:
-      "Insulated, sealed envelope with interior hallways and HVAC coordination — costs more than standard drive-up.",
+    pricing: PRICING.climate,
+    blurb: "Insulated, sealed envelope with interior hallways and HVAC coordination.",
     quoteValue: "climate",
   },
-  // TODO: ROI-confirm boat/RV $/sq ft band (larger bays, taller doors).
-  //       When confirmed, set band: { low: _, high: _ } and confirmed: true.
   {
     key: "boat-rv",
     label: "Boat / RV",
-    band: null,
-    confirmed: false,
-    blurb: "Larger bays and taller doors than standard drive-up — costs more than standard.",
+    pricing: PRICING.boat, // boat and rv bands are identical
+    blurb: "Larger bays and taller doors than standard drive-up.",
     quoteValue: "boat-rv",
   },
 ];
@@ -96,7 +72,7 @@ export function roundTo(n: number, step: number): number {
 }
 
 /** Cost band → dollar range for a given area, rounded to the nearest $1,000. */
-export function costRange(sqft: number, band: CostBand): { low: number; high: number } {
+export function costRange(sqft: number, band: Band): { low: number; high: number } {
   return {
     low: roundTo(sqft * band.low, 1000),
     high: roundTo(sqft * band.high, 1000),
