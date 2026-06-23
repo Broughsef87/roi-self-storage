@@ -6,8 +6,15 @@ import CostCalculator from "@/components/CostCalculator";
 import JsonLd from "@/components/JsonLd";
 import { pageMetadata } from "@/lib/metadata";
 import { breadcrumbSchema, faqPageSchema } from "@/lib/schema";
+import { PRICING, type Band } from "@/lib/pricing";
 
 const PATH = "/resources/cost-calculator";
+
+// Prose band strings sourced from the single pricing source (no drift).
+// Match the published convention: whole dollars plain, half-dollars show cents.
+const money = (n: number) => (Number.isInteger(n) ? `${n}` : n.toFixed(2));
+const sf = (b: Band) => `$${money(b.low)}-${money(b.high)}/sq ft`;
+const P = PRICING;
 
 export const metadata: Metadata = pageMetadata({
   title: "Self-Storage Building Cost & ROI Calculator | ROI Self Storage",
@@ -24,7 +31,7 @@ const breadcrumb = breadcrumbSchema([
 const faqs = [
   {
     q: "How accurate is this self-storage cost calculator?",
-    a: "It's a starting range, not a quote. The estimate multiplies your area by published building-package $/sq ft bands ($10-12 standard, $7-10 conversion) and rounds to a low–high range. Your real number depends on site, loads, dimensions, building type, and scope, and is confirmed only in a written quote.",
+    a: `It's a starting range, not a quote. The estimate multiplies your area by published building-package $/sq ft bands (${sf(P.standard.buildingPackage)} standard, ${sf(P.conversion.buildingPackage)} conversion) and rounds to a low–high range. Your real number depends on site, loads, dimensions, building type, and scope, and is confirmed only in a written quote.`,
   },
   {
     q: "What's included in the cost estimate?",
@@ -36,7 +43,7 @@ const faqs = [
   },
   {
     q: "Do you have climate-controlled and boat/RV pricing?",
-    a: "Yes. Climate-controlled building packages run about $15-20/sq ft ($30-42/sq ft estimated total build), and boat/RV run about $12-15/sq ft ($25.50-36/sq ft total). These are the same published bands shown on each building-type page. As always, your real number depends on your project and is confirmed in a written quote.",
+    a: `Yes. Climate-controlled building packages run about ${sf(P.climate.buildingPackage)} (${sf(P.climate.estTotal!)} estimated total build), and boat/RV run about ${sf(P.boat.buildingPackage)} (${sf(P.boat.estTotal!)} total). These are the same published bands shown on each building-type page. As always, your real number depends on your project and is confirmed in a written quote.`,
   },
   {
     q: "Where do the rent and occupancy numbers come from?",
@@ -73,10 +80,10 @@ export default function CostCalculatorPage() {
                 bands we quote from:
               </p>
               <ul className="space-y-2 list-disc pl-5">
-                <li><strong className="text-roi-navy">Standard drive-up:</strong> $10–12 / sq ft (building package).</li>
-                <li><strong className="text-roi-navy">Conversion / retrofit:</strong> $7–10 / sq ft (building package).</li>
-                <li><strong className="text-roi-navy">Climate-controlled:</strong> $15–20 / sq ft building package ($30–42 / sq ft estimated total build).</li>
-                <li><strong className="text-roi-navy">Boat &amp; RV:</strong> $12–15 / sq ft building package ($25.50–36 / sq ft estimated total build).</li>
+                <li><strong className="text-roi-navy">Standard drive-up:</strong> {sf(P.standard.buildingPackage)} (building package).</li>
+                <li><strong className="text-roi-navy">Conversion / retrofit:</strong> {sf(P.conversion.buildingPackage)} (building package).</li>
+                <li><strong className="text-roi-navy">Climate-controlled:</strong> {sf(P.climate.buildingPackage)} building package ({sf(P.climate.estTotal!)} estimated total build).</li>
+                <li><strong className="text-roi-navy">Boat &amp; RV:</strong> {sf(P.boat.buildingPackage)} building package ({sf(P.boat.estTotal!)} estimated total build).</li>
               </ul>
               <p>
                 These are the same published bands you&apos;ll find on each building-type page —
