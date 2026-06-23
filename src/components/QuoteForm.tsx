@@ -1,11 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { sizeBucket } from "@/lib/calculator";
 
 export default function QuoteForm() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Prefilled fields (controlled) — populated from the Cost+ROI calculator deep
+  // link. Read window.location.search on mount rather than useSearchParams() so
+  // we don't force a Suspense boundary onto every page that renders QuoteForm.
+  const [buildingType, setBuildingType] = useState("");
+  const [size, setSize] = useState("");
+  const [location, setLocation] = useState("");
+  const [details, setDetails] = useState("");
+
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search);
+    const bt = p.get("bt");
+    if (bt) setBuildingType(bt);
+    const sqft = p.get("sqft");
+    if (sqft) {
+      const n = parseInt(sqft, 10);
+      if (Number.isFinite(n) && n > 0) setSize(sizeBucket(n));
+    }
+    const loc = p.get("loc");
+    if (loc) setLocation(loc);
+    const calc = p.get("calc");
+    if (calc) setDetails(`[Cost+ROI Calculator] ${calc}`);
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -111,6 +135,8 @@ export default function QuoteForm() {
           <select
             id="buildingType"
             name="buildingType"
+            value={buildingType}
+            onChange={(e) => setBuildingType(e.target.value)}
             disabled={submitting}
             className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors bg-white disabled:bg-gray-50 disabled:text-gray-400"
           >
@@ -130,6 +156,8 @@ export default function QuoteForm() {
           <select
             id="size"
             name="size"
+            value={size}
+            onChange={(e) => setSize(e.target.value)}
             disabled={submitting}
             className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors bg-white disabled:bg-gray-50 disabled:text-gray-400"
           >
@@ -150,6 +178,8 @@ export default function QuoteForm() {
           type="text"
           id="location"
           name="location"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
           disabled={submitting}
           className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors disabled:bg-gray-50 disabled:text-gray-400"
           placeholder="Nashville, TN"
@@ -163,6 +193,8 @@ export default function QuoteForm() {
           id="details"
           name="details"
           rows={3}
+          value={details}
+          onChange={(e) => setDetails(e.target.value)}
           disabled={submitting}
           className="w-full px-4 py-3 border border-gray-200 rounded-md text-sm focus:border-roi-red focus:ring-1 focus:ring-roi-red outline-none transition-colors resize-none disabled:bg-gray-50 disabled:text-gray-400"
           placeholder="Number of units, timeline, special requirements..."
