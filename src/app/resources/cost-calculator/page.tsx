@@ -6,20 +6,18 @@ import CostCalculator from "@/components/CostCalculator";
 import JsonLd from "@/components/JsonLd";
 import { pageMetadata } from "@/lib/metadata";
 import { breadcrumbSchema, faqPageSchema } from "@/lib/schema";
-import { PRICING, type Band } from "@/lib/pricing";
+import { PRICING, type PricingKey } from "@/lib/pricing";
 
 const PATH = "/resources/cost-calculator";
 
-// Prose band strings sourced from the single pricing source (no drift).
-// Match the published convention: whole dollars plain, half-dollars show cents.
-const money = (n: number) => (Number.isInteger(n) ? `${n}` : n.toFixed(2));
-const sf = (b: Band) => `$${money(b.low)}-${money(b.high)}/sq ft`;
-const P = PRICING;
+// All-in Est. Total ranges, sourced from the single pricing source (no drift).
+// Reuse the canonical labels, swapping the unit suffix for prose.
+const total = (k: PricingKey) => PRICING[k].totalLabel.replace("/sf", "/sq ft");
 
 export const metadata: Metadata = pageMetadata({
   title: "Self-Storage Building Cost & ROI Calculator | ROI Self Storage",
   description:
-    "Estimate self-storage building-package cost and project a rough investment payback. Honest ranges, every assumption labeled, scope exclusions stated. Building package from $7-20/sf.",
+    "Estimate the all-in self-storage build cost ($23.50–$42/sq ft by type, national averages) and project a rough investment payback. Honest ranges, every assumption labeled.",
   path: PATH,
 });
 
@@ -31,19 +29,19 @@ const breadcrumb = breadcrumbSchema([
 const faqs = [
   {
     q: "How accurate is this self-storage cost calculator?",
-    a: `It's a starting range, not a quote. The estimate multiplies your area by published building-package $/sq ft bands (${sf(P.standard.buildingPackage)} standard, ${sf(P.conversion.buildingPackage)} conversion) and rounds to a low–high range. Your real number depends on site, loads, dimensions, building type, and scope, and is confirmed only in a written quote.`,
+    a: `It's a starting range, not a quote. The estimate multiplies your area by published all-in cost ranges (${total("standard")} standard, ${total("conversion")} conversion — national averages) and rounds to a low–high range. Your real number depends on site, loads, dimensions, building type, and scope, and is confirmed only in a written quote.`,
   },
   {
     q: "What's included in the cost estimate?",
-    a: "Only the engineered metal building package. It excludes concrete, foundations, sitework, general contracting, freight, taxes, and permitting — those are your contractor's scope. Always compare quotes on the same scope.",
+    a: "The estimated total range includes the building package, steel erection, and concrete/site work (national averages). It excludes land, permits, utilities, and other soft costs. Your real number is confirmed in a written quote.",
   },
   {
     q: "How is the investment payback calculated?",
-    a: "Projected gross annual revenue = rentable sq ft × your market rent × 12 × occupancy. Building-package payback divides the package cost range by that revenue. It's directional only and excludes land, sitework, financing, and operating costs — not a financial guarantee.",
+    a: "Projected gross annual revenue = rentable sq ft × your market rent × 12 × occupancy. Simple payback divides the estimated total build cost by that revenue. It's directional only and excludes land, financing, and operating costs — not a financial guarantee.",
   },
   {
-    q: "Do you have climate-controlled and boat/RV pricing?",
-    a: `Yes. Climate-controlled building packages run about ${sf(P.climate.buildingPackage)} (${sf(P.climate.estTotal!)} estimated total build), and boat/RV run about ${sf(P.boat.buildingPackage)} (${sf(P.boat.estTotal!)} total). These are the same published bands shown on each building-type page. As always, your real number depends on your project and is confirmed in a written quote.`,
+    q: "How much does each building type cost?",
+    a: `All-in estimated totals (national averages): standard drive-up ${total("standard")}, climate-controlled ${total("climate")}, boat/RV ${total("boat")}, flex spaces ${total("flex")}, and conversion/retrofit ${total("conversion")}. These are the same published figures shown across the site. Your real number depends on your project and is confirmed in a written quote.`,
   },
   {
     q: "Where do the rent and occupancy numbers come from?",
@@ -57,7 +55,7 @@ export default function CostCalculatorPage() {
       <JsonLd id="cost-calculator-schema" data={[breadcrumb, faqPageSchema([...faqs])]} />
       <SubPageLayout
         title="Self-Storage Cost & ROI Calculator"
-        subtitle="Estimate your building-package cost and project a rough investment return — with honest ranges, labeled assumptions, and no fake precision."
+        subtitle="Estimate your all-in build cost and project a rough investment return — with honest ranges, labeled assumptions, and no fake precision."
       >
         {/* Calculator */}
         <section className="py-16 lg:py-24 bg-white">
@@ -77,30 +75,31 @@ export default function CostCalculatorPage() {
                 We don&apos;t believe in a single cost-per-square-foot number — an honest one
                 doesn&apos;t exist without your project&apos;s details. So this tool gives you a
                 <strong className="text-roi-navy"> range</strong>, built from the same published
-                bands we quote from:
+                all-in estimated totals (national averages) we quote from:
               </p>
               <ul className="space-y-2 list-disc pl-5">
-                <li><strong className="text-roi-navy">Standard drive-up:</strong> {sf(P.standard.buildingPackage)} (building package).</li>
-                <li><strong className="text-roi-navy">Conversion / retrofit:</strong> {sf(P.conversion.buildingPackage)} (building package).</li>
-                <li><strong className="text-roi-navy">Climate-controlled:</strong> {sf(P.climate.buildingPackage)} building package ({sf(P.climate.estTotal!)} estimated total build).</li>
-                <li><strong className="text-roi-navy">Boat &amp; RV:</strong> {sf(P.boat.buildingPackage)} building package ({sf(P.boat.estTotal!)} estimated total build).</li>
+                <li><strong className="text-roi-navy">Standard drive-up:</strong> {total("standard")}.</li>
+                <li><strong className="text-roi-navy">Climate-controlled:</strong> {total("climate")}.</li>
+                <li><strong className="text-roi-navy">Boat &amp; RV:</strong> {total("boat")}.</li>
+                <li><strong className="text-roi-navy">Flex spaces:</strong> {total("flex")}.</li>
+                <li><strong className="text-roi-navy">Conversion / retrofit:</strong> {total("conversion")}.</li>
               </ul>
               <p>
-                These are the same published bands you&apos;ll find on each building-type page —
-                the calculator reads them from one shared source so the numbers never drift.
+                These are the same published figures you&apos;ll find across the site — the calculator
+                reads them from one shared source so the numbers never drift.
               </p>
               <p>
-                <strong className="text-roi-navy">What&apos;s excluded:</strong> the estimate is the
-                building package only — it excludes concrete, foundations, sitework, general
-                contracting, freight, taxes, and permitting. Those are real costs; they&apos;re just
-                your contractor&apos;s scope, not ours.
+                <strong className="text-roi-navy">What this includes:</strong> the estimated total
+                range covers the building package, steel erection, and concrete/site work (national
+                averages). It still <strong className="text-roi-navy">excludes</strong> land, permits,
+                utilities, and other soft costs.
               </p>
               <p>
                 <strong className="text-roi-navy">The ROI projection</strong> turns area into a rough
                 return: rentable square feet (after aisles) × your market rent × 12 months ×
-                occupancy gives projected gross revenue, and dividing the cost range by that revenue
-                gives a building-package payback range. Every input is an assumption you control — we
-                don&apos;t inject market rent or occupancy as if they were our data.
+                occupancy gives projected gross revenue, and dividing the estimated total build cost
+                by that revenue gives a simple payback range. Every input is an assumption you
+                control — we don&apos;t inject market rent or occupancy as if they were our data.
               </p>
               <p>
                 For the full reasoning behind these numbers, read{" "}

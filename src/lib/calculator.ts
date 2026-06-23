@@ -2,19 +2,19 @@
  * Shared, pure helpers for the Cost + ROI calculator.
  *
  * Philosophy (mirrors /resources/self-storage-building-cost): honest ranges,
- * not fake precision. Cost is always a LOW–HIGH band. All $/sq ft bands come
- * from the single source of truth in `pricing.ts` so the calculator can never
- * drift from the published building-type pages.
+ * not fake precision. Cost is the all-in Est. Total Range from the single
+ * source of truth in `pricing.ts` (ROI/Lisa, 2026-06-23) — building package +
+ * steel erection + concrete/site, national averages.
  */
 
-import { PRICING, type Band, type TypePricing } from "./pricing";
+import { PRICING, type TotalRange, type TypePricing } from "./pricing";
 
-export type BuildingTypeKey = "standard" | "retrofit" | "climate" | "boat-rv";
+export type BuildingTypeKey = "standard" | "climate" | "boat-rv" | "flex" | "retrofit";
 
 export interface BuildingTypeConfig {
   key: BuildingTypeKey;
   label: string;
-  /** Published pricing (numbers + labels) from the shared source of truth. */
+  /** Published pricing (total range + labels) from the shared source of truth. */
   pricing: TypePricing;
   /** Short plain-language description. */
   blurb: string;
@@ -24,8 +24,8 @@ export interface BuildingTypeConfig {
 
 /**
  * Building types offered in the calculator, each pointing at its published
- * pricing. Boat and RV share an identical band, so they're one selectable
- * "Boat / RV" option mapped to the QuoteForm "boat-rv" value.
+ * all-in total range. Boat and RV share an identical band, so they're one
+ * selectable "Boat / RV" option mapped to the QuoteForm "boat-rv" value.
  */
 export const BUILDING_TYPES: BuildingTypeConfig[] = [
   {
@@ -34,13 +34,6 @@ export const BUILDING_TYPES: BuildingTypeConfig[] = [
     pricing: PRICING.standard,
     blurb: "Single-story, drive-up units with roll-up doors.",
     quoteValue: "standard",
-  },
-  {
-    key: "retrofit",
-    label: "Conversion / retrofit",
-    pricing: PRICING.conversion,
-    blurb: "Converting an existing building or shell into storage.",
-    quoteValue: "retrofit",
   },
   {
     key: "climate",
@@ -52,9 +45,23 @@ export const BUILDING_TYPES: BuildingTypeConfig[] = [
   {
     key: "boat-rv",
     label: "Boat / RV",
-    pricing: PRICING.boat, // boat and rv bands are identical
+    pricing: PRICING.boat, // boat and rv totals are identical
     blurb: "Larger bays and taller doors than standard drive-up.",
     quoteValue: "boat-rv",
+  },
+  {
+    key: "flex",
+    label: "Flex spaces",
+    pricing: PRICING.flex,
+    blurb: "Higher-finish, mixed-use or specialized spaces — open-ended at the top end.",
+    quoteValue: "flex",
+  },
+  {
+    key: "retrofit",
+    label: "Conversion / retrofit",
+    pricing: PRICING.conversion,
+    blurb: "Converting an existing building or shell into storage.",
+    quoteValue: "retrofit",
   },
 ];
 
@@ -62,20 +69,37 @@ export function getBuildingType(key: string): BuildingTypeConfig | undefined {
   return BUILDING_TYPES.find((t) => t.key === key);
 }
 
-/** Verbatim exclusions list — mirrors the cost article. Restate on every result. */
-export const EXCLUDES =
-  "Building package only — excludes concrete, foundations, sitework, general contracting, freight, taxes, and permitting.";
+/**
+ * What the Est. Total Range covers / excludes. The total now includes building
+ * package + steel erection + concrete/site (national averages); it still
+ * excludes land, permits, utilities, and other soft costs.
+ */
+export const TOTAL_DISCLAIMER =
+  "Estimated total range includes the building package, steel erection, and concrete/site work (national averages). Excludes land, permits, utilities, and other soft costs. Your real number is confirmed in a written quote.";
 
-/** Round to the nearest `step` (used to keep cost output as a range, not fake-precise). */
+/** Round to the nearest `step` (keeps cost output a range, not fake-precise). */
 export function roundTo(n: number, step: number): number {
   return Math.round(n / step) * step;
 }
 
-/** Cost band → dollar range for a given area, rounded to the nearest $1,000. */
-export function costRange(sqft: number, band: Band): { low: number; high: number } {
+export interface CostResult {
+  low: number;
+  /** null when open-ended at the top (e.g. Flex). */
+  high: number | null;
+  /** trailing "+" ("and up"). */
+  plus: boolean;
+  avg: number;
+  avgPlus: boolean;
+}
+
+/** All-in total range → dollar figures for a given area, rounded to $1,000. */
+export function totalCost(sqft: number, t: TotalRange): CostResult {
   return {
-    low: roundTo(sqft * band.low, 1000),
-    high: roundTo(sqft * band.high, 1000),
+    low: roundTo(sqft * t.low, 1000),
+    high: t.high != null ? roundTo(sqft * t.high, 1000) : null,
+    plus: !!t.plus,
+    avg: roundTo(sqft * t.avg, 1000),
+    avgPlus: !!t.avgPlus,
   };
 }
 
@@ -107,9 +131,9 @@ export interface SpecialAnchor {
 
 /**
  * Published, pre-priced specials used purely as a cross-sell anchor when a
- * user's dimensions land near one. NOTE: specials are promo-priced at specific
- * loads (~$8–9/sq ft); the public estimate uses the article bands. Specials are
- * an anchor, not the formula.
+ * user's dimensions land near one. NOTE: specials are promo-priced building
+ * kits at specific loads; the calculator estimate is an all-in total. Specials
+ * are an anchor to a real package page, not the formula.
  */
 export const SPECIALS: SpecialAnchor[] = [
   { label: "The Basic — 40×100", href: "/specials/40x100-self-storage", sqft: 4000, price: 35417, types: ["standard"] },

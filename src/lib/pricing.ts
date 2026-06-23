@@ -1,74 +1,77 @@
 /**
- * SINGLE SOURCE OF TRUTH for published building-package pricing bands.
+ * SINGLE SOURCE OF TRUTH for self-storage pricing.
  *
- * Every $/sq ft figure the site quotes lives here so the numbers never drift
- * across the building-type pages and the cost calculator. The building-type
- * pages (climate-controlled, boat, rv) render their 3-tier pricing cards from
- * the `*Label` strings below; the calculator reads the numeric bands for math.
+ * Authoritative all-in "Est. Total Range" ($/sq ft) = building package + steel
+ * erection + concrete/site work (national averages).
+ * // ROI (Lisa), confirmed 2026-06-23.
  *
- * These mirror what's published on the live type pages (confirmed current
- * 2026-06-23). If ROI updates a band, change it HERE and it updates everywhere.
+ * The cost calculator drives its headline output from `total` below. The
+ * building-type pages (climate/boat/rv) render their 3-tier breakdown cards
+ * from the `*Label` strings. Change a number HERE and it updates everywhere.
  *
- * Display labels use a literal en-dash (–) and are copied verbatim from the
- * type-page cards so rendered output is byte-identical after refactor.
+ * Open-ended values: Flex is "$36+" (no published ceiling) and Retrofit is
+ * "$10.50–$16.00+" (range with "and up"). `plus` renders the trailing "+";
+ * a missing `high` means open-ended at the top — never cap it at a false high.
  */
 
 export interface Band {
-  /** $/sq ft, low end. */
   low: number;
-  /** $/sq ft, high end. */
   high: number;
 }
 
-export interface TypePricing {
-  /** Building-package band — the primary, always-published number. */
-  buildingPackage: Band;
-  buildingPackageLabel: string;
-  /** + erection & concrete band (published for climate/boat/rv). */
-  erectionConcrete?: Band;
-  erectionConcreteLabel?: string;
-  /** Estimated total build band (published for climate/boat/rv). */
-  estTotal?: Band;
-  estTotalLabel?: string;
-  /** When no est-total band is published (standard/conversion), show this note. */
-  estTotalNote?: string;
+/** All-in estimated total build, $/sq ft. */
+export interface TotalRange {
+  low: number;
+  /** Omitted when open-ended at the top (e.g. Flex "$36+"). */
+  high?: number;
+  /** Render a trailing "+" ("and up"). */
+  plus?: boolean;
+  avg: number;
+  avgPlus?: boolean;
 }
 
-export type PricingKey = "standard" | "conversion" | "climate" | "boat" | "rv";
+export interface TypePricing {
+  /** Authoritative all-in total range — drives the calculator. */
+  total: TotalRange;
+  /** Display label for the total, copied to match the type-page cards. */
+  totalLabel: string;
+  /** Component breakdown labels for the type-page 3-tier cards (where shown). */
+  buildingPackageLabel?: string;
+  erectionConcreteLabel?: string;
+}
+
+export type PricingKey = "standard" | "climate" | "boat" | "rv" | "flex" | "conversion";
 
 export const PRICING: Record<PricingKey, TypePricing> = {
   standard: {
-    buildingPackage: { low: 10, high: 12 },
+    total: { low: 23.5, high: 33, avg: 28.25 },
+    totalLabel: "$23.50–$33.00/sf",
     buildingPackageLabel: "$10–$12/sf",
-    estTotalNote: "+ your contractor's concrete & sitework",
-  },
-  conversion: {
-    buildingPackage: { low: 7, high: 10 },
-    buildingPackageLabel: "$7–$10/sf",
-    estTotalNote: "≈ $13/sf and up, depending on the existing structure",
   },
   climate: {
-    buildingPackage: { low: 15, high: 20 },
+    total: { low: 30, high: 42, avg: 36 },
+    totalLabel: "$30–$42/sf",
     buildingPackageLabel: "$15–$20/sf",
-    erectionConcrete: { low: 15, high: 22 },
     erectionConcreteLabel: "$15–$22/sf",
-    estTotal: { low: 30, high: 42 },
-    estTotalLabel: "$30–$42/sf",
   },
   boat: {
-    buildingPackage: { low: 12, high: 15 },
+    total: { low: 25.5, high: 36, avg: 30.75 },
+    totalLabel: "$25.50–$36.00/sf",
     buildingPackageLabel: "$12–$15/sf",
-    erectionConcrete: { low: 13.5, high: 21 },
     erectionConcreteLabel: "$13.50–$21/sf",
-    estTotal: { low: 25.5, high: 36 },
-    estTotalLabel: "$25.50–$36/sf",
   },
   rv: {
-    buildingPackage: { low: 12, high: 15 },
+    total: { low: 25.5, high: 36, avg: 30.75 },
+    totalLabel: "$25.50–$36.00/sf",
     buildingPackageLabel: "$12–$15/sf",
-    erectionConcrete: { low: 13.5, high: 21 },
     erectionConcreteLabel: "$13.50–$21/sf",
-    estTotal: { low: 25.5, high: 36 },
-    estTotalLabel: "$25.50–$36/sf",
+  },
+  flex: {
+    total: { low: 36, plus: true, avg: 40, avgPlus: true },
+    totalLabel: "$36+/sf",
+  },
+  conversion: {
+    total: { low: 10.5, high: 16, plus: true, avg: 13.25, avgPlus: true },
+    totalLabel: "$10.50–$16.00+/sf",
   },
 };

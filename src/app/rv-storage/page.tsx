@@ -113,7 +113,7 @@ export default function RVStoragePage() {
             </div>
             <div className="bg-roi-navy rounded-lg p-6">
               <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Est. Total Build</div>
-              <div className="text-2xl font-bold text-white">{PRICING.rv.estTotalLabel}</div>
+              <div className="text-2xl font-bold text-white">{PRICING.rv.totalLabel}</div>
             </div>
           </div>
           <p className="mt-4 text-xs text-gray-400">
