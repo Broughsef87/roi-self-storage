@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -443,7 +444,9 @@ export default function Home() {
               <h3 className="text-xl font-bold text-roi-navy mb-6">
                 Request a Free Quote
               </h3>
-              <QuoteForm />
+              <Suspense fallback={<div className="min-h-[520px]" aria-hidden />}>
+                <QuoteForm />
+              </Suspense>
             </div>
           </div>
         </div>

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Image from "next/image";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -106,7 +107,9 @@ export default function SubPageLayout({ title, subtitle, children, heroImage }: 
             </div>
             <div className="bg-white rounded-xl border border-gray-200 p-8 lg:p-10 shadow-sm">
               <h3 className="text-xl font-bold text-roi-navy mb-6">Request a Free Quote</h3>
-              <QuoteForm />
+              <Suspense fallback={<div className="min-h-[520px]" aria-hidden />}>
+                <QuoteForm />
+              </Suspense>
             </div>
           </div>
         </div>

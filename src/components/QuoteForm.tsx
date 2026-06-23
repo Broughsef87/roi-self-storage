@@ -1,35 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { sizeBucket } from "@/lib/calculator";
 
 export default function QuoteForm() {
+  // Prefill from the Cost+ROI calculator deep link. useSearchParams() is the
+  // idiomatic App Router read; callers wrap <QuoteForm/> in <Suspense> (only two
+  // render sites: SubPageLayout + homepage), which keeps those pages static.
+  const params = useSearchParams();
+
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Prefilled fields (controlled) — populated from the Cost+ROI calculator deep
-  // link. Read window.location.search on mount rather than useSearchParams() so
-  // we don't force a Suspense boundary onto every page that renders QuoteForm.
-  const [buildingType, setBuildingType] = useState("");
-  const [size, setSize] = useState("");
-  const [location, setLocation] = useState("");
-  const [details, setDetails] = useState("");
-
-  useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    const bt = p.get("bt");
-    if (bt) setBuildingType(bt);
-    const sqft = p.get("sqft");
+  // Controlled prefilled fields — initialized once from the URL, then editable.
+  const [buildingType, setBuildingType] = useState(() => params.get("bt") ?? "");
+  const [size, setSize] = useState(() => {
+    const sqft = params.get("sqft");
     if (sqft) {
       const n = parseInt(sqft, 10);
-      if (Number.isFinite(n) && n > 0) setSize(sizeBucket(n));
+      if (Number.isFinite(n) && n > 0) return sizeBucket(n);
     }
-    const loc = p.get("loc");
-    if (loc) setLocation(loc);
-    const calc = p.get("calc");
-    if (calc) setDetails(`[Cost+ROI Calculator] ${calc}`);
-  }, []);
+    return "";
+  });
+  const [location, setLocation] = useState(() => params.get("loc") ?? "");
+  const [details, setDetails] = useState(() => {
+    const calc = params.get("calc");
+    return calc ? `[Cost+ROI Calculator] ${calc}` : "";
+  });
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

@@ -56,7 +56,12 @@ export default function CostCalculator() {
     return costRange(sqft, type.band);
   }, [type, sqft]);
 
-  const special = useMemo(() => (sqft > 0 ? closestSpecial(sqft, typeKey) : null), [sqft, typeKey]);
+  // Gate the pre-priced cross-sell to CONFIRMED types only — never surface a
+  // special's dollar price alongside an unconfirmed premium estimate.
+  const special = useMemo(
+    () => (sqft > 0 && type.confirmed ? closestSpecial(sqft, typeKey) : null),
+    [sqft, typeKey, type.confirmed]
+  );
 
   // --- ROI math ---
   const eff = num(effStr) / 100;
