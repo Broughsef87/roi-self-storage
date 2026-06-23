@@ -65,6 +65,18 @@ export default function SelfStorageBuildingCostPage() {
             the number, so you can build a defensible budget and know exactly what you&apos;re
             paying for.
           </p>
+          <div className="mt-8 rounded-lg border border-gray-200 bg-roi-light p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+            <p className="text-sm text-roi-steel flex-1">
+              <strong className="text-roi-navy">Want a quick range for your build?</strong> Try the
+              cost &amp; ROI calculator — size and type in, honest range out.
+            </p>
+            <Link
+              href="/resources/cost-calculator"
+              className="shrink-0 inline-flex items-center justify-center bg-roi-red text-white font-semibold text-sm px-5 py-2.5 rounded-md hover:bg-roi-darkred transition-colors"
+            >
+              Open the calculator →
+            </Link>
+          </div>
         </div>
       </section>
 
