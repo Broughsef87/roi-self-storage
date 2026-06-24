@@ -34,9 +34,12 @@ export const BUSINESS = {
     opens: "09:00",
     closes: "19:00",
   },
+  // Sourced from the ROI Metal Buildings Google Business Profile (same company /
+  // NAP; self storage is a division). Confirmed 2026-06-24: 5.0 from 21 reviews.
+  // Keep in sync with the public GBP so the aggregateRating markup stays substantiated.
   aggregateRating: {
     ratingValue: "5.0",
-    reviewCount: "20",
+    reviewCount: "21",
     bestRating: "5",
     worstRating: "1",
   },
