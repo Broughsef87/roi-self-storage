@@ -27,6 +27,7 @@ const studies = [
     image: "/case-studies/uncasville-ct/01.jpg",
     desc: "Three-building turnkey self storage installation with standing seam roofing and factory-applied moisture barriers. Project managed by Lisa Wirth.",
     tag: "Largest Build",
+    related: { href: "/mini-storage", anchor: "multi-building drive-up self storage" },
   },
   {
     href: "/case-studies/securit-storage",
@@ -36,6 +37,7 @@ const studies = [
     image: "/case-studies/securit-storage/01.jpg",
     desc: "Two-building drive-up facility with mixed unit sizes. 4-day on-site erection in January cold. Sales rep: Dave Maxe.",
     tag: "Fast Erection",
+    related: { href: "/mini-storage", anchor: "drive-up mini storage buildings" },
   },
   {
     href: "/case-studies/tennessee-golf-course",
@@ -45,6 +47,7 @@ const studies = [
     image: "/case-studies/tennessee-golf/hero.jpg",
     desc: "Country club golf course replaced deteriorating wooden storage with 28 steel-framed units. Drip-X roof insulation, LED lighting, mono slab foundation.",
     tag: "Specialty Use",
+    related: { href: "/storage-doors", anchor: "steel storage units and roll-up doors" },
   },
 ];
 
@@ -60,8 +63,8 @@ export default function CaseStudiesPage() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="space-y-8">
             {studies.map((s) => (
+              <div key={s.href}>
               <Link
-                key={s.href}
                 href={s.href}
                 className="group grid grid-cols-1 lg:grid-cols-5 gap-0 border border-gray-200 rounded-lg overflow-hidden hover:border-roi-red/30 hover:shadow-lg transition-all"
               >
@@ -93,6 +96,13 @@ export default function CaseStudiesPage() {
                   </div>
                 </div>
               </Link>
+              <p className="mt-2 text-xs text-roi-steel">
+                Building type:{" "}
+                <Link href={s.related.href} className="text-roi-red font-semibold hover:underline">
+                  {s.related.anchor}
+                </Link>
+              </p>
+              </div>
             ))}
           </div>
         </div>

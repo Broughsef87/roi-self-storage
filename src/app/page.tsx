@@ -75,30 +75,40 @@ const buildingTypes = [
     desc: "The workhorse of the industry. Roll-up doors, simple access, low operating costs. Most popular for first-time facility owners.",
     price: "$10\u2013$12 / sq ft",
     tag: "Most Popular",
+    href: "/mini-storage",
+    linkLabel: "Mini storage details",
   },
   {
     name: "Climate Controlled",
     desc: "Insulated, HVAC-equipped buildings that command premium rents. Ideal for markets with temperature-sensitive demand.",
     price: "$15\u2013$20 / sq ft",
     tag: "Premium Revenue",
+    href: "/climate-controlled",
+    linkLabel: "Climate-controlled details",
   },
   {
     name: "Boat & RV Storage",
     desc: "Tall clear-span structures with extra-wide doors and high eave heights. Covered or enclosed configurations available.",
     price: "$12\u2013$15 / sq ft",
     tag: "High Margin",
+    href: "/boat-storage",
+    linkLabel: "Boat & RV storage",
   },
   {
     name: "Flex Spaces",
     desc: "Higher-finish or specialized fit-out spaces. Ideal for mixed-use, workshop, or commercial storage applications.",
     price: "$16+ / sq ft",
     tag: "Versatile",
+    href: null,
+    linkLabel: null,
   },
   {
     name: "Retrofit / Conversion",
     desc: "Convert or expand existing structures into self storage. The most cost-effective path for owners with an existing building or shell.",
     price: "$7\u2013$10 / sq ft",
     tag: "Best Value",
+    href: "/retrofit",
+    linkLabel: "How conversions work",
   },
 ];
 
@@ -242,12 +252,22 @@ export default function Home() {
                   <div className="text-xs text-gray-400 uppercase tracking-wider">Building Package</div>
                   <div className="text-sm font-semibold text-roi-navy mt-0.5">{b.price}</div>
                 </div>
-                <a
-                  href="#quote"
-                  className="shrink-0 inline-flex items-center text-sm font-semibold text-roi-red group-hover:underline"
-                >
-                  Get pricing &rarr;
-                </a>
+                <div className="shrink-0 flex flex-col items-start lg:items-end gap-1.5">
+                  <a
+                    href="#quote"
+                    className="inline-flex items-center text-sm font-semibold text-roi-red group-hover:underline"
+                  >
+                    Get pricing &rarr;
+                  </a>
+                  {b.href && (
+                    <Link
+                      href={b.href}
+                      className="inline-flex items-center text-xs font-medium text-roi-steel hover:text-roi-red transition-colors"
+                    >
+                      {b.linkLabel} &rarr;
+                    </Link>
+                  )}
+                </div>
               </div>
             ))}
           </div>
