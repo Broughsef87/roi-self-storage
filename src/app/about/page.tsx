@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import SubPageLayout from "@/components/SubPageLayout";
 import JsonLd from "@/components/JsonLd";
 import { pageMetadata } from "@/lib/metadata";
@@ -203,6 +204,27 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* What we build */}
+      <section className="py-16 lg:py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8">
+          <div className="text-xs font-semibold text-roi-red uppercase tracking-wider mb-3">
+            What We Build
+          </div>
+          <h2 className="text-3xl lg:text-4xl font-bold text-roi-navy tracking-tight mb-6">
+            Engineered for every self storage model
+          </h2>
+          <p className="text-roi-steel leading-relaxed mb-6">
+            From first facilities to portfolio expansions, we engineer the right structure for your
+            market — including{" "}
+            <Link href="/mini-storage" className="text-roi-red font-semibold hover:underline">mini storage buildings</Link>,{" "}
+            <Link href="/climate-controlled" className="text-roi-red font-semibold hover:underline">climate-controlled storage buildings</Link>,{" "}
+            <Link href="/boat-storage" className="text-roi-red font-semibold hover:underline">boat storage</Link> and{" "}
+            <Link href="/rv-storage" className="text-roi-red font-semibold hover:underline">RV storage</Link>, and{" "}
+            <Link href="/retrofit" className="text-roi-red font-semibold hover:underline">warehouse-to-self-storage conversions</Link>.
+          </p>
         </div>
       </section>
 

@@ -89,7 +89,15 @@ export default function RVStoragePage() {
               <p className="mt-4 text-roi-steel leading-relaxed">
                 Every building is custom engineered to your lot size, target vehicle types,
                 and revenue goals. We&apos;ll help you find the right mix of bay sizes and
-                configurations to maximize occupancy and income.
+                configurations to maximize occupancy and income. Many operators pair RV bays with{" "}
+                <Link href="/climate-controlled" className="text-roi-red font-semibold hover:underline">
+                  climate-controlled storage buildings
+                </Link>{" "}
+                on the same site, or{" "}
+                <Link href="/retrofit" className="text-roi-red font-semibold hover:underline">
+                  convert an existing building
+                </Link>{" "}
+                to add covered RV space.
               </p>
             </div>
           </div>

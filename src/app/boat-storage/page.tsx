@@ -90,6 +90,15 @@ export default function BoatStoragePage() {
               <p className="mt-4 text-roi-steel leading-relaxed">
                 Both options are engineered to handle the wide bays and tall clearances that
                 boat storage requires — from 20-foot pontoons to 40-foot cabin cruisers on trailers.
+                For high-value craft in hot or humid markets, some operators add{" "}
+                <Link href="/climate-controlled" className="text-roi-red font-semibold hover:underline">
+                  climate-controlled storage buildings
+                </Link>{" "}
+                to the mix. Already own a structure? You can often{" "}
+                <Link href="/retrofit" className="text-roi-red font-semibold hover:underline">
+                  convert an existing building
+                </Link>{" "}
+                into boat and RV bays.
               </p>
             </div>
           </div>

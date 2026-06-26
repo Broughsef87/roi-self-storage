@@ -90,7 +90,14 @@ export default function PortableStoragePage() {
                 advantage that permanent buildings can&apos;t offer.
               </p>
               <p className="mt-4 text-roi-steel leading-relaxed">
-                Weighing containers against a permanent building? Read{" "}
+                Weighing containers against a{" "}
+                <Link href="/mini-storage" className="text-roi-red font-semibold hover:underline">
+                  permanent mini storage building
+                </Link>{" "}
+                or{" "}
+                <Link href="/retrofit" className="text-roi-red font-semibold hover:underline">
+                  converting an existing building
+                </Link>? Read{" "}
                 <Link href="/resources/self-storage-building-cost" className="text-roi-red font-semibold hover:underline">
                   what drives self-storage building cost
                 </Link>{" "}

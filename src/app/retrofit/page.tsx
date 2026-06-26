@@ -47,6 +47,18 @@ const faqs = [
     q: "Does ROI handle the construction?",
     a: "ROI engineers and manufactures the steel components and provides stamped drawings. Concrete and on-site general contracting are handled by your contractor.",
   },
+  {
+    q: "Is converting a warehouse to self storage a good investment?",
+    a: "It can be — conversions often have a lower cost basis and a faster path to opening than building new, which is why they're a popular play when the right building is available. But it depends entirely on the building fitting your unit mix and your market's rents. A bad-fit structure can wipe out the savings. We help you check the building side; the full investment picture also depends on land, sitework, financing, and local demand. We don't promise returns — we give you honest building numbers to budget around.",
+  },
+  {
+    q: "What kinds of buildings convert well to self storage?",
+    a: "Open, clear-span or wide-bay structures with adequate clear height, a sound slab, and a weather-tight envelope — warehouses, distribution buildings, some big-box retail, and existing on-site buildings at a facility you already own. Buildings with lots of interior load-bearing walls, low ceilings, or a slab/envelope needing major work are harder and may not pencil. Send dimensions and we'll tell you straight.",
+  },
+  {
+    q: "How long does a self-storage conversion take?",
+    a: "It depends on the building's condition and your contractor's schedule, but conversions are typically faster than ground-up because the structure already exists. On the ROI side, engineered components and doors run on standard lead times once the design is set; sitework, permitting, and interior buildout timelines are set by your contractor and AHJ.",
+  },
 ];
 
 export default function RetrofitPage() {
@@ -110,6 +122,31 @@ export default function RetrofitPage() {
             Whether a specific building pencils depends on its dimensions, condition, the unit mix
             you want, and your local code. <a href="#quote" className="text-roi-red font-semibold hover:underline">Send us the footprint, clear height, and column spacing</a> and
             we&apos;ll tell you straight whether it&apos;s a strong candidate — including when it isn&apos;t.
+          </p>
+        </div>
+      </section>
+
+      {/* Converting a warehouse into self storage (2A) */}
+      <section className="py-16 lg:py-24 bg-white">
+        <div className="max-w-3xl mx-auto px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-roi-navy tracking-tight mb-6">
+            Converting a warehouse into self storage
+          </h2>
+          <p className="text-roi-steel leading-relaxed">
+            Warehouses are the most common conversion candidate, and usually the friendliest. A
+            typical warehouse already has the things a conversion wants: a clear-span or wide-bay
+            steel frame, high eaves that give you room for the unit types you want, a large slab,
+            and a weather-tight envelope. That means most of the work is interior — partitions,
+            corridors, and doors — rather than structural.
+          </p>
+          <p className="mt-4 text-roi-steel leading-relaxed">
+            The things to check on a warehouse specifically: clear height (enough for your unit mix,
+            and for a mezzanine or second tier if the pro forma wants one), column spacing (wide bays
+            divide efficiently; tight columns chop up the plan), slab condition and loading, and how
+            the existing dock or drive-in doors fit your access plan. Send us the footprint, clear
+            height, and column spacing and we&apos;ll tell you how it divides — and whether the
+            structure is working for you or against you. ROI supplies the engineered steel
+            components, partitions, and doors; sitework and construction stay with your contractor.
           </p>
         </div>
       </section>
@@ -209,6 +246,34 @@ export default function RetrofitPage() {
             Conversion is typically the lowest cost-per-square-foot path into self storage when the
             building cooperates — but a bad-fit structure can erase that advantage fast. Checking
             that is the first thing we do.
+          </p>
+        </div>
+      </section>
+
+      {/* Is a self-storage conversion a good opportunity? (2B) */}
+      <section className="py-16 lg:py-24 bg-white">
+        <div className="max-w-3xl mx-auto px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-roi-navy tracking-tight mb-6">
+            Is a self-storage conversion a good opportunity?
+          </h2>
+          <p className="text-roi-steel leading-relaxed">
+            When the building cooperates, conversion is often the lowest cost-per-square-foot path
+            into self storage — roughly $7&ndash;$10/sq ft for the building package vs. $10&ndash;$12
+            for standard ground-up — and it&apos;s usually faster to market because the shell is
+            already standing. With vacant retail, warehouse, and big-box space available in a lot of
+            markets, owners and investors are increasingly converting existing structures instead of
+            building new.
+          </p>
+          <p className="mt-4 text-roi-steel leading-relaxed">
+            The honest caveat: the advantage is real only when the structure fits. Interior
+            load-bearing walls, low clear height, or a slab and envelope that need real remediation
+            can erase the cost savings fast — which is why a feasibility check on the specific
+            building comes first. We&apos;ll help you pressure-test the building side of the numbers;
+            pair it with your contractor&apos;s concrete and sitework figures and your market&apos;s
+            rents for the full picture. (See{" "}
+            <Link href="/resources/self-storage-building-cost" className="text-roi-red font-semibold hover:underline">
+              what drives self-storage building cost
+            </Link>.)
           </p>
         </div>
       </section>
