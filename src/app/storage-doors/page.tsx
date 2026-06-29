@@ -7,9 +7,9 @@ import { pageMetadata } from "@/lib/metadata";
 import { breadcrumbSchema, faqPageSchema, serviceSchema, productSchema } from "@/lib/schema";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Self Storage Roll-Up Doors | New Builds & Replacement | ROI",
+  title: "Self Storage Doors — Roll-Up, Swing & Insulated | New & Replacement | ROI",
   description:
-    "Roll-up doors for self storage — sizing, options, and how doors affect unit layout and revenue. New construction and replacement. Get a component quote.",
+    "Self storage doors — roll-up, swing, and insulated, plus drop-in replacements — matched to your unit schedule. New builds and existing facilities. Get a component quote.",
   path: "/storage-doors",
 });
 
@@ -45,12 +45,20 @@ const faqs = [
     a: "Roll-up doors coil into a drum above the opening and are the most common for self storage. Sheet curtain doors use corrugated steel panels and roll up similarly but are typically more economical. Both are commercial-grade and built for daily use.",
   },
   {
+    q: "What are drive-up storage doors?",
+    a: "They're the steel roll-up doors on standard drive-up units — the tenant pulls up, lifts the door, and loads directly from their vehicle. It's the most common self-storage door type; sizing and options are under Roll-Up Doors above.",
+  },
+  {
     q: "Can I replace roll-up doors on an existing facility?",
     a: "Yes — we supply replacement doors for existing facilities, whether you're upgrading aging doors, repairing damage, or remixing unit sizes. We match your current frame dimensions and mounting configuration. Send your current door sizes and counts for a quote.",
   },
   {
-    q: "Do insulated roll-up doors matter for climate-controlled units?",
-    a: "For climate-controlled units, insulated doors are commonly specified to help maintain the conditioned envelope; standard drive-up units typically use non-insulated doors. The right choice depends on your facility type and operating plan.",
+    q: "Do you sell replacement swing doors for storage units?",
+    a: "Yes — we supply drop-in replacement swing doors for existing facilities. Send your opening dimensions and current hinge/latch configuration and we'll match a replacement. (Same for roll-up replacements.)",
+  },
+  {
+    q: "What are insulated self storage doors, and do I need them?",
+    a: "Insulated doors are temperature-rated doors used on climate-controlled (conditioned) buildings, where the door has to hold the conditioned envelope. You need them on conditioned units; standard drive-up units use non-insulated doors. We spec the right one for your build.",
   },
   {
     q: "Do your doors work with smart locks and access control?",
@@ -181,11 +189,23 @@ export default function StorageDoorsPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { title: "Roll-Up Doors", desc: "The industry standard. Open drum concept with worm screw tensioning for simplified maintenance. Available in all standard widths and heights. 2–3 week lead times." },
+              { title: "Roll-Up Doors", desc: "The industry standard — and the door on virtually every drive-up storage unit, where the tenant lifts the door and loads straight from their vehicle. Open-drum design with worm-screw tensioning for simple maintenance. Available in all standard widths and heights; 2–3 week lead times." },
               { title: "Sheet Curtain Doors", desc: "Corrugated steel panel doors. Economical option for large facilities. Durable, easy to maintain, and available in custom colors." },
-              { title: "Swing Doors", desc: "Hinged doors for units where roll-up isn’t practical. Common for hallway-access climate controlled units and specialty applications." },
+              { title: "Swing Doors", desc: "Hinged steel doors for units where a roll-up isn’t practical — common on interior, hallway-access climate-controlled units and smaller specialty units. We also supply replacement swing doors for existing storage units: send the opening size and your current hinge/latch setup and we’ll match a drop-in replacement." },
               { title: "Overhead Sectional Doors", desc: "Paneled doors that rise on tracks. Ideal for vehicle storage with wide, tall openings. Insulated options available." },
-              { title: "Insulated Doors", desc: "Temperature-rated doors for climate controlled units. Maintain thermal envelope integrity and reduce HVAC costs." },
+              {
+                title: "Insulated Self Storage Doors",
+                desc: (
+                  <>
+                    Temperature-rated doors for{" "}
+                    <Link href="/climate-controlled" className="text-roi-red font-semibold hover:underline">climate-controlled</Link>{" "}
+                    units, where the door is part of the sealed, conditioned envelope. Insulated doors
+                    help hold the conditioned space and reduce HVAC load — typically specified on
+                    conditioned buildings and skipped on standard drive-up. We match the insulation
+                    level to your build.
+                  </>
+                ),
+              },
               { title: "Replacement Doors", desc: "Drop-in replacements for existing facilities. We match your current frame dimensions and mounting configuration." },
             ].map((d) => (
               <div key={d.title} className="bg-white rounded-lg border border-gray-200 p-6">
