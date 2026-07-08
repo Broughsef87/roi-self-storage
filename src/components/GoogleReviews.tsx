@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { BUSINESS } from "@/lib/site";
 
 interface Review {
   name: string;
@@ -216,7 +217,7 @@ export default function GoogleReviews() {
                 <span className="text-4xl font-bold text-roi-navy">5.0</span>
                 <StarRow rating={5} />
               </div>
-              <div className="text-sm text-roi-steel mt-1">Based on 20 Google reviews</div>
+              <div className="text-sm text-roi-steel mt-1">Based on {BUSINESS.aggregateRating.reviewCount} Google reviews</div>
             </div>
             <a
               href="https://www.google.com/search?q=ROI+Metal+Buildings+Reviews"
