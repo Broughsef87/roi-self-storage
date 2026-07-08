@@ -7,9 +7,9 @@ import { pageMetadata } from "@/lib/metadata";
 import { breadcrumbSchema, faqPageSchema, serviceSchema, productSchema } from "@/lib/schema";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Self Storage Doors — Roll-Up, Swing & Insulated | New & Replacement | ROI",
+  title: "Self Storage Doors — Roll-Up, Sheet & Insulated | New & Replacement | ROI",
   description:
-    "Self storage doors — roll-up, swing, and insulated, plus drop-in replacements — matched to your unit schedule. New builds and existing facilities. Get a component quote.",
+    "Self storage doors — roll-up, sheet, and insulated, plus drop-in replacements — matched to your unit schedule. New builds and existing facilities. Get a component quote.",
   path: "/storage-doors",
 });
 
@@ -22,7 +22,7 @@ const service = serviceSchema({
   serviceType: "Self Storage Door Supply",
   name: "Self Storage Roll-Up Doors & Commercial Storage Doors",
   description:
-    "Commercial roll-up doors, sheet curtain doors, swing doors, and overhead sectional doors for self storage facilities — supplied as part of a complete building package and for component or replacement orders. Patented S2F Latch system with dual padlock support.",
+    "Commercial roll-up doors, sheet curtain doors, and overhead sectional doors for self storage facilities — supplied as part of a complete building package and for component or replacement orders. Patented S2F Latch system with dual padlock support.",
 });
 
 const product = productSchema({
@@ -34,7 +34,7 @@ const product = productSchema({
 const faqs = [
   {
     q: "What types of storage doors do you offer?",
-    a: "We supply commercial-grade roll-up doors (the industry standard), sheet curtain doors, swing doors, and overhead sectional doors. The right choice depends on your unit size, access needs, and budget.",
+    a: "We supply commercial-grade roll-up doors (the industry standard), sheet curtain doors, and overhead sectional doors. The right choice depends on your unit size, access needs, and budget.",
   },
   {
     q: "What sizes do self storage roll-up doors come in?",
@@ -51,10 +51,6 @@ const faqs = [
   {
     q: "Can I replace roll-up doors on an existing facility?",
     a: "Yes — we supply replacement doors for existing facilities, whether you're upgrading aging doors, repairing damage, or remixing unit sizes. We match your current frame dimensions and mounting configuration. Send your current door sizes and counts for a quote.",
-  },
-  {
-    q: "Do you sell replacement swing doors for storage units?",
-    a: "Yes — we supply drop-in replacement swing doors for existing facilities. Send your opening dimensions and current hinge/latch configuration and we'll match a replacement. (Same for roll-up replacements.)",
   },
   {
     q: "What are insulated self storage doors, and do I need them?",
@@ -191,7 +187,6 @@ export default function StorageDoorsPage() {
             {[
               { title: "Roll-Up Doors", desc: "The industry standard — and the door on virtually every drive-up storage unit, where the tenant lifts the door and loads straight from their vehicle. Open-drum design with worm-screw tensioning for simple maintenance. Available in all standard widths and heights; 2–3 week lead times." },
               { title: "Sheet Curtain Doors", desc: "Corrugated steel panel doors. Economical option for large facilities. Durable, easy to maintain, and available in custom colors." },
-              { title: "Swing Doors", desc: "Hinged steel doors for units where a roll-up isn’t practical — common on interior, hallway-access climate-controlled units and smaller specialty units. We also supply replacement swing doors for existing storage units: send the opening size and your current hinge/latch setup and we’ll match a drop-in replacement." },
               { title: "Overhead Sectional Doors", desc: "Paneled doors that rise on tracks. Ideal for vehicle storage with wide, tall openings. Insulated options available." },
               {
                 title: "Insulated Self Storage Doors",
@@ -206,7 +201,7 @@ export default function StorageDoorsPage() {
                   </>
                 ),
               },
-              { title: "Replacement Doors", desc: "Drop-in replacements for existing facilities. We match your current frame dimensions and mounting configuration." },
+              { title: "Replacement Doors", desc: "Drop-in replacement door units for existing facilities — we match your current frame dimensions and mounting configuration. (We supply replacement doors, not repair parts or repair service.)" },
             ].map((d) => (
               <div key={d.title} className="bg-white rounded-lg border border-gray-200 p-6">
                 <h3 className="font-bold text-roi-navy mb-2">{d.title}</h3>
