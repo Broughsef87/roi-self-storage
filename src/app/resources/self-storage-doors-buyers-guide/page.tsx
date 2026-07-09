@@ -249,10 +249,10 @@ export default function SelfStorageDoorsBuyersGuidePage() {
           </h2>
           <p className="text-roi-steel leading-relaxed">
             Doors look like a commodity and behave like a design decision. Match the door type to
-            the unit&apos;s location (drive-up vs. interior), insulate only where the building is
-            conditioned, size to the unit schedule, and — for replacements — measure the opening and
-            match the mounting. Do that, and the doors quietly do their job for the life of the
-            building.
+            your unit count and budget — roll-up by default, sheet curtain when per-door cost
+            drives the number at scale — insulate only where the building is conditioned, size to
+            the unit schedule, and — for replacements — measure the opening and match the mounting.
+            Do that, and the doors quietly do their job for the life of the building.
           </p>
           <p className="mt-6 text-roi-steel leading-relaxed">
             Building new or re-dooring an existing facility? ROI supplies{" "}
