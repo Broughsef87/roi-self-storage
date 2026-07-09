@@ -143,7 +143,11 @@ export default function SelfStorageBuildingCostPage() {
             </li>
             <li>
               <strong className="text-roi-navy">Doors, hallways, and partitions</strong> — count and
-              type; climate-controlled interior systems add cost.
+              type; climate-controlled interior systems add cost. (See our{" "}
+              <Link href="/resources/self-storage-doors-buyers-guide" className="text-roi-red font-semibold hover:underline">
+                doors buyer&apos;s guide
+              </Link>{" "}
+              for how door type and sizing work.)
             </li>
             <li>
               <strong className="text-roi-navy">Foundations and concrete</strong> — not in
