@@ -85,6 +85,13 @@ export default function StorageDoorsPage() {
             construction, and owner-operators replacing or upgrading doors on an existing facility.
             Both paths are below.
           </p>
+          <p className="mt-6 text-sm text-roi-steel">
+            New here? Start with our{" "}
+            <Link href="/resources/self-storage-doors-buyers-guide" className="text-roi-red font-semibold hover:underline">
+              doors buyer&apos;s guide
+            </Link>{" "}
+            for a walkthrough of door types, sizing, and replacement.
+          </p>
         </div>
       </section>
 
