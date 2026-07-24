@@ -77,6 +77,18 @@ export default function SelfStorageBuildingCostPage() {
               Open the calculator →
             </Link>
           </div>
+          <div className="mt-4 rounded-lg border border-gray-200 bg-roi-light p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+            <p className="text-sm text-roi-steel flex-1">
+              <strong className="text-roi-navy">Wondering if it&apos;s worth building at all?</strong>{" "}
+              Start here — what actually determines whether a self-storage project pencils.
+            </p>
+            <Link
+              href="/resources/is-self-storage-a-good-investment"
+              className="shrink-0 inline-flex items-center justify-center border border-roi-red text-roi-red font-semibold text-sm px-5 py-2.5 rounded-md hover:bg-roi-red hover:text-white transition-colors"
+            >
+              Is self-storage a good investment? →
+            </Link>
+          </div>
         </div>
       </section>
 
