@@ -148,6 +148,14 @@ export default function RetrofitPage() {
             structure is working for you or against you. ROI supplies the engineered steel
             components, partitions, and doors; sitework and construction stay with your contractor.
           </p>
+          <p className="mt-4 text-roi-steel leading-relaxed">
+            Converting a retail or big-box store instead? Those have their own advantages and
+            catches — see the{" "}
+            <Link href="/resources/converting-retail-to-self-storage" className="text-roi-red font-semibold hover:underline">
+              retail conversion guide
+            </Link>
+            .
+          </p>
         </div>
       </section>
 
