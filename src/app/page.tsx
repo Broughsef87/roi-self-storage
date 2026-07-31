@@ -12,9 +12,9 @@ import { faqPageSchema } from "@/lib/schema";
 import { HOME_FAQS } from "@/data/home-faqs";
 
 export const metadata: Metadata = pageMetadata({
-  title: "ROI Self Storage | Pre-Engineered Metal Storage Buildings",
+  title: "ROI Metal Buildings | Pre-Engineered Steel Self-Storage",
   description:
-    "Custom metal self storage buildings engineered for maximum ROI. From mini-storage to climate-controlled facilities. Nationwide delivery. Call (865) 316-9009.",
+    "ROI Metal Buildings engineers pre-engineered steel self-storage — mini-storage to climate-controlled, built for maximum ROI. Nationwide delivery. Call (865) 316-9009.",
   path: "/",
   // No keywords — Google ignores them and subpages don't use them, so the
   // homepage shouldn't either (sitewide consistency).
