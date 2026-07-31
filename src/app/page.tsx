@@ -179,7 +179,7 @@ export default function Home() {
               </svg>
             </a>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight">
-              Metal Storage Buildings<br />
+              ROI Metal Buildings<br />
               <span className="text-roi-red">Engineered for Profit</span>
             </h1>
             <p className="mt-6 text-lg text-gray-300 leading-relaxed max-w-xl">
