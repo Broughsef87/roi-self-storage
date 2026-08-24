@@ -71,6 +71,100 @@ function buildActivityComments(p: Payload): string {
 }
 
 /**
+ * Cached result of validating METHOD_LEAD_ASSIGNEE_ID against Method's Users
+ * table. Cached per lambda instance with a short TTL so a mid-cycle
+ * deactivation is picked up quickly without re-querying on every lead.
+ */
+let assigneeCache: { at: number; result: AssigneeCheck } | null = null;
+const ASSIGNEE_TTL_MS = 5 * 60 * 1000;
+
+interface AssigneeCheck {
+  id: number;
+  /** The user record exists AND IsActive is true. */
+  valid: boolean;
+  name?: string;
+  /** Human-readable reason when !valid, used in the alert body. */
+  reason?: string;
+}
+
+/**
+ * Verify the configured assignee is a real, ACTIVE Method user.
+ *
+ * Why this exists (see FOR-167 follow-up): Method does NOT validate
+ * AssignedTo_RecordID on write. Posting a non-existent ID returns 200 and
+ * silently creates an Activity with AssignedTo = null — a task in nobody's
+ * queue, while every success signal stays green.
+ *
+ * Two distinct failure modes, and they need different detection:
+ *   - ID does not exist      -> write succeeds, AssignedTo is null.
+ *                               Caught by the post-write read-back.
+ *   - User exists but is     -> write succeeds AND AssignedTo resolves to
+ *     DEACTIVATED (turnover)    their name, so the read-back CANNOT see it.
+ *                               Only an IsActive check catches this, and it
+ *                               is the likelier trigger (staff turnover).
+ */
+async function checkAssignee(headers: Record<string, string>, id: number): Promise<AssigneeCheck> {
+  const now = Date.now();
+  if (assigneeCache && assigneeCache.result.id === id && now - assigneeCache.at < ASSIGNEE_TTL_MS) {
+    return assigneeCache.result;
+  }
+
+  let result: AssigneeCheck;
+  try {
+    if (!Number.isFinite(id)) {
+      result = { id, valid: false, reason: `METHOD_LEAD_ASSIGNEE_ID is not a number` };
+    } else {
+      const res = await fetch(`${METHOD_API_BASE}/tables/Users/${id}`, {
+        headers,
+        signal: AbortSignal.timeout(8000),
+      });
+      if (!res.ok) {
+        result = { id, valid: false, reason: `no Method user with RecordID ${id} (HTTP ${res.status})` };
+      } else {
+        const u = (await res.json()) as { UserName?: string; IsActive?: boolean };
+        result = u.IsActive
+          ? { id, valid: true, name: u.UserName }
+          : {
+              id,
+              valid: false,
+              name: u.UserName,
+              reason: `Method user ${u.UserName ?? id} (RecordID ${id}) is DEACTIVATED`,
+            };
+      }
+    }
+  } catch (err) {
+    // Don't block the lead on a validation hiccup - assume valid and let the
+    // read-back be the backstop. Better a missed warning than a dropped lead.
+    return { id, valid: true, reason: err instanceof Error ? err.message : "check failed" };
+  }
+
+  assigneeCache = { at: now, result };
+  if (!result.valid) {
+    console.error(`[quote] ASSIGNEE INVALID - ${result.reason}. Activities will land in nobody's queue.`);
+  }
+  return result;
+}
+
+/**
+ * Read an Activity back after creation and report whether it actually has an
+ * assignee. Method returns 200 for a write with a bogus AssignedTo_RecordID,
+ * so "the POST succeeded" is not evidence a human can see the task.
+ */
+async function activityIsAssigned(headers: Record<string, string>, activityId: number): Promise<boolean> {
+  try {
+    const res = await fetch(`${METHOD_API_BASE}/tables/Activity/${activityId}`, {
+      headers,
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) return true; // can't verify -> don't cry wolf
+    const a = (await res.json()) as { AssignedTo?: string | null };
+    return !!(a.AssignedTo && String(a.AssignedTo).trim());
+  } catch {
+    return true; // verification failure is not the same as an unassigned task
+  }
+}
+
+/**
  * Push a lead to Method CRM in THREE steps:
  *   1. POST /Customer with EntityType="Customer Lead" + IsActive=true +
  *      IsLeadStatusOnly=true. This creates the LEAD entity that surfaces
@@ -105,6 +199,10 @@ async function pushToMethod(p: Payload): Promise<{
   customerId?: number;
   contactId?: number;
   activityId?: number;
+  /** Activity exists but nobody can see it (bad/deactivated assignee). */
+  activityUnassigned?: boolean;
+  /** Why the assignee was rejected, surfaced in the alert. */
+  assigneeProblem?: string;
 }> {
   const apiKey = process.env.METHOD_API_KEY;
   if (!apiKey) return { ok: false, error: "METHOD_API_KEY not configured" };
@@ -212,6 +310,9 @@ async function pushToMethod(p: Payload): Promise<{
   //                            14 = Steven Braisted
   try {
     const assignedToId = Number(process.env.METHOD_LEAD_ASSIGNEE_ID || 5);
+    // Preflight: catches a DEACTIVATED user, which the post-write read-back
+    // cannot see (Method still resolves their name on the record).
+    const assignee = await checkAssignee(headers, assignedToId);
     const activityBody = {
       ActivityType_RecordID: 2,
       ActivityStatus_RecordID: 1,
@@ -220,6 +321,18 @@ async function pushToMethod(p: Payload): Promise<{
       Comments: buildActivityComments(p),
     };
     activityId = await postAndReadId("/tables/Activity", activityBody);
+
+    // Method accepts a bogus/deactivated AssignedTo without complaint, so a
+    // 200 here is NOT proof a salesperson can see this task. Verify both ways.
+    if (!assignee.valid) {
+      console.error(`[quote] Activity ${activityId} created but ${assignee.reason}`);
+      return { ok: true, customerId, contactId, activityId, activityUnassigned: true, assigneeProblem: assignee.reason };
+    }
+    if (!(await activityIsAssigned(headers, activityId))) {
+      const reason = `Activity ${activityId} has no assignee (AssignedTo is empty) - check METHOD_LEAD_ASSIGNEE_ID=${assignedToId}`;
+      console.error(`[quote] ${reason}`);
+      return { ok: true, customerId, contactId, activityId, activityUnassigned: true, assigneeProblem: reason };
+    }
   } catch (err) {
     // Customer + Contact exist (visible in UI). Just no actionable task.
     console.warn(`[quote] Activity create failed (Customer ${customerId} + Contact ${contactId} exist):`, err instanceof Error ? err.message : err);
@@ -244,10 +357,16 @@ type MethodResult = {
   customerId?: number;
   contactId?: number;
   activityId?: number;
+  activityUnassigned?: boolean;
+  assigneeProblem?: string;
 };
 
 function methodOutcome(r: MethodResult): "ok" | "partial" | "failed" {
   if (!r.ok) return "failed";
+  // An Activity assigned to a non-existent or deactivated user is invisible
+  // in every salesperson's queue. It counts in reconciliation and returns 200
+  // on write, so it must be treated as PARTIAL or it stays silent forever.
+  if (r.activityUnassigned) return "partial";
   return r.activityId ? "ok" : "partial";
 }
 
@@ -289,10 +408,18 @@ async function sendLeadEmail(
     banner = `In Method - task assigned. Customer ${method.customerId}, Activity ${method.activityId}.`;
     bannerColor = "#0f7b3f";
   } else if (outcome === "partial") {
-    subject = `[!] [Self Storage] CRM INCOMPLETE - Customer ${method.customerId} has NO task - ${who}`;
-    banner =
-      `Customer ${method.customerId} was created in Method but the follow-up Activity was NOT. ` +
-      `Nobody is assigned to this lead. Open Method and create the task manually.`;
+    if (method.activityUnassigned) {
+      subject = `[!] [Self Storage] CRM INCOMPLETE - task assigned to NOBODY - ${who}`;
+      banner =
+        `Activity ${method.activityId} was created for Customer ${method.customerId}, but it is ` +
+        `assigned to nobody, so it will NOT appear in any salesperson's queue. ` +
+        `${method.assigneeProblem || ""} Fix METHOD_LEAD_ASSIGNEE_ID, then reassign this task.`;
+    } else {
+      subject = `[!] [Self Storage] CRM INCOMPLETE - Customer ${method.customerId} has NO task - ${who}`;
+      banner =
+        `Customer ${method.customerId} was created in Method but the follow-up Activity was NOT. ` +
+        `Nobody is assigned to this lead. Open Method and create the task manually.`;
+    }
     bannerColor = "#b45309";
     if (alert !== notify) recipients.push(alert);
   } else {
@@ -308,7 +435,9 @@ async function sendLeadEmail(
     outcome === "ok"
       ? `Method: Customer ${method.customerId} / Contact ${method.contactId} / Activity ${method.activityId}`
       : outcome === "partial"
-        ? `Method: Customer ${method.customerId} created, NO Activity - nobody assigned`
+        ? method.activityUnassigned
+          ? `Method: Customer ${method.customerId} / Activity ${method.activityId} created but UNASSIGNED - ${method.assigneeProblem || "no assignee"}`
+          : `Method: Customer ${method.customerId} created, NO Activity - nobody assigned`
         : `Method: WRITE FAILED - ${method.error || "unknown"}`;
 
   const dash = "-";
