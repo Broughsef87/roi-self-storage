@@ -17,9 +17,17 @@ import { NextResponse } from "next/server";
  *   METHOD_LEAD_ASSIGNEE_ID   (optional)  — Method user RecordID for default
  *                                            lead assignee. Defaults to 5 (Dave Maxe).
  *                                            4=Lisa, 5=Dave, 10=Blaise, 12=Jamie, 14=Steven.
- *   RESEND_API_KEY            (optional)  — enables backup email
- *   RESEND_FROM               (optional)  — e.g. "leads@roiselfstoragebuildings.com"
- *   NOTIFY_EMAIL              (optional)  — defaults to info@roimetalbuildings.com
+ *   RESEND_API_KEY            (optional)  — enables the notification email.
+ *                                            WITHOUT IT THERE IS NO EMAIL LEG AT
+ *                                            ALL, and Method is a single point of
+ *                                            failure with no human-visible copy.
+ *   RESEND_FROM               (optional)  — must be on a Resend-VERIFIED domain.
+ *                                            Need not match this site's domain.
+ *   NOTIFY_EMAIL              (optional)  — every lead (sales inbox).
+ *                                            Defaults to info@roimetalbuildings.com
+ *   ALERT_EMAIL               (optional)  — CRM-failure alerts only, so the sales
+ *                                            inbox isn't trained to ignore them.
+ *                                            Falls back to NOTIFY_EMAIL.
  */
 
 const METHOD_API_BASE = "https://rest.method.me/api/v1";
@@ -149,7 +157,6 @@ async function pushToMethod(p: Payload): Promise<{
   }
 
   let customerId: number | undefined;
-  let contactId: number | undefined;
   let activityId: number | undefined;
 
   try {
@@ -185,7 +192,7 @@ async function pushToMethod(p: Payload): Promise<{
   // --- Step 2: Look up the Primary Contact Method auto-created -------
   // Method spawns this Contact as a side effect of Customer creation.
   // We must NOT create a second Contact (that's the duplicate Lisa saw).
-  contactId = await findPrimaryContactId(customerId);
+  const contactId = await findPrimaryContactId(customerId);
   if (!contactId) {
     // Lead is visible in Method UI; we just can't attach an Activity to it.
     console.warn(`[quote] Could not locate auto-created Contact for Customer ${customerId} — skipping Activity.`);
@@ -222,28 +229,105 @@ async function pushToMethod(p: Payload): Promise<{
   return { ok: true, customerId, contactId, activityId };
 }
 
-async function sendBackupEmail(p: Payload): Promise<{ ok: boolean; error?: string }> {
+/**
+ * Outcome of the Method push, used to shape the notification email.
+ *   ok      - all three writes landed; a salesperson has a task.
+ *   partial - Customer exists but there is NO Activity, so nobody is
+ *             assigned. The lead looks normal in the Leads view and would
+ *             otherwise be dropped silently. This is the dangerous case.
+ *   failed  - nothing reached Method. The email is the ONLY record of the
+ *             lead, so it must carry the full payload for manual recovery.
+ */
+type MethodResult = {
+  ok: boolean;
+  error?: string;
+  customerId?: number;
+  contactId?: number;
+  activityId?: number;
+};
+
+function methodOutcome(r: MethodResult): "ok" | "partial" | "failed" {
+  if (!r.ok) return "failed";
+  return r.activityId ? "ok" : "partial";
+}
+
+/**
+ * Notify humans about a lead - and, critically, about the CRM write's real
+ * outcome. Runs AFTER pushToMethod (not in parallel) so the email can tell
+ * the truth about whether the lead actually landed in Method.
+ *
+ * Routing:
+ *   NOTIFY_EMAIL - every lead. The human-visible backup copy (sales inbox).
+ *   ALERT_EMAIL  - added as a recipient ONLY on partial/total failure, so
+ *                  the sales inbox isn't trained to ignore warnings.
+ *                  Falls back to NOTIFY_EMAIL so an alert is never lost.
+ */
+async function sendLeadEmail(
+  p: Payload,
+  method: MethodResult
+): Promise<{ ok: boolean; error?: string }> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return { ok: false, error: "skipped (no RESEND_API_KEY)" };
 
   const from = process.env.RESEND_FROM || "ROI Self Storage <leads@roiselfstoragebuildings.com>";
-  const to = process.env.NOTIFY_EMAIL || "info@roimetalbuildings.com";
-  const { firstName, lastName } = splitName(p.name ?? "");
+  const notify = process.env.NOTIFY_EMAIL || "info@roimetalbuildings.com";
+  const alert = process.env.ALERT_EMAIL || notify;
 
-  const subject = `New Quote Request — ${p.name || "Unknown"}${p.buildingType ? ` (${p.buildingType})` : ""}`;
+  const outcome = methodOutcome(method);
+  const who = p.name || "Unknown";
+  const type = p.buildingType ? ` (${p.buildingType})` : "";
+  const recipients = [notify];
+
+  // "[Self Storage]" prefix keeps these findable in the shared parent inbox
+  // (info@ is ROI Metal Buildings', not self-storage specific).
+  let subject: string;
+  let banner: string;
+  let bannerColor: string;
+
+  if (outcome === "ok") {
+    subject = `[Self Storage] New Quote Request - ${who}${type}`;
+    banner = `In Method - task assigned. Customer ${method.customerId}, Activity ${method.activityId}.`;
+    bannerColor = "#0f7b3f";
+  } else if (outcome === "partial") {
+    subject = `[!] [Self Storage] CRM INCOMPLETE - Customer ${method.customerId} has NO task - ${who}`;
+    banner =
+      `Customer ${method.customerId} was created in Method but the follow-up Activity was NOT. ` +
+      `Nobody is assigned to this lead. Open Method and create the task manually.`;
+    bannerColor = "#b45309";
+    if (alert !== notify) recipients.push(alert);
+  } else {
+    subject = `[FAILED] [Self Storage] CRM WRITE FAILED - lead NOT in Method - ${who}`;
+    banner =
+      `The lead did NOT reach Method at all. This email is the only record of it - ` +
+      `enter it manually. Error: ${method.error || "unknown"}`;
+    bannerColor = "#b91c1c";
+    if (alert !== notify) recipients.push(alert);
+  }
+
+  const crmLine =
+    outcome === "ok"
+      ? `Method: Customer ${method.customerId} / Contact ${method.contactId} / Activity ${method.activityId}`
+      : outcome === "partial"
+        ? `Method: Customer ${method.customerId} created, NO Activity - nobody assigned`
+        : `Method: WRITE FAILED - ${method.error || "unknown"}`;
+
+  const dash = "-";
   const text =
+    `${banner}\n\n` +
     `New website quote request\n\n` +
-    `Name: ${p.name || "—"}\n` +
-    `Email: ${p.email || "—"}\n` +
-    `Phone: ${p.phone || "—"}\n\n` +
-    `Building type: ${p.buildingType || "—"}\n` +
-    `Approximate size: ${p.size || "—"}\n` +
-    `Project location: ${p.location || "—"}\n\n` +
-    `Details:\n${p.details || "—"}\n\n` +
-    `— roiselfstoragebuildings.com`;
+    `Name: ${p.name || dash}\n` +
+    `Email: ${p.email || dash}\n` +
+    `Phone: ${p.phone || dash}\n\n` +
+    `Building type: ${p.buildingType || dash}\n` +
+    `Approximate size: ${p.size || dash}\n` +
+    `Project location: ${p.location || dash}\n\n` +
+    `Details:\n${p.details || dash}\n\n` +
+    `${crmLine}\n` +
+    `- roiselfstoragebuildings.com`;
 
   const html =
     `<div style="font-family:system-ui,sans-serif;max-width:600px;color:#1a1a2e">` +
+    `<div style="padding:12px 16px;border-radius:8px;background:${bannerColor};color:#fff;font-size:14px;font-weight:600;margin-bottom:20px">${escape(banner)}</div>` +
     `<h2 style="margin:0 0 16px;color:#E40C19">New Quote Request</h2>` +
     `<table style="border-collapse:collapse;width:100%;font-size:14px">` +
     [
@@ -256,15 +340,15 @@ async function sendBackupEmail(p: Payload): Promise<{ ok: boolean; error?: strin
     ]
       .map(
         ([k, v]) =>
-          `<tr><td style="padding:6px 12px 6px 0;color:#4a4a5a;width:160px">${k}</td><td style="padding:6px 0"><strong>${escape(v) || "—"}</strong></td></tr>`
+          `<tr><td style="padding:6px 12px 6px 0;color:#4a4a5a;width:160px">${k}</td><td style="padding:6px 0"><strong>${escape(v) || dash}</strong></td></tr>`
       )
       .join("") +
     `</table>` +
     `<div style="margin-top:20px;padding:16px;background:#f5f5f7;border-radius:8px">` +
     `<div style="font-weight:600;margin-bottom:6px">Details</div>` +
-    `<div style="white-space:pre-wrap;font-size:14px">${escape(p.details) || "—"}</div>` +
+    `<div style="white-space:pre-wrap;font-size:14px">${escape(p.details) || dash}</div>` +
     `</div>` +
-    `<p style="margin-top:24px;font-size:12px;color:#6b7280">Submitted from roiselfstoragebuildings.com — also pushed into Method CRM (Contact: ${escape(firstName)} ${escape(lastName)}).</p>` +
+    `<p style="margin-top:24px;font-size:12px;color:#6b7280">Submitted from roiselfstoragebuildings.com<br/>${escape(crmLine)}</p>` +
     `</div>`;
 
   try {
@@ -274,12 +358,12 @@ async function sendBackupEmail(p: Payload): Promise<{ ok: boolean; error?: strin
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ from, to: [to], subject, text, html, reply_to: p.email || undefined }),
+      body: JSON.stringify({ from, to: recipients, subject, text, html, reply_to: p.email || undefined }),
       signal: AbortSignal.timeout(10000),
     });
     if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      return { ok: false, error: `Resend ${res.status}: ${text.slice(0, 300)}` };
+      const t = await res.text().catch(() => "");
+      return { ok: false, error: `Resend ${res.status}: ${t.slice(0, 300)}` };
     }
     return { ok: true };
   } catch (err) {
@@ -311,11 +395,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Invalid email" }, { status: 400 });
   }
 
-  // Fire Method CRM push and (optional) email in parallel.
-  const [methodRes, emailRes] = await Promise.all([
-    pushToMethod(payload),
-    sendBackupEmail(payload),
-  ]);
+  // Method FIRST, then the email - the email has to report the real CRM
+  // outcome, so it can't run in parallel (that's how a failed write used to
+  // still produce a cheerful "New Quote Request" notice).
+  const methodRes = await pushToMethod(payload);
+  const emailRes = await sendLeadEmail(payload, methodRes);
 
   // We treat the request as successful as long as Method CRM accepted it.
   // The email is best-effort; if it fails we still log it and move on.
