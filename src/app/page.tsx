@@ -379,7 +379,51 @@ export default function Home() {
             <p><strong className="text-roi-navy">What&apos;s included:</strong> Building package (metal building kit) + steel erection + concrete/site work. All figures are per square foot, based on national averages.</p>
             <p><strong className="text-roi-navy">What&apos;s not included:</strong> Land, permits, utilities, design fees, financing, landscaping, or other soft costs. ROI does not perform concrete services — concrete figures are based on national averages for reference.</p>
             <p><strong className="text-roi-navy">Note:</strong> Actual costs vary by location, zoning, wind loads, snow loads, and current steel market. Flex space pricing ($16+) increases with finish level and specialization. Request a quote for your specific project.</p>
-            <p><strong className="text-roi-navy">Go deeper:</strong> <Link href="/resources/self-storage-building-cost" className="text-roi-red font-semibold hover:underline">What drives self-storage building cost</Link> breaks down every line that moves your number and how to build a defensible budget.</p>
+          </div>
+
+          {/* Resource hub — the only homepage entry point to /resources/*.
+              Ordered feasibility-first per FOR-166 (doors deprioritised).
+              The calculator is linked HERE rather than from the "Ready to run
+              the numbers?" CTA: that CTA also lives in SubPageLayout, which the
+              calculator page itself renders, so linking it there would make
+              that page self-link. */}
+          <div className="mt-8 border-t border-gray-150 pt-8">
+            <h3 className="text-lg font-bold text-roi-navy mb-1">Plan your build</h3>
+            <p className="text-sm text-roi-steel mb-5 max-w-2xl">
+              Free guides and tools for working out what a facility costs and whether it pencils.
+            </p>
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+              <li className="text-sm">
+                <Link href="/resources/self-storage-building-cost" className="text-roi-red font-semibold hover:underline">
+                  What drives self-storage building cost
+                </Link>
+                <span className="block text-roi-steel mt-0.5">Every line item that moves your number, and how to build a defensible budget.</span>
+              </li>
+              <li className="text-sm">
+                <Link href="/resources/cost-calculator" className="text-roi-red font-semibold hover:underline">
+                  Self-storage cost &amp; ROI calculator
+                </Link>
+                <span className="block text-roi-steel mt-0.5">Put in your dimensions and market rent, get an all-in cost range and rough payback.</span>
+              </li>
+              <li className="text-sm">
+                <Link href="/resources/is-self-storage-a-good-investment" className="text-roi-red font-semibold hover:underline">
+                  Is self-storage a good investment?
+                </Link>
+                <span className="block text-roi-steel mt-0.5">What actually determines whether a specific project returns — market, cost basis, and rents.</span>
+              </li>
+              <li className="text-sm">
+                <Link href="/resources/converting-retail-to-self-storage" className="text-roi-red font-semibold hover:underline">
+                  Converting retail &amp; big-box stores to self-storage
+                </Link>
+                <span className="block text-roi-steel mt-0.5">Why vacant retail converts well, the zoning catch, and how to tell if a building fits.</span>
+              </li>
+              <li className="text-sm">
+                <Link href="/resources/self-storage-doors-buyers-guide" className="text-roi-red font-semibold hover:underline">
+                  Self-storage doors buyer&apos;s guide
+                </Link>
+                <span className="block text-roi-steel mt-0.5">Choosing between roll-up and sheet curtain, sizing to your unit mix, and replacing doors.</span>
+              </li>
+            </ul>
           </div>
         </div>
       </section>
