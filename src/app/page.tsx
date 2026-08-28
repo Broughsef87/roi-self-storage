@@ -418,6 +418,12 @@ export default function Home() {
                 <span className="block text-roi-steel mt-0.5">Why vacant retail converts well, the zoning catch, and how to tell if a building fits.</span>
               </li>
               <li className="text-sm">
+                <Link href="/resources/self-storage-building-sizes" className="text-roi-red font-semibold hover:underline">
+                  Self-storage building sizes
+                </Link>
+                <span className="block text-roi-steel mt-0.5">What each footprint from 15&times;100 to 50&times;150 typically yields, and what each suits.</span>
+              </li>
+              <li className="text-sm">
                 <Link href="/resources/self-storage-doors-buyers-guide" className="text-roi-red font-semibold hover:underline">
                   Self-storage doors buyer&apos;s guide
                 </Link>

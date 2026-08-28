@@ -60,6 +60,18 @@ export default function SpecialsPage() {
       title="Self Storage Specials"
       subtitle="Pre-designed building packages at competitive prices. These are our most requested configurations — engineered, priced, and ready to customize for your site."
     >
+      <section className="pt-16 lg:pt-20 bg-white">
+        <div className="max-w-3xl mx-auto px-6 lg:px-8">
+          <p className="text-roi-steel leading-relaxed">
+            Not sure which footprint you need? The{" "}
+            <Link href="/resources/self-storage-building-sizes" className="text-roi-red font-semibold hover:underline">
+              self-storage building sizes guide
+            </Link>{" "}
+            compares common dimensions from 15&times;100 up to 50&times;150 and what each typically yields.
+          </p>
+        </div>
+      </section>
+
       <section className="py-16 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
