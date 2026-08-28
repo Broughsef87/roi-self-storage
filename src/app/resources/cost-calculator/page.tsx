@@ -98,7 +98,12 @@ export default function CostCalculatorPage() {
               </ul>
               <p>
                 These are the same published figures you&apos;ll find across the site — the calculator
-                reads them from one shared source so the numbers never drift.
+                reads them from one shared source so the numbers never drift. Still deciding on a
+                footprint? The{" "}
+                <Link href="/resources/self-storage-building-sizes" className="text-roi-red font-semibold hover:underline">
+                  building sizes guide
+                </Link>{" "}
+                covers what each one typically yields.
               </p>
               <p>
                 <strong className="text-roi-navy">What this includes:</strong> the estimated total

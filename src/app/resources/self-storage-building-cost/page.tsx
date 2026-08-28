@@ -139,7 +139,11 @@ export default function SelfStorageBuildingCostPage() {
           <ul className="space-y-5 text-roi-steel text-sm leading-relaxed">
             <li>
               <strong className="text-roi-navy">Building package</strong> — size, spans, heights,
-              and bay spacing of the steel system.
+              and bay spacing of the steel system. See{" "}
+              <Link href="/resources/self-storage-building-sizes" className="text-roi-red font-semibold hover:underline">
+                what each common footprint yields
+              </Link>{" "}
+              if you&apos;re still choosing dimensions.
             </li>
             <li>
               <strong className="text-roi-navy">Load requirements</strong> — wind, snow, and live

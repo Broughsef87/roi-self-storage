@@ -177,7 +177,12 @@ export default function MiniStoragePage() {
             fit — which sets your net rentable square feet (NRSF) and unit mix, which sets what the
             facility earns. &ldquo;Engineered around your pro forma, not the other way around&rdquo;
             means we size the system to the mix you want to rent rather than forcing your mix into a
-            generic box. <a href="#quote" className="text-roi-red font-semibold hover:underline">Send us your target unit mix</a>{" "}
+            generic box. Not sure which footprint fits your site? Our{" "}
+            <Link href="/resources/self-storage-building-sizes" className="text-roi-red font-semibold hover:underline">
+              building sizes guide
+            </Link>{" "}
+            walks through what each one typically yields.{" "}
+            <a href="#quote" className="text-roi-red font-semibold hover:underline">Send us your target unit mix</a>{" "}
             (or your market&apos;s demand) and the site, and we&apos;ll work the layout against it.
           </p>
         </div>
