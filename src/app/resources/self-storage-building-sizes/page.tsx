@@ -60,6 +60,10 @@ const faqs = [
     q: "Does the size change the cost per square foot?",
     a: "Usually yes, in your favour as it grows. Fixed costs get spread across more square footage. That's why the 30x120 prices better per unit than the 30x100.",
   },
+  {
+    q: "How much land do I need for a self-storage building?",
+    a: "Roughly two to two and a half times the building footprint for a single building with drive-up access, once drive aisles and turning space are included. Setbacks vary by jurisdiction and have to be checked locally. The ratio improves as you add buildings, since a second row shares the aisle.",
+  },
 ];
 
 // Typical layouts, not quotes. Method: building width sets unit depth (two
@@ -299,6 +303,59 @@ export default function SelfStorageBuildingSizesPage() {
               feasibility guide
             </Link>{" "}
             covers how to think about it.
+          </p>
+        </div>
+      </section>
+
+      {/* How much land each footprint needs.
+          NOTE: aisle widths and the 2-2.5x ratio are GENERAL INDUSTRY PLANNING
+          PRACTICE, framed as such in the copy. They are not ROI engineering
+          specs and must not be presented as quotes. */}
+      <section className="py-16 lg:py-24 bg-roi-light">
+        <div className="max-w-3xl mx-auto px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-roi-navy tracking-tight mb-6">
+            How much land each footprint needs
+          </h2>
+          <p className="text-roi-steel leading-relaxed">
+            The building footprint is not the site requirement, and this is where projects get
+            stuck at the planning stage. A 30&times;100 building does not fit on a 30&times;100
+            piece of land.
+          </p>
+          <p className="mt-4 text-roi-steel leading-relaxed">
+            <strong className="text-roi-navy">Drive aisles are the biggest addition.</strong>{" "}
+            Drive-up units need enough width for a vehicle to pull in, stop, and back out without a
+            three-point turn. Typical is 24 to 30 feet — closer to 30 where you have drive-up units
+            on both sides of the aisle.
+          </p>
+          <p className="mt-4 text-roi-steel leading-relaxed">
+            <strong className="text-roi-navy">Turning space at the ends.</strong> A truck with a
+            trailer needs room to come around the end of a building. Undersized end space is the
+            most common complaint from tenants who otherwise like the facility.
+          </p>
+          <p className="mt-4 text-roi-steel leading-relaxed">
+            <strong className="text-roi-navy">Setbacks vary by jurisdiction</strong> and are the one
+            number you cannot estimate from a rule of thumb. Check them before you fall in love with
+            a parcel.
+          </p>
+          <p className="mt-4 text-roi-steel leading-relaxed">
+            <strong className="text-roi-navy">A working rule of thumb:</strong> for a single
+            building with drive-up access, plan on usable site area of roughly two to two and a half
+            times the building footprint. A 3,000 sq ft building wants something in the range of
+            6,000 to 7,500 sq ft of usable ground once aisles and maneuvering are accounted for.
+          </p>
+          <p className="mt-4 text-roi-steel leading-relaxed">
+            That ratio improves as you add buildings — a second row shares the aisle between them
+            rather than needing its own.
+          </p>
+          <p className="mt-4 text-roi-steel leading-relaxed">
+            <strong className="text-roi-navy">If you&apos;re evaluating a parcel rather than a
+            building</strong>, work backwards: take the usable area after setbacks, divide by
+            roughly 2.25, and that&apos;s the approximate building footprint the site supports. Then
+            come back to the table above.
+          </p>
+          <p className="mt-6 text-xs text-gray-500">
+            Aisle widths and the site-area ratio above are general industry planning practice, not
+            ROI engineering specifications. Your jurisdiction, site shape and access plan govern.
           </p>
         </div>
       </section>
