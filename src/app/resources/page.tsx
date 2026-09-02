@@ -75,7 +75,7 @@ const design: Resource[] = [
     href: "/resources/self-storage-doors-buyers-guide",
     title: "Storage doors buyer's guide",
     blurb:
-      "Roll-up versus sheet curtain, sizing doors to your unit mix, what fails first and why, and what's involved in replacing doors on an existing facility.",
+      "Roll-up versus sheet curtain, insulated versus not, how doors get sized to your unit mix, and what's involved in replacing doors on an existing facility.",
     use: "Use it before you sign off on a door schedule.",
   },
   {
