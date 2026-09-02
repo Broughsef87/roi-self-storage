@@ -97,8 +97,12 @@ function ResourceCard({ r }: { r: Resource }) {
       </h3>
       <p className="mt-2 text-sm text-roi-steel leading-relaxed">{r.blurb}</p>
       <p className="mt-3 text-sm text-gray-500 italic">{r.use}</p>
+      {/* Six cards share the visible text "Read the guide", so a screen
+          reader's link list would otherwise show six indistinguishable
+          entries. The aria-label names the destination. */}
       <Link
         href={r.href}
+        aria-label={`Read the guide: ${r.title}`}
         className="mt-4 inline-flex items-center text-sm text-roi-red font-semibold hover:underline"
       >
         Read the guide &rarr;
