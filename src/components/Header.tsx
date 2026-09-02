@@ -102,7 +102,9 @@ export default function Header() {
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="lg:hidden p-2 text-roi-navy"
-            aria-label="Toggle menu"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
           >
             {mobileOpen ? (
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -118,7 +120,7 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {mobileOpen && (
-          <div className="lg:hidden border-t border-gray-100 py-4 space-y-1">
+          <div id="mobile-menu" className="lg:hidden border-t border-gray-100 py-4 space-y-1">
             <div className="py-2">
               <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-1 mb-2">Buildings</div>
               {buildingLinks.map((link) => (
