@@ -390,7 +390,11 @@ export default function Home() {
           <div className="mt-8 border-t border-gray-150 pt-8">
             <h3 className="text-lg font-bold text-roi-navy mb-1">Plan your build</h3>
             <p className="text-sm text-roi-steel mb-5 max-w-2xl">
-              Free guides and tools for working out what a facility costs and whether it pencils.
+              Free guides and tools for working out what a facility costs and whether it pencils.{" "}
+              <Link href="/resources" className="text-roi-red font-semibold hover:underline">
+                See all resources
+              </Link>
+              .
             </p>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
               <li className="text-sm">
